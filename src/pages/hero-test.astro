@@ -367,8 +367,12 @@ import Layout from '../layouts/Layout.astro';
       container.style.top = '0';
       container.style.width = '100%';
       container.style.minHeight = '100svh';
-      container.style.zIndex = '0';
+      container.style.minHeight = '100svh';
+      container.style.zIndex = '50'; // Force High Z-Index
       container.style.willChange = 'transform';
+
+      // Mobile: Disable GSAP ScrollTrigger
+      return;
     }
 
     const scrollConfig = isMobileDevice

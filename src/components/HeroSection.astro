@@ -187,19 +187,24 @@
       container.style.left = '0';
       container.style.width = '100%';
       container.style.minHeight = '100svh';
-      container.style.zIndex = '0'; // Keep it low so next section covers it?
-      // Wait, if it's 0, it might be behind body?
-      // Let's try zIndex 0. Next section (Intro) usually has z-index.
-      // If we want next section to cover it, Next needs z-index > 0.
-      container.style.willChange = 'transform';
+      container.style.width = '100%';
+      container.style.minHeight = '100svh';
+      container.style.zIndex = '50'; // Force High Z-Index to be visible
+      container.style.willChange = 'transform'; // Optimization
 
+      // Mobile: Disable GSAP ScrollTrigger Effects to prevent "Stopping"
+      // Pure CSS Fixed positioning is smoother and glitch-free.
+      return;
+
+      /* 
       scrollConfig = {
         trigger: section,
         start: 'top top',
         end: 'bottom top',
-        pin: false,
+        pin: false, 
         scrub: true,
-      };
+      }; 
+      */
     } else {
       // Desktop: Standard GSAP Pin
       scrollConfig = {
