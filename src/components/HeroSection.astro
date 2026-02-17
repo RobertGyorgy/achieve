@@ -3,11 +3,11 @@
 ---
 
 <section
-  class="relative w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
+  class="relative w-full min-h-screen lg:h-screen bg-transparent lg:bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
 >
   <!-- Main Content Container with fixed padding to prevent gluing to edges -->
   <div
-    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0"
+    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0 bg-[#F2F2F2] lg:bg-transparent"
   >
     <!-- Top: ACHIEVE -->
     <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
@@ -179,7 +179,7 @@
       // Spacer (Section)
       section.style.position = 'relative';
       section.style.minHeight = '100svh';
-      section.style.zIndex = '1';
+      section.style.zIndex = 'auto'; // Let it fall back
 
       // Fixed Content (Container)
       container.style.position = 'fixed';
@@ -187,14 +187,17 @@
       container.style.left = '0';
       container.style.width = '100%';
       container.style.minHeight = '100svh';
-      container.style.zIndex = '0';
-      container.style.willChange = 'transform'; // Optimization
+      container.style.zIndex = '0'; // Keep it low so next section covers it?
+      // Wait, if it's 0, it might be behind body?
+      // Let's try zIndex 0. Next section (Intro) usually has z-index.
+      // If we want next section to cover it, Next needs z-index > 0.
+      container.style.willChange = 'transform';
 
       scrollConfig = {
         trigger: section,
         start: 'top top',
         end: 'bottom top',
-        pin: false, // CSS Fixed handles it
+        pin: false,
         scrub: true,
       };
     } else {
