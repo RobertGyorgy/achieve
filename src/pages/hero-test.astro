@@ -147,6 +147,17 @@ import Layout from '../layouts/Layout.astro';
 
     const tl = gsap.timeline();
 
+    // Failsafe
+    setTimeout(() => {
+      if (
+        document
+          .querySelector('.hero-buttons-overlay')
+          ?.classList.contains('revealed')
+      )
+        return;
+      revealHeroContent();
+    }, 1000);
+
     // PHASE 1: Animate preloader letters in
     tl.to(preloaderLetters, {
       opacity: 1,
@@ -179,10 +190,14 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function revealHeroContent() {
+    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    if (buttonsOverlay && buttonsOverlay.classList.contains('revealed')) return;
+    if (buttonsOverlay) buttonsOverlay.classList.add('revealed');
+
     document.dispatchEvent(new CustomEvent('reveal-navbar'));
 
     const heroWords = document.querySelectorAll('.hero-text-word');
-    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    // buttonsOverlay declared at top
     const buttons = document.querySelectorAll('.hero-buttons-overlay button');
 
     heroWords.forEach((word) => wrapForSlide(word as HTMLElement));

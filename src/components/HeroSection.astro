@@ -147,6 +147,17 @@
       revealHeroContent();
     }
 
+    // Failsafe: Force reveal after 1s if preloader logic hangs
+    setTimeout(() => {
+      if (
+        document
+          .querySelector('.hero-buttons-overlay')
+          ?.classList.contains('revealed')
+      )
+        return;
+      revealHeroContent();
+    }, 1000);
+
     initDraggable();
     initTooltip();
     initScrollEffects();
@@ -262,11 +273,16 @@
   }
 
   function revealHeroContent() {
+    // Idempotency Check
+    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    if (buttonsOverlay && buttonsOverlay.classList.contains('revealed')) return;
+    if (buttonsOverlay) buttonsOverlay.classList.add('revealed');
+
     // Notify navbar to reveal itself
     document.dispatchEvent(new CustomEvent('reveal-navbar'));
 
     const heroWords = document.querySelectorAll('.hero-text-word');
-    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    // buttonsOverlay already declared at top
     const buttons = document.querySelectorAll('.hero-buttons-overlay button');
 
     if (!heroWords.length) return;
