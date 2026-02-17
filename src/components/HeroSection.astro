@@ -1,0 +1,635 @@
+---
+// HeroSection.astro - Refined Version
+---
+
+<section
+  class="relative w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
+>
+  <!-- Main Content Container with fixed padding to prevent gluing to edges -->
+  <div
+    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0"
+  >
+    <!-- Top: ACHIEVE -->
+    <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
+      <h1 class="achieve-hero-title flex justify-between w-full">
+        <span class="hero-text-word" data-tooltip="Drag">A</span>
+        <span class="hero-text-word" data-tooltip="Drag">C</span>
+        <span class="hero-text-word" data-tooltip="Drag">H</span>
+        <span class="hero-text-word" data-tooltip="Drag">I</span>
+        <span class="hero-text-word" data-tooltip="Drag">E</span>
+        <span class="hero-text-word" data-tooltip="Drag">V</span>
+        <span class="hero-text-word" data-tooltip="Drag">E</span>
+      </h1>
+    </div>
+
+    <!-- Middle: Headline -->
+    <div
+      class="hero-middle flex-1 md:flex-none flex flex-col justify-center items-center md:items-start pl-0 md:pl-2 md:mb-32 lg:mb-0 w-full"
+    >
+      <!-- Mobile Layout: 3 Stacked Rows (Visible only on mobile) -->
+      <div class="md:hidden w-full flex flex-col items-center justify-center">
+        <div class="hero-title-row flex justify-center w-full">
+          <span
+            class="hero-text-word headline-word mobile-max"
+            data-tooltip="Drag">CREĂM</span
+          >
+        </div>
+        <div class="hero-title-row flex justify-center w-full">
+          <span
+            class="hero-text-word headline-word mobile-max"
+            data-tooltip="Drag">IMPACT</span
+          >
+        </div>
+        <div class="hero-title-row flex justify-center w-full">
+          <span
+            class="hero-text-word headline-word mobile-max accent text-[#ff4500]"
+            data-tooltip="Drag">DIGITAL</span
+          >
+        </div>
+      </div>
+
+      <!-- Desktop Layout: 1 Single Row (Visible only on desktop) -->
+      <div
+        class="hidden md:flex hero-title-row justify-start gap-x-[1vw] w-full"
+      >
+        <span
+          class="hero-text-word headline-word desktop-min"
+          data-tooltip="Drag">CREĂM</span
+        >
+        <span
+          class="hero-text-word headline-word desktop-min"
+          data-tooltip="Drag">IMPACT</span
+        >
+        <span
+          class="hero-text-word headline-word desktop-min accent text-[#ff4500]"
+          data-tooltip="Drag">DIGITAL</span
+        >
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div
+      class="hero-bottom w-full flex flex-col md:flex-row items-center md:items-end justify-between gap-12 md:gap-32 lg:gap-0"
+    >
+      <!-- Functional Buttons (Literal 1:1 Copy from HeroSection.astro) -->
+      <div class="hero-buttons-overlay">
+        <button class="cutout-button primary blob-btn" id="lets-talk-btn"
+          >Let's Talk</button
+        >
+        <button class="cutout-button secondary blob-btn" id="process-btn"
+          >Our Process</button
+        >
+      </div>
+
+      <!-- Studio Label -->
+      <div class="text-right hidden md:block">
+        <p
+          class="font-nura font-bold text-[#222831] text-xs md:text-xl uppercase leading-tight tracking-wide"
+        >
+          PREMIUM<br />
+          WEB DEVELOPMENT<br />
+          & DESIGN STUDIO
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drag Tooltip -->
+  <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { initBubbleButtons } from '../scripts/bubble-button';
+  import { isMobile } from '../scripts/smooth-scroll';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Helper to prepare elements for Character-by-Character Reveal
+  function wrapForAppearance(element: HTMLElement, splitByCharacters = false) {
+    const text = element.innerText;
+
+    if (splitByCharacters) {
+      // Split into single characters
+      element.innerHTML = text
+        .split('')
+        .map((char) => {
+          if (char === ' ') return ' ';
+          return `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${char}</span>`;
+        })
+        .join('');
+    } else {
+      // Split into word inner (for headline words)
+      element.innerHTML = `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${text}</span>`;
+    }
+
+    // Ensure parent has perspective for 3D state
+    const parentRow = element.parentElement;
+    if (parentRow) {
+      parentRow.style.overflow = 'hidden';
+      parentRow.style.perspective = '1000px';
+    }
+    element.style.display = 'inline-block';
+    element.style.overflow = 'visible';
+    element.style.verticalAlign = 'top';
+  }
+
+  function initHeroContent() {
+    const preloader = document.getElementById('preloader');
+    const preloaderLetters = document.querySelectorAll('.preloader-letter');
+
+    // If preloader exists (initial load), wait for it to finish
+    if (preloader && preloaderLetters.length) {
+      initPreloader(preloader, preloaderLetters);
+    } else {
+      // If no preloader (client-side navigation), reveal immediately
+      revealHeroContent();
+    }
+
+    initDraggable();
+    initTooltip();
+    initScrollEffects();
+  }
+
+  function initScrollEffects() {
+    const section = document.querySelector('section') as HTMLElement;
+    const container = document.querySelector(
+      '.hero-section-container'
+    ) as HTMLElement;
+
+    if (!section || !container) return;
+
+    const isMobileDevice = isMobile();
+
+    // Reset styles just in case
+    container.style.position = '';
+    container.style.top = '';
+    container.style.zIndex = '';
+
+    let scrollConfig = {};
+
+    if (isMobileDevice) {
+      // Mobile: Force Transform Pinning
+      // This bypasses 'position: fixed' issues by using transforms to keep element in view.
+
+      // Spacer (Section)
+      section.style.position = '';
+      section.style.height = '';
+      section.style.zIndex = '';
+      container.style.position = '';
+      container.style.top = '';
+      container.style.width = '';
+      container.style.height = '';
+
+      // Enforce SVH for stability
+      section.style.minHeight = '100svh';
+      container.style.minHeight = '100svh';
+
+      scrollConfig = {
+        trigger: section,
+        start: 'top top',
+        end: 'bottom top',
+        pin: true,
+        pinSpacing: false,
+        pinType: 'transform' as 'transform', // Fixed TS Error and Logic
+        scrub: true,
+        anticipatePin: 1,
+      };
+    } else {
+      // Desktop: Standard GSAP Pin
+      scrollConfig = {
+        trigger: section,
+        start: 'top top',
+        end: '+=100%',
+        pin: true,
+        pinSpacing: false,
+        scrub: true,
+        anticipatePin: 1,
+      };
+    }
+
+    gsap.to(container, {
+      scrollTrigger: scrollConfig,
+      filter: 'blur(10px)',
+      scale: 0.9,
+      opacity: 0.2,
+      ease: 'none',
+    });
+  }
+
+  function initPreloader(preloader: HTMLElement, letters: NodeList) {
+    const tl = gsap.timeline();
+
+    // PHASE 1: Animate preloader letters in
+    tl.to(letters, {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: 'back.out(1.7)',
+    });
+
+    // PHASE 2: Hold & Fade Out
+    tl.to({}, { duration: 0.5 });
+    tl.to(letters, {
+      opacity: 0,
+      y: -30,
+      rotateX: 90,
+      duration: 0.5,
+      stagger: 0.04,
+      ease: 'back.in(1.7)',
+    });
+
+    // PHASE 3: Hide Preloader & Reveal Hero
+    tl.set(preloader, {
+      display: 'none',
+      zIndex: -1,
+      onComplete: () => {
+        revealHeroContent();
+      },
+    });
+  }
+
+  function revealHeroContent() {
+    // Notify navbar to reveal itself
+    document.dispatchEvent(new CustomEvent('reveal-navbar'));
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    const buttons = document.querySelectorAll('.hero-buttons-overlay button');
+
+    if (!heroWords.length) return;
+
+    // Split ACHIEVE letters specifically
+    const achieveHeroTitle = document.querySelector('.achieve-hero-title');
+    if (achieveHeroTitle) {
+      achieveHeroTitle.querySelectorAll('.hero-text-word').forEach((el) => {
+        wrapForAppearance(el as HTMLElement, true);
+      });
+    }
+
+    // Wrap headline words as single units
+    document.querySelectorAll('.headline-word').forEach((el) => {
+      wrapForAppearance(el as HTMLElement, false);
+    });
+
+    const chars = document.querySelectorAll('.char-inner');
+
+    const tl = gsap.timeline();
+
+    // Premium Staggered Character Reveal
+    tl.fromTo(
+      chars,
+      {
+        y: 40,
+        rotateX: -90,
+        opacity: 0,
+        transformOrigin: '50% 0%',
+      },
+      {
+        y: 0,
+        rotateX: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.04,
+        ease: 'back.out(1.7)',
+        onComplete: () => {
+          document
+            .querySelectorAll('.hero-title-row, .achieve-hero-title')
+            .forEach((row) => {
+              (row as HTMLElement).style.overflow = 'visible';
+            });
+          heroWords.forEach((word) => {
+            (word as HTMLElement).style.overflow = 'visible';
+          });
+        },
+      }
+    );
+
+    // Button Reveal Logic
+    if (buttonsOverlay && buttons.length) {
+      gsap.set(buttonsOverlay, {
+        visibility: 'visible',
+        pointerEvents: 'auto',
+      });
+      tl.fromTo(
+        buttons,
+        {
+          y: 50,
+          scale: 0.8,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'back.out(2)',
+        },
+        '-=1'
+      );
+    }
+
+    setTimeout(() => {
+      initBubbleButtons('.blob-btn');
+    }, 100);
+  }
+
+  function initDraggable() {
+    const heroWords = document.querySelectorAll('.hero-text-word');
+    let zIndexCounter = 1000;
+    let activeDragElement: HTMLElement | null = null;
+    let activeDragState: any = null;
+
+    const stopDragging = (element: HTMLElement) => {
+      element.classList.remove('dragging');
+      activeDragElement = null;
+      activeDragState = null;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!activeDragElement || !activeDragState) return;
+      const x = e.clientX - activeDragState.startX;
+      const y = e.clientY - activeDragState.startY;
+      activeDragElement.style.transform = `translate(${x}px, ${y}px) translateZ(0)`;
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (activeDragElement) stopDragging(activeDragElement);
+    };
+
+    heroWords.forEach((el: any) => {
+      el.addEventListener('mousedown', (e: MouseEvent) => {
+        e.preventDefault();
+        const transform = el.style.transform || '';
+        const match = transform.match(
+          /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/
+        );
+        const curX = match ? parseFloat(match[1]) : 0;
+        const curY = match ? parseFloat(match[2]) : 0;
+
+        el.style.zIndex = (zIndexCounter++).toString();
+        activeDragElement = el;
+        activeDragState = {
+          startX: e.clientX - curX,
+          startY: e.clientY - curY,
+        };
+        el.classList.add('dragging');
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+      });
+    });
+  }
+
+  function initTooltip() {
+    const tooltip = document.getElementById('drag-tooltip');
+    if (!tooltip) return;
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+
+    const updateTooltipPosition = (e: MouseEvent) => {
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+      const rect = tooltip.getBoundingClientRect();
+      const tooltipWidth = rect.width || 120;
+      const tooltipHeight = rect.height || 40;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
+        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
+      }
+      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
+        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
+      }
+    };
+
+    heroWords.forEach((word: any) => {
+      word.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          tooltip.classList.add('visible');
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mouseleave', () =>
+        tooltip.classList.remove('visible')
+      );
+      word.addEventListener('mousedown', () =>
+        tooltip.classList.remove('visible')
+      );
+    });
+  }
+
+  // Handle initialization on page load and Astro transitions
+  document.addEventListener('DOMContentLoaded', initHeroContent);
+  document.addEventListener('astro:page-load', initHeroContent);
+</script>
+
+<style is:global>
+  .font-nura {
+    font-family: 'Nura', serif !important;
+  }
+
+  .hero-section-container {
+    padding: 12vh 5vw 6vh !important;
+    min-height: 100vh; /* Fallback */
+    min-height: 100svh; /* Stable Mobile Height (prevents address bar glitch) */
+    /* will-change removed to avoid stacking context issues with pinning */
+  }
+
+  @media (min-width: 768px) {
+    .hero-section-container {
+      padding: 18vh 5vw 6vh !important;
+      min-height: auto;
+    }
+  }
+
+  .hero-text-word {
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    cursor: grab;
+    user-select: none;
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .hero-text-word.dragging {
+    z-index: 10000 !important;
+    cursor: grabbing;
+  }
+
+  .achieve-hero-title {
+    font-size: 19vw; /* Maximized for mobile */
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: #ff4500;
+  }
+
+  @media (min-width: 768px) {
+    .achieve-hero-title {
+      font-size: 18.5vw;
+    }
+  }
+
+  .headline-word {
+    font-size: 15vw;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  /* Mobile Maximized Size */
+  .headline-word.mobile-max {
+    font-size: 21vw;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  /* Desktop Smaller Size */
+  .headline-word.desktop-min {
+    font-size: 5vw;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  @media (min-width: 768px) {
+    .headline-word {
+      font-size: 5vw; /* Default fallback */
+    }
+  }
+
+  .hero-buttons-overlay {
+    position: relative;
+    display: flex;
+    gap: calc(36 / 1920 * 100vw);
+    z-index: 20;
+    visibility: hidden;
+    pointer-events: none;
+    justify-content: center; /* Center on mobile */
+    width: 100%; /* Full width for centering */
+  }
+
+  @media (min-width: 768px) {
+    .hero-buttons-overlay {
+      justify-content: flex-start;
+      width: auto;
+    }
+  }
+
+  .hero-buttons-overlay .cutout-button {
+    opacity: 0;
+  }
+
+  .cutout-button {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem; /* Larger touch targets on mobile */
+    font-size: 1.1rem; /* Larger text on mobile */
+    white-space: nowrap; /* Keep on one line */
+    border-radius: 9999px;
+    font-family: 'Nura', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    isolation: isolate;
+    transition:
+      transform 0.2s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  @media (min-width: 1024px) {
+    .cutout-button {
+      padding: calc(20 / 1920 * 100vw) calc(42 / 1920 * 100vw);
+      font-size: calc(24 / 1920 * 100vw);
+    }
+  }
+
+  .cutout-button.primary {
+    background: #222831;
+    color: #f2f2f2;
+    border: none;
+  }
+
+  .cutout-button.primary:hover {
+    color: #f2f2f2 !important;
+  }
+
+  .cutout-button.secondary {
+    background: transparent;
+    border: 2px solid #222831;
+    color: #222831;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .cutout-button.secondary:hover {
+    border-color: #ff4500;
+    color: #f2f2f2 !important;
+  }
+
+  .blob-btn {
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .blob-btn .work-blob {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4500;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .blob-btn .work-expand {
+    transform: translate(-50%, -50%) scale(40);
+  }
+
+  .blob-btn:hover {
+    color: #f2f2f2 !important;
+  }
+
+  .drag-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    opacity: 0;
+    transform: translate(10px, 10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    background: #222831;
+    color: #f2f2f2;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Nura', serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-left: -10px;
+    margin-top: 10px;
+  }
+
+  .drag-tooltip.visible {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
+</style>

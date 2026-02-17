@@ -1,0 +1,287 @@
+---
+// FAQSection.astro
+
+const faqs = [
+  {
+    id: 1,
+    question: 'What services do you offer?',
+    answer: 'We offer comprehensive web design and development services including UI/UX design, frontend and backend development, AI integration, e-commerce solutions, and custom software development. Our team works with modern technologies to create scalable, high-performance digital solutions.',
+  },
+  {
+    id: 2,
+    question: 'How long does a typical project take?',
+    answer: 'Project timelines vary depending on scope and complexity. A simple website typically takes 4-6 weeks, while more complex applications can take 3-6 months. We provide detailed timelines during the initial consultation and keep you updated throughout the development process.',
+  },
+  {
+    id: 3,
+    question: 'What is your design process?',
+    answer: 'Our design process begins with discovery and research to understand your brand and goals. We then move to wireframing and prototyping, followed by design iterations based on your feedback. Once approved, we proceed with development, testing, and deployment. We maintain close communication throughout every stage.',
+  },
+  {
+    id: 4,
+    question: 'Do you provide ongoing support and maintenance?',
+    answer: 'Yes, we offer comprehensive maintenance and support packages. This includes regular updates, security patches, performance monitoring, content updates, and technical support. We can customize a maintenance plan that fits your specific needs and budget.',
+  },
+  {
+    id: 5,
+    question: 'Can you work with our existing brand guidelines?',
+    answer: 'Absolutely. We can work within your existing brand guidelines or help develop new ones. Our design team ensures all digital assets align with your brand identity, maintaining consistency across all touchpoints while optimizing for digital experiences.',
+  },
+  {
+    id: 6,
+    question: 'What technologies do you use?',
+    answer: 'We work with a wide range of modern technologies including React, Next.js, Astro, TypeScript, Node.js, and various databases. For AI integration, we work with OpenAI, Anthropic, and custom machine learning solutions. We choose technologies based on your project requirements and long-term goals.',
+  },
+  {
+    id: 7,
+    question: 'How do you ensure website performance and SEO?',
+    answer: 'Performance and SEO are built into every project from the start. We optimize for Core Web Vitals, implement proper semantic HTML, ensure fast loading times, and follow SEO best practices. We conduct regular performance audits and provide recommendations for continuous improvement.',
+  },
+];
+---
+
+<section class="relative py-16 sm:py-20 md:py-32 bg-white" id="faq">
+  <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+    <div class="w-full mx-auto pt-12 pb-12 md:pt-16 md:pb-16 lg:pt-20 lg:pb-20">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 md:gap-12 lg:gap-16 lg:items-start">
+        <!-- Left Side - Sticky Title (Desktop Only) -->
+        <div class="faq-title-container">
+          <h2 class="text-4xl sm:text-5xl md:text-6xl font-black font-nura text-black" id="faq-title">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <!-- Right Side - FAQ Items -->
+        <div class="faq-items-container">
+          {faqs.map((faq, index) => (
+            <div class="faq-item-wrapper" data-faq-index={index}>
+              <details class="faq-item">
+                <summary class="faq-question">
+                  <span class="faq-question-text">{faq.question}</span>
+                  <svg
+                    class="faq-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </summary>
+                <div class="faq-content">
+                  <p class="faq-answer" data-reveal="words" data-reveal-duration="0.5" data-reveal-delay="0.1" data-reveal-stagger="0.03">{faq.answer}</p>
+                </div>
+              </details>
+              
+              <!-- Divider Line with Fill Animation -->
+              {index < faqs.length - 1 && (
+                <div class="faq-divider-wrapper">
+                  <div class="faq-divider-line"></div>
+                  <div class="faq-divider-fill"></div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #faq {
+    background-color: #ffffff;
+  }
+
+  .faq-title-container {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .faq-title-container {
+      padding: 2rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .faq-title-container {
+      padding: 2.5rem 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .faq-title-container {
+      padding: 3rem 4rem;
+      align-self: flex-start !important;
+      height: fit-content;
+      z-index: 10;
+      /* Sticky will be handled by ScrollTrigger pin */
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .faq-title-container {
+      padding: 4rem 5rem;
+    }
+  }
+
+  #faq-title {
+    color: #000000;
+  }
+
+  .faq-items-container {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .faq-items-container {
+      padding: 2rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .faq-items-container {
+      padding: 2.5rem 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .faq-items-container {
+      padding: 3rem 4rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .faq-items-container {
+      padding: 4rem 5rem;
+    }
+  }
+
+  .faq-item-wrapper {
+    margin-bottom: 0;
+  }
+
+  .faq-item {
+    display: block;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000000;
+    font-family: 'HKGrotesk', system-ui, sans-serif;
+    line-height: 1.5;
+    flex: 1;
+    padding-right: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .faq-question-text {
+      font-size: 1.5rem;
+    }
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: #000000;
+    transition: transform 0.3s ease;
+    transform-origin: center;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-content {
+    overflow: hidden;
+    /* Initial state set by GSAP */
+  }
+
+  .faq-answer {
+    padding: 0 0 1.5rem 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #000000;
+    opacity: 0.7;
+    font-family: 'HKGrotesk', system-ui, sans-serif;
+  }
+
+  @media (min-width: 768px) {
+    .faq-answer {
+      font-size: 1.125rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  .faq-divider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .faq-divider-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #000000;
+    opacity: 0.1;
+  }
+
+  .faq-divider-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: #000000;
+    transform-origin: left;
+    will-change: width;
+  }
+</style>
+
+<script>
+  import { initFAQAccordion } from '../scripts/faq-accordion';
+  import { initFAQAnimations } from '../scripts/faq-animations';
+
+  // Initialize FAQ accordion and animations
+  if (typeof window !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initFAQAccordion();
+      initFAQAnimations();
+    });
+
+    // Also initialize on Astro page load
+    document.addEventListener('astro:page-load', () => {
+      initFAQAccordion();
+      initFAQAnimations();
+    });
+  }
+</script>

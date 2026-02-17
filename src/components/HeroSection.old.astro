@@ -1,0 +1,1262 @@
+---
+// HeroSection.astro
+---
+
+<section
+  class="relative w-full h-screen bg-[#F2F2F2] overflow-hidden"
+  style="isolation: auto;"
+>
+  <!-- Hero SVG Container - Acts as the Glass Card -->
+  <div class="hero-svg-container">
+    <svg
+      id="mySVG"
+      class="hero-svg"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1920 1080"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <mask id="heroMask">
+          <path id="maskPath" fill="#F2F2F2" d="M0,0 H1920 V1080 H0 Z"></path>
+        </mask>
+      </defs>
+
+      <!-- Glass Layer (Masked by SVG Path) -->
+      <foreignObject
+        x="0"
+        y="0"
+        width="1920"
+        height="1080"
+        mask="url(#heroMask)"
+        style="overflow: hidden;"
+      >
+        <div class="glass-content-wrapper solid-black">
+          <!-- Monochrome card background -->
+        </div>
+      </foreignObject>
+
+      <!-- Invisible reference path for GSAP positioning if needed outside clip -->
+      <path id="heroPath" fill="none" d=""></path>
+
+      <!-- Legacy Hero Content (Commented Out)
+      <foreignObject
+        x="0"
+        y="0"
+        width="1920"
+        height="1080"
+        class="hero-content-fo"
+        style="overflow: visible;"
+      >
+        <div
+          {...{ xmlns: 'http://www.w3.org/1999/xhtml' }}
+          class="hero-svg-content"
+        >
+          <h1 id="achieve-hero-title" class="achieve-hero-title-svg">
+            <span class="hero-letter inline-block" data-tooltip="Drag">A</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">C</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">H</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">I</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">E</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">V</span>
+            <span class="hero-letter inline-block" data-tooltip="Drag">E</span>
+          </h1>
+
+          <div class="hero-subtitle-svg">
+            <span class="hero-text-word preserve-3d" data-tooltip="Drag">WEB</span>
+            <span class="hero-text-word preserve-3d" data-tooltip="Drag">DESIGN</span>
+            <span class="hero-text-word preserve-3d" data-tooltip="Drag">+</span>
+            <span class="hero-text-word preserve-3d" data-tooltip="Drag">DEV</span>
+            <span class="hero-text-word preserve-3d" data-tooltip="Drag">STUDIO</span>
+          </div>
+        </div>
+      </foreignObject>
+      -->
+
+      <!-- Refactored Main Text (Previously Cutout Text) -->
+      <!-- Refactored Main Text (Previously Cutout Text) -->
+      <foreignObject
+        x="0"
+        y="200"
+        width="1920"
+        height="600"
+        class="main-hero-text-fo"
+        style="overflow: visible;"
+      >
+        <div
+          {...{ xmlns: 'http://www.w3.org/1999/xhtml' }}
+          class="w-full h-full flex flex-col items-start justify-center text-left"
+          style="padding-left: 80px;"
+        >
+          <div class="main-hero-title-row">
+            <span class="hero-text-word" data-tooltip="Drag">Facem</span>
+            <span class="hero-text-word" data-tooltip="Drag">site-urile</span>
+          </div>
+          <div class="main-hero-title-row">
+            <span class="hero-text-word" data-tooltip="Drag">sa</span>
+            <span class="hero-text-word" data-tooltip="Drag">iasa</span>
+            <span class="hero-text-word" data-tooltip="Drag">in</span>
+          </div>
+          <div class="main-hero-title-row">
+            <span class="hero-text-word accent" data-tooltip="Drag"
+              >evidenta</span
+            >
+          </div>
+        </div>
+      </foreignObject>
+    </svg>
+  </div>
+
+  <!-- Hero Buttons - HTML overlay for real backdrop-filter -->
+  <div class="hero-buttons-overlay">
+    <button class="cutout-button primary blob-btn" id="lets-talk-btn"
+      >Let's Talk</button
+    >
+    <button class="cutout-button secondary blob-btn" id="process-btn"
+      >Our Process</button
+    >
+  </div>
+
+  <!-- ========== MOBILE HERO ========== -->
+  <div class="mobile-hero">
+    <div class="mobile-hero-card">
+      <!-- Mobile Content Overlay -->
+      <div class="mobile-hero-content">
+        <div class="mobile-hero-title">
+          <div class="mobile-title-row">
+            <span>Facem</span><span>site-urile</span>
+          </div>
+          <div class="mobile-title-row">
+            <span>sa</span><span>iasa</span><span>in</span>
+          </div>
+          <div class="mobile-title-row">
+            <span class="accent">evidenta</span>
+          </div>
+        </div>
+        <div class="mobile-hero-buttons">
+          <button
+            class="cutout-button primary blob-btn"
+            id="lets-talk-btn-mobile">Let's Talk</button
+          >
+          <button
+            class="cutout-button secondary blob-btn"
+            id="process-btn-mobile">Our Process</button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drag Tooltip -->
+  <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
+</section>
+
+<style>
+  /* Hero SVG container - The Glass Card */
+  .hero-svg-container {
+    position: absolute;
+    width: 100%; /* Start Full Screen */
+    height: 100%; /* Start Full Screen */
+    top: 0; /* Start Full Screen */
+    left: 0; /* Start Full Screen */
+    z-index: 10;
+    overflow: hidden;
+    opacity: 0; /* Initial state for animation */
+  }
+
+  /* Glass Effect Implementation */
+  .glass-content-wrapper.solid-black {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #222831; /* Solid black as requested */
+    z-index: 1;
+  }
+
+  .hero-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  .main-hero-text-fo {
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  .main-hero-title-row {
+    display: flex;
+    gap: 1em; /* Increased gap */
+    height: 155px;
+    align-items: center;
+  }
+
+  .hero-text-word {
+    font-size: 150px;
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    color: #f2f2f2 !important;
+    line-height: 0.8 !important;
+    cursor: grab;
+    will-change: transform;
+    user-select: none;
+    pointer-events: auto;
+    margin-right: 0.4em; /* Explicit margin to fix joined words issue */
+  }
+
+  .hero-text-word:last-child {
+    margin-right: 0;
+  }
+
+  .hero-text-word.accent {
+    color: #ff4500 !important;
+  }
+
+  .hero-text-word:active {
+    cursor: grabbing;
+  }
+
+  .hero-text-word.dragging {
+    z-index: 10000 !important;
+  }
+
+  .hero-buttons-overlay {
+    position: absolute;
+    bottom: 12%;
+    left: calc(4% + 4.17vw);
+    display: flex;
+    gap: calc(36 / 1920 * 100vw);
+    z-index: 20;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .hero-buttons-overlay .cutout-button {
+    opacity: 0;
+  }
+
+  /* === SVG-integrated Hero Content === */
+  .hero-svg-content {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 80px;
+    box-sizing: border-box;
+    padding-bottom: 200px; /* Move content higher */
+  }
+
+  .achieve-hero-title-svg {
+    font-size: 280px;
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    color: #ff4500 !important;
+    line-height: 0.9 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0;
+    letter-spacing: -0.06em;
+  }
+
+  .hero-subtitle-svg {
+    font-size: 64px;
+    font-weight: 900;
+    font-family: 'Nura', serif;
+    color: #fff;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    text-align: left;
+    margin-top: 24px;
+  }
+
+  .hero-buttons-svg {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+
+  .cutout-bottom-left {
+    bottom: 12%; /* Move upwards as requested */
+    left: 4rem; /* Match hero padding logic for alignment */
+    height: auto; /* Allow content to dictate height */
+    align-items: center; /* Vertically center content */
+    pointer-events: auto; /* Ensure interactive */
+  }
+
+  .cutout-bottom-left .cutout-inner {
+    flex-direction: row; /* Horizontal layout for buttons */
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Removed .cutout-bottom-right CSS as it's now in SVG */
+
+  /* Responsive Positioning */
+  @media (max-width: 1024px) {
+    .cutout-bottom-left {
+      left: 2rem;
+    }
+  }
+
+  .cutout-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: #f2f2f2; /* White text on black background */
+  }
+
+  .cutout-inner.text-right {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  /* Buttons - viewport-scaled to match SVG coordinate space */
+  .cutout-button {
+    padding: calc(20 / 1920 * 100vw) calc(42 / 1920 * 100vw);
+    font-size: calc(24 / 1920 * 100vw);
+    border-radius: 9999px;
+    font-family: 'Nura', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    transition:
+      transform 0.2s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Let's Talk - solid white, white text on hover */
+  .cutout-button.primary {
+    background: #f2f2f2;
+    color: #222831;
+    border: none;
+  }
+
+  .cutout-button.primary:hover {
+    color: #f2f2f2 !important;
+  }
+
+  /* Our Process - High contrast monochrome */
+  .cutout-button.secondary {
+    background: transparent;
+    border: 2px solid #f2f2f2;
+    color: #f2f2f2;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .cutout-button.secondary:hover {
+    border-color: #ff4500;
+    color: #f2f2f2 !important;
+  }
+
+  /* Blob Button Effect */
+  .blob-btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .blob-btn :global(.work-blob) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4500; /* Accent Orange */
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .blob-btn :global(.work-expand) {
+    transform: translate(-50%, -50%) scale(40); /* Larger scale for SVG-sized buttons */
+  }
+
+  .blob-btn:hover {
+    color: #f2f2f2 !important; /* White text on hover for both buttons */
+  }
+
+  /* Text */
+  .cutout-text-small {
+    font-size: clamp(0.875rem, 1vw, 1rem);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .cutout-text-large {
+    font-size: clamp(1.25rem, 2vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    font-family: 'Nura', sans-serif;
+  }
+
+  /* Hero content */
+  #hero-content {
+    will-change: opacity;
+    position: relative;
+    position: relative;
+    z-index: 20; /* Above everything */
+    pointer-events: none; /* Allow clicks to pass through to buttons if needed */
+  }
+
+  /* Hero content container - matches navbar padding exactly */
+  .hero-content-container {
+    padding-left: 4rem;
+    padding-right: 4.5rem;
+  }
+
+  /* Responsive padding for smaller screens */
+  @media (max-width: 1024px) {
+    .hero-content-container {
+      padding-left: 2rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-content-container {
+      padding-left: 1.5rem;
+      padding-right: 1rem;
+    }
+  }
+
+  /* Hero letters */
+  .hero-letter {
+    cursor: grab;
+    font-family: 'Nura', serif !important;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: none;
+    position: relative;
+    pointer-events: auto;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .hero-letter:active {
+    cursor: grabbing;
+  }
+
+  .hero-letter.dragging {
+    filter: brightness(1.05);
+    transition: none;
+    cursor: grabbing !important;
+    pointer-events: auto;
+    z-index: 10000 !important;
+  }
+
+  /* Hero text words */
+  .hero-text-word {
+    cursor: grab;
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: none;
+    position: relative;
+    pointer-events: auto;
+  }
+
+  .hero-text-word:active {
+    cursor: grabbing;
+  }
+
+  .hero-text-word.dragging {
+    filter: brightness(1.05);
+    transition: none;
+    cursor: grabbing !important;
+    pointer-events: auto;
+    z-index: 10000 !important;
+  }
+
+  /* Hero Content Wrapper */
+  .hero-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding-bottom: 15vh; /* Move text upwards */
+  }
+
+  .hero-subtitle {
+    width: 100%;
+    margin-top: clamp(0.5rem, 1vw, 1.5rem); /* Closer spacing */
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* Subtitle text - starts at left padding (normal flow, no absolute positioning) */
+  .hero-subtitle-text {
+    font-size: clamp(0.875rem, 1rem, 1.5rem);
+    font-weight: 900;
+    font-family: 'Nura', serif;
+    color: #ff4500;
+    display: flex;
+    gap: clamp(0.5rem, 0.75vw, 1.5rem);
+    flex-wrap: wrap;
+    text-align: left;
+  }
+
+  /* Desktop: larger font */
+  @media (min-width: 768px) {
+    .hero-subtitle-text {
+      font-size: clamp(1.25rem, 1.25rem + 1.5vw, 4rem);
+      gap: clamp(0.75rem, 1vw, 1.5rem);
+    }
+
+    .hero-subtitle {
+      margin-bottom: clamp(0.5rem, 2vw, 3rem);
+    }
+  }
+
+  /* Title wrapper - spans full width from left to right padding */
+  .hero-title-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* Achieve title - spans full width, letters distributed from left to right */
+  .achieve-hero-title {
+    font-size: clamp(4rem, 8vw, 11rem);
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    color: #ff4500 !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0;
+    letter-spacing: -0.02em; /* Slightly tighter spacing */
+  }
+
+  @media (min-width: 768px) {
+    .achieve-hero-title {
+      font-size: clamp(8rem, 12vw, 11rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .achieve-hero-title {
+      font-size: clamp(10rem, 14vw, 14rem);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .achieve-hero-title {
+      font-size: clamp(12rem, 16vw, 16rem);
+    }
+  }
+
+  /* Drag Tooltip */
+  .drag-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    opacity: 0;
+    transform: translate(10px, 10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    background: #f2f2f2;
+    color: black;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Nura', serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-left: -10px;
+    margin-top: 10px;
+  }
+
+  .drag-tooltip.visible {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
+
+  /* ============================================
+     MOBILE HERO — default: hidden
+     ============================================ */
+  .mobile-hero {
+    display: none;
+  }
+
+  /* ============================================
+     MOBILE LAYOUT (< 768px)
+     ============================================ */
+  @media (max-width: 767px) {
+    /* Hide desktop SVG-based hero elements */
+    .hero-svg-container,
+    .hero-buttons-overlay,
+    .cutout-text,
+    .drag-tooltip {
+      display: none !important;
+    }
+
+    /* Show mobile hero */
+    .mobile-hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 5rem 1rem 1rem;
+      box-sizing: border-box;
+      background: #f2f2f2; /* Solid white background for mobile hero */
+    }
+
+    /* Card — initial state for GSAP */
+    .mobile-hero-card {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 9 / 16;
+      max-height: calc(100vh - 7rem);
+      border-radius: 24px;
+      overflow: hidden;
+      opacity: 0;
+      transform: scale(1.15); /* Start scaled up */
+      background: #222831; /* Solid black card on mobile */
+    }
+
+    .mobile-hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.25rem;
+      z-index: 2;
+    }
+
+    .mobile-hero-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Left-aligned as requested */
+      width: 100%;
+      line-height: 0.85;
+      margin-bottom: 0.5rem;
+      gap: 0.8rem;
+    }
+
+    .mobile-title-row {
+      display: flex;
+      justify-content: flex-start; /* Left-aligned */
+      gap: 6vw; /* Spacer fallback */
+      width: 100%;
+      font-family: 'Nura', serif !important;
+      font-weight: 900;
+      font-size: 12vw; /* Further reduced to ensure it fits on small phones */
+      color: #f2f2f2; /* White as requested */
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      line-height: 0.85;
+      line-height: 0.85;
+      /* opacity: 0; Removed to fix visibility */
+      /* transform: translateY(30px); Removed */
+    }
+
+    .mobile-title-row span {
+      margin-right: 4vw; /* Robust spacing for mobile */
+    }
+
+    .mobile-title-row span:last-child {
+      margin-right: 0;
+    }
+
+    .mobile-title-row span.accent {
+      color: #ff4500;
+    }
+
+    .mobile-hero-subtitle {
+      font-family: 'Nura', serif !important;
+      font-weight: 900;
+      font-size: 6vw;
+      color: #f2f2f2;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      width: 100%;
+      text-align: justify;
+      text-align-last: justify;
+      margin-top: 0.25rem;
+      margin-top: 0.25rem;
+      opacity: 1; /* Fixed visibility */
+      /* transform: translateY(15px); Removed */
+    }
+
+    .mobile-hero-buttons {
+      position: absolute;
+      bottom: 2rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .mobile-hero-buttons .cutout-button {
+      padding: 12px 24px;
+      font-size: 14px;
+      flex: 1;
+      text-align: center;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .mobile-hero-buttons .cutout-button.secondary {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      will-change: backdrop-filter;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { initHeroAnim } from '../scripts/simultaneous-reveal';
+  import { initBubbleButtons } from '../scripts/bubble-button';
+
+  // Helper to prepare elements for Slide Reveal
+  function wrapForSlide(element: HTMLElement) {
+    // 1. Wrap content in a span (the slider)
+    const text = element.innerText;
+    element.innerHTML = `<span class="word-inner" style="display: inline-block; will-change: transform;">${text}</span>`;
+
+    // 2. Set overflow hidden on the parent ROW to mask the slide-in
+    const parentRow = element.closest(
+      '.main-hero-title-row, .mobile-title-row'
+    ) as HTMLElement;
+    if (parentRow) {
+      parentRow.style.overflow = 'hidden';
+    }
+
+    // 3. Ensure component display for transform
+    element.style.display = 'inline-block';
+    element.style.overflow = 'hidden'; // Ensure word itself clips if needed
+    element.style.verticalAlign = 'top';
+  }
+
+  function initPreloader() {
+    console.log('🎬 Starting preloader animation...');
+
+    const preloader = document.getElementById('preloader');
+    const preloaderText = document.getElementById('preloader-text');
+    const heroSvgContainer = document.querySelector('.hero-svg-container');
+    const preloaderLetters = document.querySelectorAll('.preloader-letter');
+    const scrollIndicator = document.getElementById('scroll-indicator');
+
+    console.log('📊 Elements found:', {
+      preloader: !!preloader,
+      preloaderText: !!preloaderText,
+      heroSvgContainer: !!heroSvgContainer,
+      preloaderLetters: preloaderLetters.length,
+      scrollIndicator: !!scrollIndicator,
+    });
+
+    if (!preloader || !preloaderText || !preloaderLetters.length) {
+      console.error('❌ Missing required elements');
+      return;
+    }
+
+    const isMobile = window.innerWidth < 1024;
+    console.log('📱 Device:', isMobile ? 'Mobile' : 'Desktop');
+
+    // Master timeline
+    setTimeout(() => {
+      const tl = gsap.timeline({
+        onStart: () => console.log('▶️ Timeline started'),
+        onComplete: () => console.log('✅ Timeline complete'),
+      });
+
+      // PHASE 1: Animate preloader letters in with 3D flip (staggered)
+      tl.to(preloaderLetters, {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'back.out(1.7)',
+        onComplete: () =>
+          console.log('✓ Phase 1: Preloader letters animated in'),
+      });
+
+      // PHASE 2: Hold
+      tl.to(
+        {},
+        {
+          duration: 0.3,
+        }
+      );
+
+      // PHASE 3: Fade out preloader
+      tl.to(preloaderLetters, {
+        opacity: 0,
+        y: -30,
+        rotateX: 90,
+        duration: 0.5,
+        stagger: 0.04,
+        ease: 'back.in(1.7)',
+        onComplete: () => console.log('✓ Phase 3: Preloader faded out'),
+      });
+
+      // PHASE 4: Hide preloader
+      tl.set(preloader, {
+        display: 'none',
+        zIndex: -1,
+        onComplete: () => {
+          console.log('✓ Phase 4: Preloader hidden');
+          // Trigger Mobile Hero Reveal if mobile view
+          initMobileHero();
+        },
+      });
+
+      // PHASE 5: Desktop SVG Animation (only if not mobile)
+      const isMobileView = window.innerWidth < 768; // check window width for desktop logic
+
+      if (!isMobileView && heroSvgContainer) {
+        // === DESKTOP: SVG Reveal Sequence ===
+        const svgTl = gsap.timeline({
+          onStart: () => console.log('🚀 Starting SVG Reveal Sequence...'),
+        });
+
+        // 1. Fade In Full Screen
+        svgTl.to(heroSvgContainer, {
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+
+        // 2. Shrink to Card (Scale Down Effect)
+        svgTl.to(heroSvgContainer, {
+          width: '92%',
+          height: '84%',
+          top: '15%',
+          left: '4%',
+          borderRadius: '32px',
+          duration: 1.5,
+          ease: 'power3.inOut',
+          onComplete: () => {
+            console.log('✅ SVG Scaled Down. Starting path animation...');
+            // 3. Start Path Animation (Reveal Cutouts)
+            initHeroAnim('/SVG/svg1.svg', () => {
+              console.log('✅ SVG Animation Complete. Revealing content...');
+              revealHeroContent();
+            });
+          },
+        });
+      }
+
+      // PHASE 5.5: Hero Content Reveal (Triggered by callback, removed from main TL)
+      // The reveal logic is now inside revealHeroContent()
+
+      // PHASE 6: Removed (Hero letters are now handled by revealHeroContent)
+
+      // PHASE 7: Show scroll indicator
+      if (scrollIndicator) {
+        tl.to(scrollIndicator, {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          onComplete: () => console.log('✓ Phase 7: Scroll indicator shown'),
+        });
+      }
+
+      console.log('🎯 Timeline created');
+    }, 50); // Small delay to ensure layout is ready
+
+    // Helper function to reveal hero content
+    function revealHeroContent() {
+      console.log('✨ Revealing Hero Content (Fancy Style)...');
+
+      // Dispatch event to Navbar
+      document.dispatchEvent(new CustomEvent('reveal-navbar'));
+
+      const mainHeroTextParent = document.querySelector('.main-hero-text-fo');
+      const heroWords = document.querySelectorAll(
+        '.main-hero-text-fo .hero-text-word'
+      );
+      const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+      const buttons = document.querySelectorAll('.hero-buttons-overlay button');
+
+      if (mainHeroTextParent) {
+        // Animate Hero Words with Slide Reveal
+        heroWords.forEach((word) => wrapForSlide(word as HTMLElement));
+        const innerSpans = document.querySelectorAll(
+          '.main-hero-text-fo .hero-text-word .word-inner'
+        );
+
+        const tl = gsap.timeline();
+
+        // Ensure FO is visible
+        gsap.set(mainHeroTextParent, { opacity: 1 });
+
+        // Animate the inner span (Slide Up from 120%)
+        tl.fromTo(
+          innerSpans,
+          {
+            y: '120%',
+          },
+          {
+            y: '0%',
+            duration: 1.2,
+            stagger: 0.1,
+            ease: 'power3.out', // Smooth slide
+            onComplete: () => {
+              // Cleanup overflow for drag interaction and full visibility
+              document
+                .querySelectorAll('.main-hero-title-row')
+                .forEach((row) => {
+                  (row as HTMLElement).style.overflow = 'visible';
+                });
+              heroWords.forEach((word) => {
+                (word as HTMLElement).style.overflow = 'visible';
+              });
+            },
+          }
+        );
+
+        // Phase 2: Fancy Button Reveal
+        if (buttonsOverlay && buttons.length) {
+          gsap.set(buttonsOverlay, {
+            visibility: 'visible',
+            pointerEvents: 'auto',
+          });
+          tl.fromTo(
+            buttons,
+            {
+              y: 50,
+              scale: 0.8,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              duration: 1,
+              stagger: 0.2,
+              ease: 'back.out(2)',
+            },
+            '-=1.2' // Start while text is still assembling
+          );
+        }
+
+        // Initialize Blob Buttons
+        setTimeout(() => {
+          initBubbleButtons('.blob-btn');
+        }, 100);
+      }
+    }
+  }
+
+  // Initialize tooltip functionality
+  function initTooltip() {
+    if (window.innerWidth < 1024) return; // Desktop only
+
+    const tooltip = document.getElementById('drag-tooltip');
+    if (!tooltip) return;
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+
+    const updateTooltipPosition = (e: MouseEvent) => {
+      const rect = tooltip.getBoundingClientRect();
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+      const tooltipWidth = rect.width || 120;
+      const tooltipHeight = rect.height || 40;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
+        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
+      }
+      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
+        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
+      }
+    };
+
+    heroWords.forEach((element) => {
+      const el = element as HTMLElement;
+
+      el.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (!el.classList.contains('dragging')) {
+          tooltip.classList.add('visible');
+          updateTooltipPosition(e);
+        }
+      });
+
+      el.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!el.classList.contains('dragging')) {
+          updateTooltipPosition(e);
+        }
+      });
+
+      el.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+
+      el.addEventListener('mousedown', () => {
+        tooltip.classList.remove('visible');
+      });
+    });
+  }
+
+  // Initialize draggable functionality
+  function initDraggable() {
+    if (window.innerWidth < 1024) return; // Desktop only
+
+    const heroWords = document.querySelectorAll(
+      '.hero-text-word:not([data-draggable-initialized])'
+    );
+
+    let zIndexCounter = 1000;
+    let activeDragElement: HTMLElement | null = null;
+    let activeDragState: {
+      startX: number;
+      startY: number;
+      currentX: number;
+      currentY: number;
+    } | null = null;
+
+    const handleDocumentMouseMove = (e: MouseEvent) => {
+      if (!activeDragElement || !activeDragState) return;
+      e.preventDefault();
+      activeDragState.currentX = e.clientX - activeDragState.startX;
+      activeDragState.currentY = e.clientY - activeDragState.startY;
+      activeDragElement.style.transform = `translate(${activeDragState.currentX}px, ${activeDragState.currentY}px) translateZ(0)`;
+    };
+
+    const handleDocumentMouseUp = (e: MouseEvent) => {
+      if (activeDragElement) {
+        e.preventDefault();
+        stopDragging(activeDragElement);
+      }
+    };
+
+    const handleDocumentMouseLeave = () => {
+      if (activeDragElement) {
+        stopDragging(activeDragElement);
+      }
+    };
+
+    const handleWindowBlur = () => {
+      if (activeDragElement) {
+        stopDragging(activeDragElement);
+      }
+    };
+
+    const stopDragging = (element: HTMLElement) => {
+      element.classList.remove('dragging');
+      activeDragElement = null;
+      activeDragState = null;
+
+      document.removeEventListener('mousemove', handleDocumentMouseMove);
+      document.removeEventListener('mouseup', handleDocumentMouseUp);
+      document.removeEventListener('mouseleave', handleDocumentMouseLeave);
+      window.removeEventListener('blur', handleWindowBlur);
+    };
+
+    const makeDraggable = (elements: NodeListOf<Element>) => {
+      elements.forEach((el) => {
+        const element = el as HTMLElement;
+        element.setAttribute('data-draggable-initialized', 'true');
+
+        const handleMouseDown = (e: MouseEvent) => {
+          if (activeDragElement && activeDragElement !== element) {
+            return;
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const tooltip = document.getElementById('drag-tooltip');
+          if (tooltip) {
+            tooltip.classList.remove('visible');
+          }
+
+          const transform = element.style.transform || '';
+          const match = transform.match(
+            /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/
+          );
+          const currentX = match ? parseFloat(match[1]) : 0;
+          const currentY = match ? parseFloat(match[2]) : 0;
+
+          element.style.zIndex = (zIndexCounter++).toString();
+
+          activeDragElement = element;
+          activeDragState = {
+            startX: e.clientX - currentX,
+            startY: e.clientY - currentY,
+            currentX: currentX,
+            currentY: currentY,
+          };
+
+          element.classList.add('dragging');
+
+          document.addEventListener('mousemove', handleDocumentMouseMove);
+          document.addEventListener('mouseup', handleDocumentMouseUp);
+          document.addEventListener('mouseleave', handleDocumentMouseLeave);
+          window.addEventListener('blur', handleWindowBlur);
+        };
+
+        element.addEventListener('mousedown', handleMouseDown, true);
+      });
+    };
+
+    makeDraggable(heroWords);
+  }
+
+  // Standalone mobile hero animation — runs independently of preloader
+  function initMobileHero() {
+    // Use CSS-based detection: check if mobile hero is actually visible
+    const mobileHero = document.querySelector('.mobile-hero') as HTMLElement;
+    if (!mobileHero) return;
+    const computedStyle = window.getComputedStyle(mobileHero);
+    if (computedStyle.display === 'none') return; // Not mobile or hidden
+
+    const mobileCard = document.querySelector(
+      '.mobile-hero-card'
+    ) as HTMLElement;
+    if (!mobileCard) return;
+
+    // Check if already animated (opacity 1)
+    if (mobileCard.style.opacity === '1') {
+      console.log('📱 Mobile hero already visible, skipping.');
+      return;
+    }
+
+    console.log('📱 initMobileHero(): Mobile hero visible, starting reveal...');
+
+    const mobileTl = gsap.timeline({
+      delay: 0.1, // Start immediately after preloader finishes
+      onStart: () => console.log('🚀 Mobile Hero Timeline Started'),
+    });
+
+    // 1. Zoom intro — card starts scaled up, shrinks to normal
+    gsap.set(mobileCard, { scale: 1.15, opacity: 0 });
+    mobileTl.to(mobileCard, {
+      opacity: 1,
+      scale: 1,
+      duration: 1.2,
+      ease: 'back.out(1.7)',
+    });
+
+    // 2. Dispatch reveal-navbar to coordinate
+    document.dispatchEvent(new CustomEvent('reveal-navbar'));
+
+    // 3. Reveal title rows with Slide Reveal
+    // Target all distinct text elements in rows
+    const allMobileTextElements = document.querySelectorAll(
+      '.mobile-title-row > span'
+    );
+
+    allMobileTextElements.forEach((el) => wrapForSlide(el as HTMLElement));
+
+    const mobileInners = document.querySelectorAll(
+      '.mobile-title-row > span .word-inner'
+    );
+
+    mobileTl.fromTo(
+      mobileInners,
+      {
+        y: '120%',
+      },
+      {
+        y: '0%',
+        duration: 1.2,
+        stagger: 0.1,
+        ease: 'power3.out',
+        onComplete: () => {
+          // Cleanup overflow for mobile consistency
+          document.querySelectorAll('.mobile-title-row').forEach((row) => {
+            (row as HTMLElement).style.overflow = 'visible';
+          });
+          document
+            .querySelectorAll('.mobile-title-row > span')
+            .forEach((word) => {
+              (word as HTMLElement).style.overflow = 'visible';
+            });
+        },
+      },
+      '-=0.8'
+    );
+
+    // 4. Reveal buttons with spring effect
+    mobileTl.fromTo(
+      '.mobile-hero-buttons .cutout-button',
+      { opacity: 0, y: 30, scale: 0.8 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'back.out(2)',
+        onComplete: () => {
+          console.log('✅ Mobile Hero Reveal Complete');
+          initBubbleButtons('.blob-btn');
+        },
+      },
+      '-=0.8'
+    );
+  }
+
+  // Run on load
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initPreloader();
+        initDraggable();
+        initTooltip();
+      });
+    } else {
+      setTimeout(() => {
+        initPreloader();
+        initDraggable();
+        initTooltip();
+      }, 200);
+    }
+
+    document.addEventListener('astro:page-load', () => {
+      setTimeout(() => {
+        // If preloader exists, it will handle init. If not, fallback.
+        const preloader = document.getElementById('preloader');
+        if (!preloader) {
+          initMobileHero();
+        } else {
+          initPreloader();
+        }
+        initDraggable();
+        initTooltip();
+      }, 200);
+    });
+  }
+</script>

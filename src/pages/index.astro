@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import IntroTextSection from '../components/IntroTextSection.astro';
+import Marquee from '../components/Marquee.astro';
+import FeaturedWork from '../components/FeaturedWork.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import AboutUsSection from '../components/AboutUsSection.astro';
+import OurProcessSection from '../components/OurProcessSection.astro';
+import FAQSection from '../components/FAQSection.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Achieve Studio - Web Design & Development"
+  description="Premium web design and development studio. We create beautiful, high-performance websites and applications for modern brands."
+>
+  <main>
+    <HeroSection />
+
+    <IntroTextSection />
+
+    <Marquee />
+
+    <FeaturedWork />
+
+    <Marquee />
+
+    <ServicesSection />
+
+    <Marquee />
+
+    <AboutUsSection />
+
+    <OurProcessSection />
+
+    <FAQSection />
+
+    <Footer />
+  </main>
+</Layout>
+
+<style is:global>
+  main {
+    min-height: 100vh;
+  }
+
+  /* Smooth page transitions */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(*) {
+      animation: fade-out 0.6s ease-out forwards;
+    }
+    ::view-transition-new(*) {
+      animation: fade-in 0.6s ease-out forwards;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+// AboutUsSection.astro
+
+const aboutText = `We believe in the power of thoughtful design and cutting-edge technology to create digital experiences that not only look beautiful but drive real business results. Every project we take on is an opportunity to push boundaries and create something extraordinary. We combine strategic thinking with creative execution. From initial concept to final deployment, we work closely with our clients to ensure every detail aligns with their vision and goals. We're not just building websites—we're crafting digital solutions that grow with your business. With years of experience across industries, we bring a unique perspective to every project. We stay ahead of the curve with the latest technologies and design trends, ensuring your digital presence is both modern and timeless.`;
+---
+
+<section class="relative py-16 sm:py-20 md:py-32 bg-dark-bg" id="about">
+  <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+    <div class="w-full mx-auto pt-12 pb-12 md:pt-16 md:pb-16 lg:pt-20 lg:pb-20">
+      <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-8 md:gap-12 lg:gap-16 items-center">
+        <!-- Left Side - Text -->
+        <div class="w-full order-2 md:order-1">
+          <p id="about-text" class="text-base sm:text-lg md:text-xl lg:text-2xl text-white/70 leading-relaxed" data-reveal="words" data-reveal-duration="0.6" data-reveal-delay="0.1" data-reveal-stagger="0.03" data-reveal-blur>
+            {aboutText}
+          </p>
+        </div>
+
+        <!-- Right Side - Image -->
+        <div id="about-image-container" class="w-full order-1 md:order-2">
+          <div class="relative w-full aspect-3/4 rounded-2xl overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" 
+              alt="About Us"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Performance optimization - isolate blur animations */
+  #about {
+    contain: layout style paint;
+  }
+  
+  /* About section text padding - responsive with left padding */
+  #about-text {
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    contain: layout style paint;
+    transform: translateZ(0); /* Force GPU layer */
+    will-change: filter, transform;
+  }
+
+  /* Image container - responsive padding */
+  #about-image-container {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    #about-text {
+      padding: 2rem 2rem 2rem 2.5rem;
+    }
+    
+    #about-image-container {
+      padding: 2rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    #about-text {
+      padding: 2.5rem 3rem 2.5rem 3.5rem;
+    }
+    
+    #about-image-container {
+      padding: 2.5rem 3rem 2.5rem 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #about-text {
+      padding: 3rem 4rem 3rem 4.5rem;
+    }
+    
+    #about-image-container {
+      padding: 3rem 4rem 3rem 0;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    #about-text {
+      padding: 4rem 5rem 4rem 5.5rem;
+    }
+    
+    #about-image-container {
+      padding: 4rem 5rem 4rem 0;
+    }
+  }
+</style>

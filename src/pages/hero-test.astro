@@ -1,0 +1,602 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Hero Test" description="Test page for new hero layout">
+  <main
+    class="w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
+  >
+    <!-- Main Content Container with fixed padding to prevent gluing to edges -->
+    <div
+      class="hero-test-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0"
+    >
+      <!-- Top: ACHIEVE -->
+      <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
+        <h1 class="achieve-hero-title flex justify-between w-full">
+          <span class="hero-text-word" data-tooltip="Drag">A</span>
+          <span class="hero-text-word" data-tooltip="Drag">C</span>
+          <span class="hero-text-word" data-tooltip="Drag">H</span>
+          <span class="hero-text-word" data-tooltip="Drag">I</span>
+          <span class="hero-text-word" data-tooltip="Drag">E</span>
+          <span class="hero-text-word" data-tooltip="Drag">V</span>
+          <span class="hero-text-word" data-tooltip="Drag">E</span>
+        </h1>
+      </div>
+
+      <!-- Middle: Headline -->
+      <div
+        class="hero-middle flex-1 md:flex-none flex flex-col justify-center items-center md:items-start pl-0 md:pl-2 md:mb-32 lg:mb-0 w-full"
+      >
+        <!-- Mobile Layout: 3 Stacked Rows (Visible only on mobile) -->
+        <div class="md:hidden w-full flex flex-col items-center justify-center">
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max"
+              data-tooltip="Drag">CREĂM</span
+            >
+          </div>
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max"
+              data-tooltip="Drag">IMPACT</span
+            >
+          </div>
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max accent text-[#ff4500]"
+              data-tooltip="Drag">DIGITAL</span
+            >
+          </div>
+        </div>
+
+        <!-- Desktop Layout: 1 Single Row (Visible only on desktop) -->
+        <div
+          class="hidden md:flex hero-title-row justify-start gap-x-[1vw] w-full"
+        >
+          <span
+            class="hero-text-word headline-word desktop-min"
+            data-tooltip="Drag">CREĂM</span
+          >
+          <span
+            class="hero-text-word headline-word desktop-min"
+            data-tooltip="Drag">IMPACT</span
+          >
+          <span
+            class="hero-text-word headline-word desktop-min accent text-[#ff4500]"
+            data-tooltip="Drag">DIGITAL</span
+          >
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div
+        class="hero-bottom w-full flex flex-col md:flex-row items-center md:items-end justify-between gap-12 md:gap-32 lg:gap-0"
+      >
+        <!-- Functional Buttons (Literal 1:1 Copy from HeroSection.astro) -->
+        <div class="hero-buttons-overlay">
+          <button class="cutout-button primary blob-btn" id="lets-talk-btn"
+            >Let's Talk</button
+          >
+          <button class="cutout-button secondary blob-btn" id="process-btn"
+            >Our Process</button
+          >
+        </div>
+
+        <!-- Studio Label -->
+        <div class="text-right hidden md:block">
+          <p
+            class="font-nura font-bold text-[#222831] text-xs md:text-xl uppercase leading-tight tracking-wide"
+          >
+            PREMIUM<br />
+            WEB DEVELOPMENT<br />
+            & DESIGN STUDIO
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drag Tooltip -->
+    <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
+  </main>
+
+  <!-- Dummy Transparent Next Section for Testing Overlap -->
+  <section
+    class="min-h-screen flex items-center justify-center relative z-10 pointer-events-none"
+  >
+    <div class="max-w-4xl text-center p-10">
+      <h2 class="text-6xl font-black text-[#222831] mb-8">NEXT SECTION</h2>
+      <p class="text-2xl text-[#222831] font-bold">
+        This content scrolls over the pinned hero.<br />
+        The background is transparent.<br />
+        Hero should blur underneath.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { initBubbleButtons } from '../scripts/bubble-button';
+  import { isMobile } from '../scripts/smooth-scroll';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Helper to prepare elements for Slide Reveal
+  function wrapForSlide(element: HTMLElement) {
+    const text = element.innerText;
+    element.innerHTML = `<span class="word-inner" style="display: inline-block; will-change: transform;">${text}</span>`;
+    const parentRow = element.parentElement;
+    if (parentRow) {
+      parentRow.style.overflow = 'hidden';
+    }
+    element.style.display = 'inline-block';
+    element.style.overflow = 'hidden';
+    element.style.verticalAlign = 'top';
+  }
+
+  function initPreloader() {
+    const preloader = document.getElementById('preloader');
+    const preloaderLetters = document.querySelectorAll('.preloader-letter');
+
+    // On test page, reveal content immediately if no preloader
+    if (!preloader || !preloaderLetters.length) {
+      revealHeroContent();
+      return;
+    }
+
+    const tl = gsap.timeline();
+
+    // PHASE 1: Animate preloader letters in
+    tl.to(preloaderLetters, {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: 'back.out(1.7)',
+    });
+
+    // PHASE 2: Hold & Fade Out
+    tl.to({}, { duration: 0.5 });
+    tl.to(preloaderLetters, {
+      opacity: 0,
+      y: -30,
+      rotateX: 90,
+      duration: 0.5,
+      stagger: 0.04,
+      ease: 'back.in(1.7)',
+    });
+
+    // PHASE 3: Hide Preloader & Reveal Content
+    tl.set(preloader, {
+      display: 'none',
+      zIndex: -1,
+      onComplete: () => {
+        revealHeroContent();
+      },
+    });
+  }
+
+  function revealHeroContent() {
+    document.dispatchEvent(new CustomEvent('reveal-navbar'));
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
+    const buttons = document.querySelectorAll('.hero-buttons-overlay button');
+
+    heroWords.forEach((word) => wrapForSlide(word as HTMLElement));
+    const innerSpans = document.querySelectorAll('.hero-text-word .word-inner');
+
+    const tl = gsap.timeline();
+
+    // World reveal
+    tl.fromTo(
+      innerSpans,
+      { y: '120%' },
+      {
+        y: '0%',
+        duration: 1.2,
+        stagger: 0.05,
+        ease: 'power3.out',
+        onComplete: () => {
+          document
+            .querySelectorAll('.hero-title-row, .achieve-hero-title')
+            .forEach((row) => {
+              (row as HTMLElement).style.overflow = 'visible';
+            });
+          heroWords.forEach((word) => {
+            (word as HTMLElement).style.overflow = 'visible';
+          });
+        },
+      }
+    );
+
+    // Literal 1:1 Button Reveal Logic
+    if (buttonsOverlay && buttons.length) {
+      gsap.set(buttonsOverlay, {
+        visibility: 'visible',
+        pointerEvents: 'auto',
+      });
+      tl.fromTo(
+        buttons,
+        {
+          y: 50,
+          scale: 0.8,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'back.out(2)',
+        },
+        '-=1'
+      );
+    }
+
+    setTimeout(() => {
+      initBubbleButtons('.blob-btn');
+    }, 100);
+  }
+
+  function initDraggable() {
+    const heroWords = document.querySelectorAll('.hero-text-word');
+    let zIndexCounter = 1000;
+    let activeDragElement: HTMLElement | null = null;
+    let activeDragState: any = null;
+
+    const stopDragging = (element: HTMLElement) => {
+      element.classList.remove('dragging');
+      activeDragElement = null;
+      activeDragState = null;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!activeDragElement || !activeDragState) return;
+      const x = e.clientX - activeDragState.startX;
+      const y = e.clientY - activeDragState.startY;
+      activeDragElement.style.transform = `translate(${x}px, ${y}px) translateZ(0)`;
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (activeDragElement) stopDragging(activeDragElement);
+    };
+
+    heroWords.forEach((el: any) => {
+      el.addEventListener('mousedown', (e: MouseEvent) => {
+        e.preventDefault();
+        const transform = el.style.transform || '';
+        const match = transform.match(
+          /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/
+        );
+        const curX = match ? parseFloat(match[1]) : 0;
+        const curY = match ? parseFloat(match[2]) : 0;
+
+        el.style.zIndex = (zIndexCounter++).toString();
+        activeDragElement = el;
+        activeDragState = {
+          startX: e.clientX - curX,
+          startY: e.clientY - curY,
+        };
+        el.classList.add('dragging');
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+      });
+    });
+  }
+
+  function initTooltip() {
+    const tooltip = document.getElementById('drag-tooltip');
+    if (!tooltip) return;
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+
+    const updateTooltipPosition = (e: MouseEvent) => {
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+      const rect = tooltip.getBoundingClientRect();
+      const tooltipWidth = rect.width || 120;
+      const tooltipHeight = rect.height || 40;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
+        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
+      }
+      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
+        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
+      }
+    };
+
+    heroWords.forEach((word: any) => {
+      word.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          tooltip.classList.add('visible');
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mouseleave', () =>
+        tooltip.classList.remove('visible')
+      );
+      word.addEventListener('mousedown', () =>
+        tooltip.classList.remove('visible')
+      );
+    });
+  }
+
+  // Run on load
+  document.addEventListener('DOMContentLoaded', () => {
+    initPreloader();
+    initDraggable();
+    initTooltip();
+    initScrollEffects();
+  });
+
+  function initScrollEffects() {
+    const section = document.querySelector('main') as HTMLElement; // Target the main tag for hero-test
+    const container = document.querySelector(
+      '.hero-test-container'
+    ) as HTMLElement;
+
+    if (!section || !container) return;
+
+    const isMobileDevice = isMobile();
+
+    // Reset styles
+    container.style.position = '';
+    container.style.top = '';
+
+    // Handle SECTION (main) styles
+    if (isMobileDevice) {
+      // Reset styles
+      section.style.position = '';
+      section.style.height = '';
+      section.style.zIndex = '';
+      container.style.position = '';
+      container.style.top = '';
+    }
+
+    const scrollConfig = isMobileDevice
+      ? {
+          trigger: section,
+          start: 'top top',
+          end: '+=100svh',
+          pin: true,
+          pinSpacing: false,
+          pinType: 'transform' as 'transform', // TS Fix
+          scrub: true,
+          anticipatePin: 1,
+        }
+      : {
+          trigger: section,
+          start: 'top top',
+          end: '+=100%',
+          pin: true,
+          pinSpacing: false,
+          scrub: true,
+          anticipatePin: 1,
+        };
+
+    gsap.to(container, {
+      scrollTrigger: scrollConfig,
+      filter: 'blur(10px)',
+      scale: 0.9,
+      opacity: 0.2,
+      ease: 'none',
+    });
+  }
+</script>
+
+<style is:global>
+  .font-nura {
+    font-family: 'Nura', serif !important;
+  }
+
+  .hero-test-container {
+    padding: 12vh 5vw 6vh !important;
+    min-height: 100vh;
+    min-height: 100svh; /* Stable */
+    /* will-change removed */
+  }
+
+  @media (min-width: 768px) {
+    .hero-test-container {
+      padding: 18vh 5vw 6vh !important;
+      min-height: auto;
+    }
+  }
+
+  .hero-text-word {
+    font-family: 'Nura', serif !important;
+    font-weight: 900 !important;
+    cursor: grab;
+    user-select: none;
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .hero-text-word.dragging {
+    z-index: 10000 !important;
+    cursor: grabbing;
+  }
+
+  .achieve-hero-title {
+    font-size: 19vw;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: #ff4500;
+  }
+
+  @media (min-width: 768px) {
+    .achieve-hero-title {
+      font-size: 18.5vw;
+    }
+  }
+
+  .headline-word {
+    font-size: 15vw;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  /* Mobile Maximized Size */
+  .headline-word.mobile-max {
+    font-size: 21vw;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  /* Desktop Smaller Size */
+  .headline-word.desktop-min {
+    font-size: 5vw;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  @media (min-width: 768px) {
+    .headline-word {
+      font-size: 5vw; /* Default fallback */
+    }
+  }
+
+  /* Literal 1:1 Implementation with Stacking Context Fix */
+  .hero-buttons-overlay {
+    position: relative;
+    display: flex;
+    gap: calc(36 / 1920 * 100vw);
+    z-index: 20;
+    visibility: hidden;
+    pointer-events: none;
+    justify-content: center;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .hero-buttons-overlay {
+      justify-content: flex-start;
+      width: auto;
+    }
+  }
+
+  .hero-buttons-overlay .cutout-button {
+    opacity: 0;
+  }
+
+  .cutout-button {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    border-radius: 9999px;
+    font-family: 'Nura', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    pointer-events: auto;
+    isolation: isolate; /* CRITICAL: Creates stacking context so z-index: -1 children (blob) are above parent BG but below text */
+    transition:
+      transform 0.2s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  @media (min-width: 1024px) {
+    .cutout-button {
+      padding: calc(20 / 1920 * 100vw) calc(42 / 1920 * 100vw);
+      font-size: calc(24 / 1920 * 100vw);
+    }
+  }
+
+  /* Primary Button - Black background for visibility on white test page */
+  .cutout-button.primary {
+    background: #222831;
+    color: #f2f2f2;
+    border: none;
+  }
+
+  .cutout-button.primary:hover {
+    color: #f2f2f2 !important;
+  }
+
+  /* Secondary Button - Transparent with black border */
+  .cutout-button.secondary {
+    background: transparent;
+    border: 2px solid #222831;
+    color: #222831;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .cutout-button.secondary:hover {
+    border-color: #ff4500;
+    color: #f2f2f2 !important;
+  }
+
+  /* Blob Button Effect (1:1 from HeroSection.astro) */
+  .blob-btn {
+    overflow: hidden;
+    z-index: 1; /* Establishes z-index stacking locally */
+  }
+
+  .blob-btn .work-blob {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4500; /* Accent Orange */
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    z-index: -1; /* Sits behind text content but in front of isolated background */
+    pointer-events: none;
+  }
+
+  .blob-btn .work-expand {
+    transform: translate(-50%, -50%) scale(40);
+  }
+
+  .blob-btn:hover {
+    color: #f2f2f2 !important; /* White text on hover for both buttons */
+  }
+
+  /* Drag Tooltip */
+  .drag-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    opacity: 0;
+    transform: translate(10px, 10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    background: #222831; /* Reverted to Dark tooltip for visibility on Light BG */
+    color: #f2f2f2;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Nura', serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-left: -10px;
+    margin-top: 10px;
+  }
+
+  .drag-tooltip.visible {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
+</style>

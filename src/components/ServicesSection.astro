@@ -1,0 +1,543 @@
+---
+// ServicesSection.astro
+
+const services = [
+  {
+    id: 1,
+    title: 'Web Design',
+    description:
+      'Beautiful, user-centric design that captures your brand essence and engages your audience.',
+    features: ['UI/UX Design', 'Brand Identity', 'Prototyping', 'Design Systems', 'Accessibility'],
+  },
+  {
+    id: 2,
+    title: 'Web Development',
+    description:
+      'Robust, scalable web applications built with modern technologies and best practices.',
+    features: ['Frontend Development', 'Backend API', 'Database Design', 'Testing', 'Deployment'],
+  },
+  {
+    id: 3,
+    title: 'AI & Software',
+    description:
+      'Intelligent solutions powered by AI and machine learning for business transformation.',
+    features: ['AI Integration', 'Machine Learning', 'Automation', 'Custom Software', 'Analytics'],
+  },
+  {
+    id: 4,
+    title: 'E-Commerce',
+    description:
+      'Complete e-commerce solutions to launch and scale your online store effectively.',
+    features: ['Store Setup', 'Payment Integration', 'Inventory Management', 'Marketing Tools', 'Analytics'],
+  },
+];
+---
+
+<section class="bg-dark-bg -mt-1 px-4 pt-24 pb-24 sm:px-6 lg:px-10 lg:pt-32 lg:pb-40" id="services">
+  <div id="services-header" class="mx-auto w-full lg:w-[98vw] xl:w-[96vw] 2xl:w-[94vw]">
+    <div class="inline-block justify-start">
+      <h2 class="text-4xl sm:text-5xl md:text-6xl font-black font-nura text-accent-orange mb-2 px-4 pt-8 pb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
+        Services
+      </h2>
+    </div>
+    <p class="text-base sm:text-lg text-white/60 mb-24 max-w-2xl md:text-xl md:mb-32 lg:mb-48 lg:text-2xl pt-0" data-reveal="slide" data-reveal-duration="0.7" data-reveal-delay="0.2">
+      Comprehensive solutions tailored to your business needs
+    </p>
+  </div>
+
+  <div id="services-component-vt" class="flex flex-col items-center space-y-2 py-4 sm:space-y-4 md:space-y-8 lg:space-y-32 lg:pb-24">
+    {services.map((service, index) => (
+      <article class="w-full lg:w-auto">
+        <div class="card-wrapper mx-auto w-full lg:w-[98vw] xl:w-[96vw] 2xl:w-[94vw] perspective-normal">
+          <div class={`card bg-white lg:bg-white h-auto overflow-visible rounded-none will-change-transform lg:rounded-2xl transition-shadow duration-300 lg:shadow-[0_2px_43px_rgba(30,30,30,0.1),0_-30px_100px_rgba(30,30,30,0.6)] services-card-grid lg:relative ${index === services.length - 1 ? 'card-last' : ''}`}>
+            <!-- Desktop layout with image covering full height -->
+            <div class="hidden lg:flex services-card-inner lg:items-stretch">
+              <!-- Left side - Title and Content -->
+              <div class="services-card-content lg:w-3/5 lg:flex lg:flex-col lg:pl-8 lg:pr-16 lg:pt-10 lg:pb-16 lg:relative lg:z-10" style="min-height: 100%;">
+                <!-- Title - moved to right side -->
+                <div class="flex items-start justify-end pt-8 pb-6 relative">
+                  <div class="text-dark-bg flex flex-col items-end">
+                    <h3 class="text-3xl font-nura transition-transform duration-300 ease-in-out will-change-transform" data-reveal="perspective" data-reveal-duration="0.6" data-reveal-delay="0.1">
+                      {service.title}
+                    </h3>
+                  </div>
+                </div>
+
+                <!-- Spacer to push content to bottom -->
+                <div style="flex: 1 1 auto; min-height: 0;"></div>
+
+                <!-- Content - at the bottom -->
+                <div class="flex flex-col" style="margin-top: auto;">
+                  <!-- Description and Features side by side -->
+                  <div class="flex gap-8 items-start mb-4">
+                    <!-- Description - left side, larger space -->
+                    <div class="flex-1 pl-8">
+                      <p class="text-dark-bg/70 text-xl" data-reveal="words" data-reveal-duration="0.5" data-reveal-delay="0.2" data-reveal-stagger="0.03" data-reveal-fade>{service.description} {service.description} {service.description}</p>
+                    </div>
+
+                    <!-- Features - right side, smaller space -->
+                    <div class="w-1/3 space-y-2 text-right">
+                      <ul class="space-y-2">
+                        {service.features.map((feature) => (
+                          <li class="flex items-center justify-end gap-3 text-dark-bg/80">
+                            <span class="order-2 text-lg">{feature}</span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent-orange shrink-0 order-1"></span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Learn More Link -->
+                  <button class="mt-4 text-accent-orange font-medium text-sm hover:gap-2 transition-all duration-300 flex items-center gap-1">
+                    Learn More
+                    <svg
+                      class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right side - Image Placeholder (full height from top to bottom) -->
+              <div class="hidden lg:flex services-card-image lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-2/5 lg:flex-col">
+                <div class="w-full h-full overflow-hidden service-image-placeholder" style="border-radius: 0 1rem 1rem 0;">
+                  <img 
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop" 
+                    alt={service.title}
+                    class="w-full h-full object-cover"
+                    style="border-radius: 0 1rem 1rem 0 !important; display: block;"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile/Tablet layout -->
+            <div class="lg:hidden relative mobile-card-container" style="min-height: 100%; height: 100%;">
+              <div class="overflow-hidden pt-6 pb-10 px-4">
+                <div class="relative mt-8 flex items-center">
+                  <h3 class="text-dark-bg ml-4 transform text-2xl font-nura sm:text-3xl md:text-4xl pl-4">
+                    {service.title}
+                  </h3>
+                </div>
+              </div>
+              
+              <!-- Mobile Content -->
+              <div class="px-4 pb-20 mobile-content-wrapper">
+                <p class="text-dark-bg/70 text-base mb-6" data-reveal="words" data-reveal-duration="0.5" data-reveal-delay="0.2" data-reveal-stagger="0.03" data-reveal-fade>{service.description}</p>
+                
+                <button class="mt-4 px-4 text-accent-orange font-medium text-sm hover:gap-2 transition-all duration-300 flex items-center gap-1">
+                  Learn More
+                  <svg
+                    class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+              
+              <!-- Mobile Image - absolutely positioned at bottom -->
+              <div class="absolute bottom-0 left-0 right-0 w-full rounded-xl overflow-hidden mobile-image-container" style="height: 200px;">
+                <img 
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop" 
+                  alt={service.title}
+                  class="w-full h-full object-cover rounded-xl"
+                  style="object-fit: cover; width: 100%; height: 100%; border-radius: 0.75rem;"
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <!-- Bottom CTA -->
+  <div id="services-cta-container" class="mt-16 md:mt-24 lg:mt-32 flex justify-center py-8 md:py-12 lg:py-16">
+    <div class="text-center">
+      <p class="text-white/60 mb-6">Ready to bring your ideas to life?</p>
+      <a
+        href="#contact"
+        class="inline-block px-8 py-4 rounded-full bg-accent-orange text-dark-bg font-medium hover:scale-105 transition-transform duration-300"
+      >
+        Start Your Project
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Services header - override global reset padding */
+  #services-header {
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 3rem;
+  }
+
+  /* Base mobile padding - match card padding (px-4 = 1rem) */
+  #services-header h2 {
+    padding: 2rem 1rem 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #services-header p {
+    padding: 0 1rem 3rem;
+  }
+
+  /* Small screens (640px+) */
+  @media (min-width: 640px) {
+    #services-header h2 {
+      padding: 2.5rem 1.25rem 0.5rem;
+    }
+    
+    #services-header p {
+      padding: 0 1.25rem 3.5rem;
+    }
+  }
+
+  /* Medium screens (768px+) */
+  @media (min-width: 768px) {
+    #services-header h2 {
+      padding: 3rem 1.5rem 0.5rem;
+    }
+    
+    #services-header p {
+      padding: 0 1.5rem 4rem;
+    }
+  }
+
+  /* Large screens (1024px+) - match card content padding (lg:pl-8 = 2rem) */
+  @media (min-width: 1024px) {
+    #services-header {
+      padding-left: 0;
+      padding-bottom: 3rem;
+    }
+    
+    #services-header h2 {
+      padding: 4rem 0 0.5rem 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    #services-header p {
+      padding: 0 0 5rem 2rem;
+    }
+  }
+
+  /* Services cards - white background with subtle shadow (scoped to services section only) */
+  #services-component-vt .card-wrapper .card,
+  #services-component-vt article .card-wrapper .card,
+  #services-component-vt .card {
+    background-color: #ffffff;
+    background: #ffffff;
+    box-shadow: 0 2px 43px rgba(30,30,30,0.1), 0 -30px 100px rgba(30,30,30,0.6);
+  }
+
+  /* Text colors for services cards - dark text on white background */
+  #services-component-vt .card h3,
+  #services-component-vt .card p,
+  #services-component-vt .card li,
+  #services-component-vt .card span:not(.w-1\.5) {
+    color: #000000;
+  }
+
+  #services-component-vt .card p.text-dark-bg\/70 {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  #services-component-vt .card p.text-dark-bg\/40 {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  #services-component-vt .card li.text-dark-bg\/80 {
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  @media (max-width: 1023px) {
+    #services-component-vt .card {
+      padding-top: 1.5rem;
+      padding-bottom: 0 !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      background-color: white !important;
+      background: white !important;
+      display: flex !important;
+      flex-direction: column !important;
+      min-height: 500px !important;
+      height: 500px !important;
+      border-radius: 1rem !important; /* Add rounded corners for mobile/tablet */
+    }
+
+    /* Mobile layout - image absolutely positioned at bottom */
+    #services-component-vt .card > .lg\:hidden.mobile-card-container {
+      position: relative !important;
+      min-height: 100% !important;
+      height: 100% !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Image container - absolutely positioned at bottom */
+    #services-component-vt .card .mobile-image-container {
+      position: absolute !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 200px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 0 0.75rem 0.75rem !important;
+    }
+
+    /* Content wrapper - add bottom padding to prevent overlap */
+    #services-component-vt .card .mobile-content-wrapper {
+      padding-bottom: 220px !important;
+      margin-bottom: 0 !important;
+    }
+
+    #services-component-vt .card > .overflow-hidden:not(.lg\:hidden) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    #services-component-vt .card > .overflow-hidden.lg\:hidden {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    #services-component-vt .card .lg\:hidden .relative.mt-8.flex.items-center {
+      margin-left: 0;
+    }
+
+    #services-component-vt .card .lg\:hidden h3.ml-4 {
+      margin-left: 1rem !important;
+    }
+  }
+
+  /* Force taller spacing for card titles - Desktop */
+  @media (min-width: 1024px) {
+    #services-component-vt .card {
+      background-color: white !important;
+      background: white !important;
+      min-height: 400px !important;
+      height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+    }
+
+    #services-component-vt .card > .hidden.lg\:block {
+      min-height: 110px !important;
+    }
+    
+    /* Remove padding from inner container to allow image to reach edges */
+    #services-component-vt .card > .hidden.lg\:block.services-card-inner {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Add more spacing to content area - reduced padding */
+    #services-component-vt .services-card-content {
+      padding-top: 2.5rem !important;
+      padding-bottom: 4rem !important;
+    }
+
+    /* Ensure content area is at the bottom - HIGH SPECIFICITY - reduced height */
+    #services-component-vt .card .services-card-content {
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100% !important;
+      min-height: 350px !important;
+      justify-content: flex-start !important;
+      padding-bottom: 4rem !important;
+    }
+    
+    /* Spacer div takes up all available space - reduced height */
+    #services-component-vt .card .services-card-content > div:nth-child(2) {
+      flex: 1 1 0% !important;
+      min-height: 150px !important;
+      height: 100% !important;
+      display: block !important;
+    }
+    
+    /* Content div pushed to bottom - FORCE IT TO BOTTOM */
+    #services-component-vt .card .services-card-content > div:last-child {
+      margin-top: auto !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+      align-self: stretch !important;
+      width: 100% !important;
+      position: relative !important;
+      top: auto !important;
+      bottom: 0 !important;
+    }
+
+    /* Add left padding to description */
+    #services-component-vt .card .services-card-content > div:last-child > div:first-child > div:first-child {
+      padding-left: 2rem !important;
+    }
+    
+    /* Ensure the card inner container fills height - no padding to allow image to reach edges */
+    #services-component-vt .card .services-card-inner {
+      flex: 1 1 auto !important;
+      display: flex !important;
+      min-height: 100% !important;
+      height: 100% !important;
+      align-items: stretch !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Title styling - right aligned with same padding as bullets */
+    #services-component-vt .services-card-content h3 {
+      text-align: right !important;
+      padding-right: 0 !important;
+    }
+
+    #services-component-vt .services-card-image {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+
+  /* Mobile title spacing */
+  @media (max-width: 1023px) {
+    #services-component-vt .card > .overflow-hidden.lg\:hidden {
+      padding-top: 1.5rem !important;
+      padding-bottom: 2rem !important;
+      min-height: 110px !important;
+    }
+    
+    #services-component-vt .card .lg\:hidden > div:first-child {
+      margin-bottom: 1.5rem !important;
+    }
+  }
+
+  /* Title left padding */
+  #services-component-vt .card h3 {
+    padding-left: 1rem !important;
+  }
+
+  @media (min-width: 1024px) {
+    #services-component-vt .card h3.lg\:text-3xl {
+      padding-left: 2rem !important;
+    }
+  }
+
+  /* CTA container padding */
+  #services-cta-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  @media (min-width: 768px) {
+    #services-cta-container {
+      padding-top: 3rem !important;
+      padding-bottom: 3rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #services-cta-container {
+      padding-top: 4rem !important;
+      padding-bottom: 4rem !important;
+    }
+  }
+
+  /* Make image placeholder cover full height including title area using absolute positioning */
+  @media (min-width: 1024px) {
+    /* Card must be relative for absolute positioning */
+    #services-component-vt .services-card-grid {
+      position: relative !important;
+    }
+
+    /* Inner container */
+    #services-component-vt .services-card-inner {
+      display: flex !important;
+      flex-direction: row !important;
+      width: 100% !important;
+    }
+
+    /* Content side - takes up 60% with extra right padding */
+    #services-component-vt .services-card-content {
+      display: flex !important;
+      flex-direction: column !important;
+      position: relative !important;
+      z-index: 10 !important;
+      width: 60% !important;
+      padding-right: 4rem !important;
+      height: 100% !important;
+      min-height: 100% !important;
+    }
+
+    /* Image container - absolutely positioned to cover full height, aligned to right edge - takes up 40% */
+    #services-component-vt .services-card-image {
+      position: absolute !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      height: 100% !important;
+      background-color: transparent !important;
+      width: 40% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Image placeholder fills its container - glued to top and bottom with rounded right corners matching card */
+    #services-component-vt .service-image-placeholder {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0 1rem 1rem 0 !important;
+      -webkit-border-radius: 0 1rem 1rem 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      position: relative !important;
+      overflow: hidden !important;
+      clip-path: inset(0 0 0 0 round 0 1rem 1rem 0) !important;
+    }
+    
+    /* Image inside should also have matching border radius - ensure it's applied with maximum specificity */
+    #services-component-vt .service-image-placeholder img,
+    #services-component-vt .services-card-image .service-image-placeholder img,
+    #services-component-vt .services-card-image img {
+      border-radius: 0 1rem 1rem 0 !important;
+      -webkit-border-radius: 0 1rem 1rem 0 !important;
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      clip-path: inset(0 0 0 0 round 0 1rem 1rem 0) !important;
+    }
+    
+    /* Card wrapper needs overflow visible to allow scroll stack transforms */
+    #services-component-vt .card-wrapper {
+      overflow: visible !important;
+    }
+    
+    /* Card itself can have overflow hidden for rounded corners, but wrapper must be visible */
+    #services-component-vt .card {
+      overflow: hidden !important;
+    }
+  }
+</style>

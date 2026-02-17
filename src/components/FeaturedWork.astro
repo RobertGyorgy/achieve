@@ -1,0 +1,554 @@
+---
+// Featured Work Section Component
+const featuredProjects = [
+  {
+    id: 1,
+    title: 'Digital Agency',
+    slug: 'digital-agency',
+    description: 'Modern agency website with immersive design',
+    tags: ['Web Design', 'Development', 'Animation'],
+  },
+  {
+    id: 2,
+    title: 'E-Commerce Platform',
+    slug: 'ecommerce-platform',
+    description: 'Full-stack e-commerce solution with advanced features',
+    tags: ['E-Commerce', 'Development'],
+  },
+  {
+    id: 3,
+    title: 'SaaS Dashboard',
+    slug: 'saas-dashboard',
+    description: 'Enterprise-grade dashboard with real-time analytics',
+    tags: ['SaaS', 'UI/UX Design'],
+  },
+];
+---
+
+<section class="bg-white -mt-1 px-4 pt-24 pb-24 sm:px-6 lg:px-10 lg:pt-32 lg:pb-40" id="work">
+  <div id="featured-work-header" class="mx-auto w-full lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
+    <div class="inline-block justify-start">
+      <h2 class="text-4xl sm:text-5xl md:text-6xl font-black font-nura text-accent-orange mb-2 pt-8 pb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
+        Featured Work
+      </h2>
+    </div>
+    <p class="text-base sm:text-lg text-black/60 mb-24 max-w-2xl md:text-xl md:mb-32 lg:mb-48 lg:text-2xl pt-0" data-reveal="slide" data-reveal-duration="0.7" data-reveal-delay="0.2">
+      Showcase of our latest projects and creative endeavors
+    </p>
+  </div>
+
+  <div id="work-component-vt" class="flex flex-col items-center space-y-2 pt-8 py-4 sm:space-y-4 sm:pt-12 md:space-y-8 md:pt-16 lg:space-y-32 lg:pt-24 lg:pb-24">
+    {featuredProjects.map((project, index) => (
+      <article class="w-full lg:w-auto">
+        <a href={`/work/${project.slug}`} class="group block w-full">
+          <div class="card-wrapper mx-auto w-full perspective-[500px] lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
+            <div class={`card lg:bg-main-bg h-auto overflow-hidden rounded-none will-change-transform lg:rounded-2xl transition-shadow duration-300 lg:shadow-[0_2px_43px_rgba(30,30,30,0.1),0_-30px_100px_rgba(30,30,30,0.6)] ${index === featuredProjects.length - 1 ? 'card-last' : ''}`}>
+              <!-- Desktop layout -->
+              <div class="hidden lg:block">
+                <div class="flex items-end justify-between pt-8 lg:px-8 lg:pt-10 pb-6 relative">
+                  <div class="text-white flex flex-col lg:w-full lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+                    <div class="flex items-center lg:items-center relative">
+                      <h3 class="ml-2 truncate text-2xl font-nura lg:ml-0 lg:max-w-[40vw] lg:text-3xl lg:transition-transform lg:duration-300 lg:ease-in-out lg:will-change-transform lg:group-hover:translate-x-16 pl-4 lg:pl-8">
+                        {project.title}
+                      </h3>
+                      <!-- Arrow Icon - aligned with text -->
+                      <span class="absolute left-4 top-1/2 -translate-y-1/2 hidden h-8 w-8 overflow-hidden lg:left-8 lg:block">
+                        <span class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full opacity-0 transition-all duration-200 ease-in-out group-hover:translate-x-0 group-hover:opacity-100">
+                          <svg viewBox="0 0 24 24" role="img" width="24" height="24" fill="none" class="h-7 w-7 text-white">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M1.9999 11.9998C1.9999 12.552 2.44762 12.9997 2.9999 12.9997H18.9757C18.8901 13.148 18.7838 13.2876 18.657 13.4144L12.2931 19.7784C11.9025 20.1689 11.9025 20.8021 12.2931 21.1926C12.6836 21.5831 13.3168 21.5831 13.7073 21.1926L22.1926 12.7073C22.5831 12.3168 22.5831 11.6836 22.1926 11.2931L22.1924 11.293L13.7071 2.80767C13.3166 2.41715 12.6834 2.41715 12.2929 2.80767C11.9024 3.1982 11.9024 3.83136 12.2929 4.22189L18.657 10.586C18.7836 10.7126 18.8896 10.8518 18.9752 10.9998H2.9999C2.44762 10.9997 1.9999 11.4475 1.9999 11.9998Z" fill="currentColor" />
+                          </svg>
+                        </span>
+                      </span>
+                    </div>
+                    <div class="mt-4 flex gap-x-4 overflow-x-auto lg:mt-0 pr-8 lg:pr-12">
+                      {project.tags.map((tag) => (
+                        <span class="text-white text-xs whitespace-nowrap will-change-transform lg:text-base">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Video placeholder -->
+              <div class="overflow-hidden pt-4 pb-4 lg:px-8 lg:pt-6 lg:pb-8">
+                <div class="aspect-[16/9] w-full overflow-hidden rounded-xl lg:rounded-lg bg-gradient-to-br from-accent-orange/30 via-accent-orange/20 to-transparent flex items-center justify-center relative border border-white/10">
+                  <!-- Video play button mock -->
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 hover:bg-white/30 transition-all cursor-pointer">
+                      <svg viewBox="0 0 24 24" fill="white" class="w-10 h-10 ml-1">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <!-- Subtle grid pattern -->
+                  <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                </div>
+              </div>
+
+              <!-- Mobile layout -->
+              <div class="overflow-hidden pt-6 pb-10 px-4 lg:hidden lg:px-6 lg:pt-4">
+                <div class="flex flex-wrap gap-x-4 gap-y-3 mb-6 pr-8">
+                  {project.tags.map((tag) => (
+                    <span class="text-white text-xs whitespace-nowrap sm:text-base md:text-lg">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div class="relative mt-8 flex items-center">
+                  <span class="flex items-center overflow-hidden">
+                    <span class="transform">
+                      <svg viewBox="0 0 24 24" role="img" width="24" height="24" fill="none" class="h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.9999 11.9998C1.9999 12.552 2.44762 12.9997 2.9999 12.9997H18.9757C18.8901 13.148 18.7838 13.2876 18.657 13.4144L12.2931 19.7784C11.9025 20.1689 11.9025 20.8021 12.2931 21.1926C12.6836 21.5831 13.3168 21.5831 13.7073 21.1926L22.1926 12.7073C22.5831 12.3168 22.5831 11.6836 22.1926 11.2931L22.1924 11.293L13.7071 2.80767C13.3166 2.41715 12.6834 2.41715 12.2929 2.80767C11.9024 3.1982 11.9024 3.83136 12.2929 4.22189L18.657 10.586C18.7836 10.7126 18.8896 10.8518 18.9752 10.9998H2.9999C2.44762 10.9997 1.9999 11.4475 1.9999 11.9998Z" fill="currentColor" />
+                      </svg>
+                    </span>
+                  </span>
+                  <h3 class="text-white ml-4 transform text-2xl font-nura sm:text-3xl md:text-4xl pl-4">
+                    {project.title}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </article>
+    ))}
+  </div>
+
+  <!-- View All Button -->
+  <div id="view-all-button-container" class="mt-16 md:mt-24 lg:mt-32 flex justify-center py-8 md:py-12 lg:py-16">
+    <a
+      href="/work"
+      class="work-btn-view-all"
+    >
+      <span>View All Projects</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  /* Featured Work cards - orange background with glow effect (scoped to work section only) */
+  #work-component-vt .card {
+    background-color: #0d141a;
+    box-shadow: 0 0 30px rgba(255, 69, 0, 0.6), 0 0 60px rgba(255, 69, 0, 0.4), 0 0 90px rgba(255, 69, 0, 0.2);
+  }
+
+  /* Work item cards - orange background with glow */
+  #work-component-vt .card-wrapper .card {
+    background-color: #ff4500;
+    box-shadow: 0 0 25px rgba(255, 69, 0, 0.7), 0 0 50px rgba(255, 69, 0, 0.5), 0 0 75px rgba(255, 69, 0, 0.3);
+    border-radius: 1rem;
+  }
+
+  /* Ensure mobile cards have rounded corners */
+  @media (max-width: 1023px) {
+    #work-component-vt .card {
+      border-radius: 1rem;
+    }
+  }
+
+  /* Make sure the card backgrounds are orange */
+  #work-component-vt .lg\:bg-main-bg {
+    background-color: #ff4500;
+  }
+
+  /* Make text inside work cards white for better contrast */
+  #work-component-vt .card h3,
+  #work-component-vt .card .text-dark-text,
+  #work-component-vt .card .text-light-text,
+  #work-component-vt .card .fade-text {
+    color: #ffffff;
+  }
+
+  /* Ensure all text elements in work cards are white */
+  #work-component-vt .card * {
+    color: #ffffff;
+  }
+
+  /* Featured Work text alignment - override global reset */
+  #featured-work-header {
+    position: relative; /* Like hero-subtitle wrapper */
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 3rem !important; /* Add bottom padding for spacing */
+  }
+
+  /* Featured Work header wrapper - position relative like hero-subtitle */
+  #featured-work-header {
+    position: relative;
+    min-height: 250px; /* Ensure enough height for absolutely positioned elements */
+    padding-top: 2rem; /* Add top padding to header */
+    margin-bottom: 2rem; /* Add bottom margin to create space for cards */
+  }
+
+  /* Base mobile padding - left positioning will be set by JavaScript to align with cards */
+  #featured-work-header h2 {
+    position: absolute; /* Like hero-subtitle-text */
+    left: 0; /* Start at 0, will be moved by JS */
+    top: 2rem; /* Position from top */
+    padding-right: 1rem !important; /* 1rem = 16px right padding */
+    padding-top: 0 !important; /* Remove padding-top since we use top */
+    padding-bottom: 0.5rem !important; /* Reduced bottom padding */
+    margin-bottom: 0 !important; /* Remove margin */
+  }
+
+  #featured-work-header p {
+    position: absolute; /* Like hero-subtitle-text */
+    left: 0; /* Start at 0, will be moved by JS */
+    top: auto; /* Will be positioned below h2 by JS */
+    padding-right: 1rem !important; /* 1rem = 16px right padding */
+    padding-top: 0 !important; /* No top padding - close to title */
+    padding-bottom: 0 !important; /* Remove bottom padding */
+    margin-top: 0.5rem !important; /* Small margin from title */
+  }
+
+  /* Small screens (640px+) */
+  @media (min-width: 640px) {
+    #featured-work-header {
+      padding-left: 2rem !important;
+    }
+    
+    #featured-work-header h2 {
+      padding-right: 1.25rem !important;
+      padding-top: 2.5rem !important;
+      padding-bottom: 0.5rem !important; /* Reduced bottom padding */
+      margin-bottom: 0.5rem !important; /* Small margin */
+    }
+    
+    #featured-work-header p {
+      padding-right: 1.25rem !important;
+      padding-top: 0 !important; /* No top padding - close to title */
+      padding-bottom: 3.5rem !important; /* Bottom padding */
+    }
+  }
+
+  /* Medium screens (768px+) */
+  @media (min-width: 768px) {
+    #featured-work-header {
+      padding-left: 4rem !important;
+    }
+    
+    #featured-work-header h2 {
+      padding-right: 1.5rem !important;
+      padding-top: 3rem !important;
+      padding-bottom: 0.5rem !important; /* Reduced bottom padding */
+      margin-bottom: 0.5rem !important; /* Small margin */
+    }
+    
+    #featured-work-header p {
+      padding-right: 1.5rem !important;
+      padding-top: 0 !important; /* No top padding - close to title */
+      padding-bottom: 4rem !important; /* Bottom padding */
+    }
+  }
+
+  /* Large screens (1024px+) */
+  @media (min-width: 1024px) {
+    #featured-work-header {
+      padding-left: 6rem !important;
+      padding-bottom: 3rem !important; /* More spacing on larger screens */
+    }
+    
+    #featured-work-header h2 {
+      padding-right: 1.5rem !important;
+      padding-top: 4rem !important; /* More top padding on larger screens */
+      padding-bottom: 0.5rem !important; /* Reduced bottom padding */
+      margin-bottom: 0.5rem !important; /* Small margin */
+    }
+    
+    #featured-work-header p {
+      padding-right: 1.5rem !important;
+      padding-top: 0 !important; /* No top padding - close to title */
+      padding-bottom: 5rem !important; /* Bottom padding */
+    }
+  }
+
+  /* Extra large screens (1280px+) */
+  @media (min-width: 1280px) {
+    #featured-work-header {
+      padding-left: 10rem !important;
+    }
+  }
+
+  /* 2XL screens (1440px+) - for larger monitors */
+  @media (min-width: 1440px) {
+    #featured-work-header {
+      padding-left: 15rem !important;
+    }
+  }
+
+  /* 3XL screens (1600px+) - for 24-inch and larger monitors */
+  @media (min-width: 1600px) {
+    #featured-work-header {
+      padding-left: 20rem !important;
+    }
+  }
+
+  .work-btn-view-all {
+    display: inline-block;
+    text-transform: uppercase;
+    position: relative;
+    padding: 16px 40px;
+    cursor: pointer;
+    color: #ff4500 !important;
+    background: transparent !important;
+    border: 2px solid #ff4500 !important;
+    border-radius: 9999px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    overflow: hidden;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    mix-blend-mode: normal !important;
+  }
+
+  .work-btn-view-all span {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+  }
+
+  .work-btn-view-all:hover {
+    color: white;
+  }
+
+  .work-btn-view-all:focus {
+    color: white;
+  }
+
+  :global(.work-blob-view-all) {
+    z-index: 0;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    margin-left: 0;
+    margin-top: 0;
+    background: #ff4500;
+    border-radius: 50%;
+    border-color: #ff4500;
+    border-width: 1px;
+    border-style: solid;
+    transition: border-width 0.45s ease-in-out, margin-left 0.45s ease-in-out, margin-top 0.45s ease-in-out;
+  }
+
+  :global(.work-expand-view-all) {
+    border-color: #ff4500;
+    border-width: 300px;
+    border-style: solid;
+    transition: border-width 0.45s ease-in-out, margin-left 0.45s ease-in-out, margin-top 0.45s ease-in-out;
+    margin-left: -300px;
+    margin-top: -300px;
+  }
+
+  @media (max-width: 1023px) {
+    #work-component-vt .card {
+      padding-top: 1.5rem;
+      padding-bottom: 2rem;
+      padding-left: 1rem !important; /* Add left padding */
+      padding-right: 1rem !important; /* Add right padding */
+      border-radius: 1rem !important; /* Add rounded corners for mobile/tablet */
+    }
+
+    /* Video container padding on mobile */
+    #work-component-vt .card > .overflow-hidden:not(.lg\:hidden) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* Mobile layout container */
+    #work-component-vt .card > .overflow-hidden.lg\:hidden {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    #work-component-vt .card .lg\:hidden .relative.mt-8.flex.items-center {
+      margin-left: 0;
+    }
+
+    #work-component-vt .card .lg\:hidden h3.ml-4 {
+      margin-left: 1rem !important;
+    }
+  }
+
+  /* Force taller spacing for card titles - Desktop */
+  @media (min-width: 1024px) {
+    #work-component-vt .card > .hidden.lg\:block {
+      min-height: 110px !important;
+    }
+    
+    #work-component-vt .card > .hidden.lg\:block > div {
+      padding-top: 3rem !important;
+      padding-bottom: 2rem !important;
+    }
+  }
+
+  /* Mobile title spacing */
+  @media (max-width: 1023px) {
+    #work-component-vt .card > .overflow-hidden.lg\:hidden {
+      padding-top: 1.5rem !important;
+      padding-bottom: 2rem !important;
+      min-height: 110px !important;
+    }
+    
+    #work-component-vt .card .lg\:hidden > div:first-child {
+      margin-bottom: 1.5rem !important;
+    }
+  }
+
+  /* Tags right padding */
+  #work-component-vt .card .flex.gap-x-4 {
+    padding-right: 2rem !important;
+  }
+
+  #work-component-vt .card .flex.flex-wrap.gap-x-4 {
+    padding-right: 2rem !important;
+  }
+
+  @media (min-width: 1024px) {
+    #work-component-vt .card .flex.gap-x-4.lg\:mt-0 {
+      padding-right: 3rem !important;
+    }
+  }
+
+  /* Title left padding */
+  #work-component-vt .card h3 {
+    padding-left: 1rem !important;
+  }
+
+  @media (min-width: 1024px) {
+    #work-component-vt .card h3.lg\:text-3xl {
+      padding-left: 2rem !important;
+    }
+  }
+
+  /* View All Button container padding */
+  #view-all-button-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  @media (min-width: 768px) {
+    #view-all-button-container {
+      padding-top: 3rem !important;
+      padding-bottom: 3rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #view-all-button-container {
+      padding-top: 4rem !important;
+      padding-bottom: 4rem !important;
+    }
+  }
+</style>
+
+<script>
+  // Align Featured Work title and subtitle with the cards - using same logic as HeroSection
+  function alignFeaturedWorkHeader() {
+    const header = document.getElementById('featured-work-header');
+    const title = header?.querySelector('h2') as HTMLElement;
+    const subtitle = header?.querySelector('p') as HTMLElement;
+    
+    if (!header || !title || !subtitle) return;
+    
+    const updateAlignment = () => {
+      // Find the first card's h3 title (the content, like HeroSection finds the first letter)
+      const firstCard = document.querySelector('#work-component-vt .card') as HTMLElement;
+      if (!firstCard) return;
+      
+      // Find the h3 inside the card (desktop or mobile)
+      const desktopTitle = firstCard.querySelector('.hidden.lg\\:block h3') as HTMLElement;
+      const mobileTitle = firstCard.querySelector('.lg\\:hidden h3') as HTMLElement;
+      const cardTitle = desktopTitle || mobileTitle;
+      
+      if (!cardTitle) return;
+      
+      // Get positions relative to header wrapper (exact same logic as HeroSection)
+      const cardTitleRect = cardTitle.getBoundingClientRect();
+      const headerRect = header.getBoundingClientRect();
+      
+      // Calculate position relative to header wrapper (exact same formula as HeroSection)
+      const cardTitleLeftPosition = cardTitleRect.left - headerRect.left;
+      
+      // Set left property (not padding-left) - same as HeroSection
+      title.style.left = `${cardTitleLeftPosition}px`;
+      subtitle.style.left = `${cardTitleLeftPosition}px`;
+      
+      // Position subtitle below title - calculate relative to header
+      const titleRect = title.getBoundingClientRect();
+      const titleBottomRelative = titleRect.bottom - headerRect.top;
+      subtitle.style.top = `${titleBottomRelative + 8}px`; // Add small gap
+    };
+    
+    updateAlignment();
+    window.addEventListener('resize', updateAlignment);
+    if (document.fonts) {
+      document.fonts.ready.then(updateAlignment);
+    }
+    setTimeout(updateAlignment, 100);
+    setTimeout(updateAlignment, 500);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.querySelector('.work-btn-view-all') as HTMLElement;
+    if (!btn) return;
+
+    btn.addEventListener('mouseenter', function(this: HTMLElement, e: MouseEvent) {
+      // Remove any existing blob first
+      const existing = this.querySelector('.work-blob-view-all');
+      if (existing) existing.remove();
+
+      const rect = this.getBoundingClientRect();
+      const x = e.pageX - rect.left - window.scrollX;
+      const y = e.pageY - rect.top - window.scrollY;
+      
+      const blob = document.createElement('div');
+      blob.className = 'work-blob-view-all';
+      blob.style.left = x + 'px';
+      blob.style.top = y + 'px';
+      this.appendChild(blob);
+      
+      setTimeout(function() {
+        blob.classList.add('work-expand-view-all');
+      }, 20);
+    });
+
+    btn.addEventListener('mouseleave', function(this: HTMLElement, e: MouseEvent) {
+      const rect = this.getBoundingClientRect();
+      const x = e.pageX - rect.left - window.scrollX;
+      const y = e.pageY - rect.top - window.scrollY;
+      
+      const blobs = this.querySelectorAll('.work-blob-view-all');
+      blobs.forEach(function(blob: Element) {
+        const htmlBlob = blob as HTMLElement;
+        htmlBlob.style.left = x + 'px';
+        htmlBlob.style.top = y + 'px';
+        blob.classList.remove('work-expand-view-all');
+        setTimeout(function() {
+          blob.remove();
+        }, 520);
+      });
+    });
+
+    // Align header with cards
+    setTimeout(alignFeaturedWorkHeader, 200);
+  });
+
+  // Also call immediately if DOM is already loaded
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(alignFeaturedWorkHeader, 200);
+      });
+    } else {
+      // DOM already loaded, call immediately
+      setTimeout(alignFeaturedWorkHeader, 200);
+    }
+    
+    // Re-align on Astro page navigation
+    document.addEventListener('astro:page-load', () => {
+      setTimeout(alignFeaturedWorkHeader, 200);
+    });
+  }
+</script>

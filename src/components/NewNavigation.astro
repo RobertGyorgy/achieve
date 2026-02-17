@@ -1,0 +1,560 @@
+---
+// NewNavigation.astro — Restructured for mix-blend-mode
+// Each nav element is a separate fixed-position div so blend mode works against page content.
+---
+
+<!-- Logo: ACHIEVE — True 180-Degree 3D Character Flip -->
+<div
+  id="nav-logo"
+  class="fixed z-50 mix-blend-difference opacity-0 -translate-y-12 transition-all duration-300 pointer-events-auto"
+  style="top: 4vh; left: 5%;"
+>
+  <a href="/" class="z-10 relative group block" aria-label="Return to homepage">
+    <div
+      class="logo-chars-container hidden md:flex overflow-visible"
+      style="align-items: baseline; perspective: 1200px;"
+    >
+      {
+        [
+          { d: 'a', h: 'A' },
+          { d: 'n', h: 'C' },
+          { d: 'o', h: 'H' },
+          { d: 'a', h: 'I' },
+          { d: 'n', h: 'E' },
+          { d: 'o', h: 'V' },
+          { d: 'u', h: 'E' },
+        ].map((pair, i) => (
+          <div
+            class="char-flip-wrapper relative overflow-visible grid"
+            style={`
+              grid-template-columns: 1fr; 
+              grid-template-rows: 1fr; 
+              align-items: baseline; 
+              justify-items: center; 
+              transform-style: preserve-3d;
+              transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              transition-delay: ${i * 0.05}s;
+            `}
+          >
+            {/* Front: Stylized Letter */}
+            <span
+              class="stylized-char text-3xl md:text-5xl font-normal text-white block"
+              style={`
+                font-family: 'OSFont', sans-serif !important; 
+                line-height: 1; 
+                grid-area: 1 / 1; 
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+              `}
+            >
+              {pair.d}
+            </span>
+            {/* Back: Full Letter (Rotated 180deg) */}
+            <span
+              class="full-char text-3xl md:text-5xl font-black font-nura tracking-tight text-white block"
+              style={`
+                font-family: 'Nura', serif !important; 
+                line-height: 1; 
+                grid-area: 1 / 1; 
+                transform: rotateX(180deg); 
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+                margin-top: -0.25em; /* Local baseline correction */
+              `}
+            >
+              {pair.h}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+    <!-- Mobile-only Simple Logo -->
+    <div class="md:hidden">
+      <span
+        class="text-3xl font-black font-nura tracking-tight text-white"
+        style="font-family: 'Nura', serif !important;"
+      >
+        ACHIEVE
+      </span>
+    </div>
+  </a>
+</div>
+
+<style>
+  /* 3D 180-Degree Staggered Flip */
+  #nav-logo:hover .char-flip-wrapper {
+    transform: rotateX(180deg);
+  }
+</style>
+
+<!-- CTA Button: "Let's Talk" — Separate fixed div (not blended) -->
+<div
+  id="nav-cta"
+  class="fixed z-50 hidden md:flex items-center pointer-events-auto mix-blend-difference opacity-0 -translate-y-12"
+  style="top: 4vh; right: calc(5% + 11rem); will-change: transform, opacity;"
+>
+  <a
+    href="#contact"
+    id="nav-cta-btn"
+    class="nav-cutout-button cursor-pointer select-none relative inline-flex items-center justify-center overflow-hidden rounded-full font-bold uppercase tracking-wider text-white"
+    style="
+      font-family: 'Nura', serif !important;
+      font-size: 1rem;
+    "
+  >
+    Let's Talk
+  </a>
+</div>
+
+<!-- Mobile Glassmorphism Pill: groups logo + CTA (mobile only) -->
+<div
+  id="nav-mobile-pill"
+  class="fixed z-50 hidden items-center gap-3 rounded-full"
+  style="top: 1rem; left: 1rem; padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+         background: rgba(242,242,242,0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+         border: 1px solid rgba(242,242,242,0.25);"
+>
+  <a href="/" class="z-10" aria-label="Return to homepage">
+    <span
+      class="text-lg font-black font-nura tracking-tight text-white"
+      style="font-family: 'Nura', serif !important; line-height: 1;"
+    >
+      ACHIEVE
+    </span>
+  </a>
+  <a
+    href="#contact"
+    class="mobile-pill-cta inline-flex items-center justify-center rounded-full font-bold uppercase tracking-wider"
+    style="font-family: 'Nura', serif !important; padding: 0.5rem 1.25rem;
+           font-size: 0.7rem; background: #F2F2F2; color: #222831; white-space: nowrap;"
+  >
+    Let's Work!
+  </a>
+</div>
+
+<!-- Menu Toggle — Separate fixed div with mix-blend-difference -->
+<div
+  id="nav-menu-toggle"
+  class="fixed z-50 flex items-center gap-1 select-none mix-blend-difference opacity-0 -translate-y-12"
+  style="top: 4vh; right: 5%; will-change: transform, opacity;"
+>
+  <!-- Menu text label -->
+  <span
+    class="menu-label hidden lg:block text-2xl font-medium tracking-wider text-white"
+    style="font-family: 'HK Grotesk', sans-serif !important; transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);"
+    >Menu</span
+  >
+  <!-- Hamburger button: small dot default, expands on hover -->
+  <button
+    id="new-menu-btn"
+    class="relative flex cursor-pointer items-center justify-center w-12 h-12 bg-transparent border-none p-0 outline-none"
+    aria-label="Toggle navigation menu"
+    aria-expanded="false"
+  >
+    <!-- The Dot -->
+    <span
+      class="menu-dot absolute w-2 h-2 bg-[#F2F2F2] rounded-full"
+      style="transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);"
+    ></span>
+    <!-- Hamburger bars (hidden by default) -->
+    <div
+      class="hamburger-bars absolute flex flex-col items-center gap-[5px]"
+      style="opacity: 0; transition: opacity 0.2s ease;"
+    >
+      <span
+        class="bar-top block w-5 h-[2px] bg-[#222831] rounded-full"
+        style="transition: transform 0.3s ease;"></span>
+      <span
+        class="bar-bottom block w-5 h-[2px] bg-[#222831] rounded-full"
+        style="transition: transform 0.3s ease;"></span>
+    </div>
+  </button>
+</div>
+
+<!-- Curtain Menu Overlay — slides down from top -->
+<div
+  id="new-menu-overlay"
+  class="fixed inset-0 bg-black z-[40] w-full h-screen flex flex-col pointer-events-none"
+  style="transform: translateY(-100%); will-change: transform;"
+>
+  <div class="flex-grow relative w-[90%] mx-auto py-[15vh]">
+    <div class="grid grid-cols-1 md:grid-cols-2 h-full">
+      <!-- Left: Navigation Links -->
+      <nav class="flex flex-col justify-center gap-4">
+        {
+          ['Work', 'Services', 'About'].map((item, index) => (
+            <div class="overflow-hidden">
+              <a
+                href={`/${item.toLowerCase()}`}
+                class="block text-6xl md:text-8xl font-black font-nura text-white hover:text-accent-orange transition-colors duration-300 transform translate-y-[120%] new-menu-link"
+                style={`font-family: 'Nura', serif !important;`}
+              >
+                {item}
+              </a>
+            </div>
+          ))
+        }
+      </nav>
+
+      <!-- Right: Contact & Socials -->
+      <div
+        class="flex flex-col justify-center items-start md:items-start gap-12 font-nura text-white"
+      >
+        <div class="overflow-hidden">
+          <div class="new-menu-info transform translate-y-[120%]">
+            <p class="text-sm uppercase tracking-widest text-gray-500 mb-4">
+              Socials
+            </p>
+            <ul class="space-y-2 text-xl">
+              <li>
+                <a href="#" class="hover:text-accent-orange transition-colors"
+                  >Instagram</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-accent-orange transition-colors"
+                  >LinkedIn</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-accent-orange transition-colors"
+                  >Dribbble</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="overflow-hidden">
+          <div class="new-menu-info transform translate-y-[120%]">
+            <p class="text-sm uppercase tracking-widest text-gray-500 mb-4">
+              Contact
+            </p>
+            <a
+              href="mailto:hello@achieve.ro"
+              class="text-2xl hover:text-accent-orange transition-colors"
+              >hello@achieve.ro</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ============================================
+     NAV CUTOUT BUTTON
+     ============================================ */
+  .nav-cutout-button {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 0.75rem 1.75rem;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .nav-cutout-button:hover {
+    border-color: #ff4500;
+    /* text color remains white */
+  }
+
+  /* ============================================
+     HAMBURGER / DOT
+     ============================================ */
+  .menu-dot {
+    will-change: transform;
+  }
+
+  .hamburger-bars {
+    will-change: opacity;
+  }
+
+  /* ============================================
+     MENU OVERLAY
+     ============================================ */
+  #new-menu-overlay {
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  /* ============================================
+     MOBILE NAVIGATION (< 768px)
+     ============================================ */
+  @media (max-width: 767px) {
+    /* Hide the glassmorphism pill wrapper */
+    #nav-mobile-pill {
+      display: none !important;
+    }
+
+    /* Logo — bigger, same height as button */
+    #nav-logo {
+      top: 1rem !important;
+      left: 1rem !important;
+      height: 2.5rem;
+      align-items: center;
+      opacity: 0; /* Animated in via GSAP */
+      transform: translateY(-15px);
+    }
+
+    #nav-logo .logo-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    /* CTA — show on mobile, positioned right, next to hamburger */
+    #nav-cta {
+      display: flex !important;
+      position: fixed;
+      top: 1rem !important;
+      right: 4rem !important;
+      left: auto !important;
+      height: 2.5rem;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+
+    #nav-cta .nav-cutout-button {
+      padding: 0.6rem 1.5rem !important;
+      font-size: 0.75rem !important;
+      border: 1.5px solid #fff !important; /* Keep white, relies on mix-blend for visibility */
+      white-space: nowrap;
+      border-radius: 9999px !important;
+    }
+
+    /* Hamburger — position top-right */
+    #nav-menu-toggle {
+      top: 1rem !important;
+      right: 1rem !important;
+      height: 2.5rem;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+
+    /* Keep dot at normal resting size on mobile */
+    #nav-menu-toggle .menu-dot {
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+    }
+
+    #nav-menu-toggle #new-menu-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    /* Show hamburger bars by default on mobile */
+    #nav-menu-toggle .hamburger-bars {
+      opacity: 1 !important;
+    }
+
+    .menu-label {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // ============================================
+  // HAMBURGER MENU — Dot → Circle + Bars
+  // ============================================
+  function initMenuToggle() {
+    const menuContainer = document.getElementById('nav-menu-toggle');
+    const menuBtn = document.getElementById('new-menu-btn');
+    const overlay = document.getElementById('new-menu-overlay');
+    const menuLabel = document.querySelector('.menu-label') as HTMLElement;
+    const body = document.body;
+
+    if (!menuContainer || !menuBtn || !overlay) return;
+
+    // Clone to remove old listeners
+    const newBtn = menuBtn.cloneNode(true) as HTMLElement;
+    menuBtn.parentNode!.replaceChild(newBtn, menuBtn);
+
+    // Get elements from cloned button
+    const dot = newBtn.querySelector('.menu-dot') as HTMLElement;
+    const bars = newBtn.querySelector('.hamburger-bars') as HTMLElement;
+    const barTop = newBtn.querySelector('.bar-top') as HTMLElement;
+    const barBottom = newBtn.querySelector('.bar-bottom') as HTMLElement;
+
+    if (!dot || !bars || !barTop || !barBottom) return;
+
+    let isMenuOpen = false;
+    // CSS-based mobile detection — survives window resize
+    const isMobileNav = window.matchMedia('(max-width: 767px)').matches;
+
+    // --- HOVER: Entire container trigger ---
+    menuContainer.style.cursor = 'pointer';
+    menuContainer.addEventListener('mouseenter', () => {
+      if (isMenuOpen) return;
+      if (isMobileNav) {
+        // Mobile: small bounce, no scale
+        gsap.to(dot, { scale: 1.1, duration: 0.2, ease: 'power2.out' });
+      } else {
+        gsap.to(dot, { scale: 6, duration: 0.25, ease: 'power2.out' });
+        gsap.to(bars, { opacity: 1, duration: 0.2, delay: 0.05 });
+        if (menuLabel)
+          gsap.to(menuLabel, { x: -10, duration: 0.25, ease: 'power2.out' });
+      }
+    });
+
+    menuContainer.addEventListener('mouseleave', () => {
+      if (isMenuOpen) return;
+      if (isMobileNav) {
+        gsap.to(dot, { scale: 1, duration: 0.2, ease: 'power2.in' });
+      } else {
+        gsap.to(dot, { scale: 1, duration: 0.25, ease: 'power2.in' });
+        gsap.to(bars, { opacity: 0, duration: 0.15 });
+        if (menuLabel)
+          gsap.to(menuLabel, { x: 0, duration: 0.25, ease: 'power2.in' });
+      }
+    });
+
+    // --- CLICK: Container or button toggle ---
+    const handleToggle = () => {
+      isMenuOpen = !isMenuOpen;
+      // ... (rest of click logic)
+    };
+
+    menuContainer.addEventListener('click', (e) => {
+      // Prevent double trigger if clicking actual button
+      if (e.target === newBtn || newBtn.contains(e.target as Node)) {
+        // Handled by button click
+      } else {
+        // Toggle from container click
+        newBtn.click();
+      }
+    });
+
+    newBtn.addEventListener('click', () => {
+      isMenuOpen = !isMenuOpen;
+
+      const links = document.querySelectorAll('.new-menu-link');
+      const infos = document.querySelectorAll('.new-menu-info');
+
+      if (isMenuOpen) {
+        // === OPEN ===
+        body.style.overflow = 'hidden';
+
+        // Keep dot expanded on desktop only, bars visible
+        if (!isMobileNav) {
+          gsap.to(dot, { scale: 6, duration: 0.2 });
+        }
+        gsap.to(bars, { opacity: 1, duration: 0.15 });
+
+        // Bars → X
+        gsap.to(barTop, {
+          y: 3.5,
+          rotation: 45,
+          duration: 0.25,
+          ease: 'power2.out',
+        });
+        gsap.to(barBottom, {
+          y: -3.5,
+          rotation: -45,
+          duration: 0.25,
+          ease: 'power2.out',
+        });
+
+        // Menu label shifts left
+        if (menuLabel) gsap.to(menuLabel, { x: -10, duration: 0.25 });
+
+        // Slide overlay down — INSTANT feel
+        overlay.style.pointerEvents = 'auto';
+        gsap.to(overlay, {
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+        });
+
+        // Links stagger in — start almost immediately
+        gsap.to([...links, ...infos], {
+          y: 0,
+          duration: 0.5,
+          stagger: 0.06,
+          ease: 'power3.out',
+          delay: 0.15,
+        });
+      } else {
+        // === CLOSE ===
+        body.style.overflow = '';
+
+        // Bars → parallel
+        gsap.to(barTop, { y: 0, rotation: 0, duration: 0.25 });
+        gsap.to(barBottom, { y: 0, rotation: 0, duration: 0.25 });
+
+        // Menu label back
+        if (menuLabel) gsap.to(menuLabel, { x: 0, duration: 0.25 });
+
+        // If not hovering, shrink dot (desktop only)
+        if (!newBtn.matches(':hover') && !isMobileNav) {
+          gsap.to(dot, { scale: 1, duration: 0.25, delay: 0.05 });
+          gsap.to(bars, { opacity: 0, duration: 0.15, delay: 0.05 });
+        }
+
+        // Links out
+        gsap.to([...links, ...infos], {
+          y: '120%',
+          duration: 0.3,
+          stagger: 0.02,
+          ease: 'power3.in',
+        });
+
+        // Slide overlay up — fast
+        gsap.to(overlay, {
+          y: '-100%',
+          duration: 0.45,
+          ease: 'power2.in',
+          delay: 0.1,
+          onComplete: () => {
+            overlay.style.pointerEvents = 'none';
+          },
+        });
+      }
+    });
+  }
+
+  // ============================================
+  // INITIALIZATION
+  // ============================================
+  function initNavigation() {
+    initMenuToggle();
+  }
+
+  // Listen for the coordinated reveal event
+  document.addEventListener('reveal-navbar', () => {
+    console.log('✨ Custom Event: Revealing Navbar...');
+    revealNavbar();
+  });
+
+  function revealNavbar() {
+    const logo = document.getElementById('nav-logo');
+    const cta = document.getElementById('nav-cta');
+    const menu = document.getElementById('nav-menu-toggle');
+
+    if (!logo || !cta || !menu) return;
+
+    gsap.to([logo, cta, menu], {
+      opacity: 1,
+      y: 0,
+      duration: 1.2,
+      stagger: 0.15,
+      ease: 'back.out(1.7)',
+      force3D: true,
+    });
+  }
+
+  // Run on first load
+  initNavigation();
+
+  // Re-run on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    initNavigation();
+  });
+</script>

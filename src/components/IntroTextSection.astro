@@ -1,0 +1,124 @@
+---
+// IntroTextSection.astro
+// Centered text section with justified alignment (text touching both edges)
+---
+
+<section
+  class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32 bg-transparent intro-text-section"
+>
+  <div
+    class="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-center min-h-[60vh]"
+  >
+    <div class="w-full max-w-7xl mx-auto">
+      <div class="intro-text-box">
+        <div class="description-reveal">
+          <div class="description-reveal-split intro-text-justified">
+            We create digital experiences that blend cutting-edge design with
+            powerful functionality. Our approach combines strategic thinking,
+            creative vision, and technical excellence to deliver solutions that
+            not only look stunning but drive real business results. Every
+            project is an opportunity to push boundaries and create something
+            extraordinary that resonates with your audience and elevates your
+            brand.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro-text-box {
+    width: 100%;
+    padding: 2rem;
+    background: transparent;
+  }
+
+  @media (min-width: 640px) {
+    .intro-text-box {
+      padding: 2.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .intro-text-box {
+      padding: 3rem 4rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .intro-text-box {
+      padding: 4rem 5rem;
+    }
+  }
+
+  .description-reveal {
+    opacity: 1; /* Visible by default */
+  }
+
+  /* Show text immediately - no reveal animation */
+  .reveal-wrapper {
+    display: block;
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+
+  .intro-text-justified {
+    font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+    line-height: 1.8;
+    color: #222831;
+    text-align: justify;
+    text-align-last: justify;
+    font-family: 'HKGrotesk', system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    word-break: normal; /* Normal word breaking */
+    overflow-wrap: normal; /* Normal wrapping at word boundaries */
+    hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    white-space: normal; /* Normal whitespace handling */
+  }
+
+  .hero-char {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  @media (min-width: 768px) {
+    .intro-text-justified {
+      font-size: clamp(1rem, 1.75vw, 1.4rem);
+      line-height: 1.9;
+      letter-spacing: 0.2em;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .intro-text-justified {
+      font-size: clamp(1.75rem, 1.75vw, 1.4rem);
+      line-height: 2;
+      letter-spacing: 0.25em;
+    }
+  }
+</style>
+
+<script>
+  import { initTextRepulsion } from '../scripts/text-repulsion';
+
+  if (typeof window !== 'undefined') {
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        initTextRepulsion();
+      }, 500);
+    });
+
+    // Also initialize on Astro page load
+    document.addEventListener('astro:page-load', () => {
+      setTimeout(() => {
+        initTextRepulsion();
+      }, 500);
+    });
+  }
+</script>

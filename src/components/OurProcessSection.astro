@@ -1,0 +1,515 @@
+---
+// OurProcessSection.astro
+// Horizontal scrolling process cards using GSAP ScrollTrigger
+
+const processSteps = [
+  {
+    id: 1,
+    title: 'Discovery',
+    description: 'We start by understanding your business, goals, and target audience. Through workshops and research, we identify opportunities and define the project scope.',
+    number: '01'
+  },
+  {
+    id: 2,
+    title: 'Strategy',
+    description: 'We develop a comprehensive strategy that aligns with your business objectives. This includes user personas, information architecture, and technical requirements.',
+    number: '02'
+  },
+  {
+    id: 3,
+    title: 'Design',
+    description: 'Our design team creates beautiful, user-centered interfaces. We iterate through wireframes, prototypes, and visual designs until we achieve perfection.',
+    number: '03'
+  },
+  {
+    id: 4,
+    title: 'Development',
+    description: 'We build your solution using modern technologies and best practices. Our code is clean, scalable, and optimized for performance and SEO.',
+    number: '04'
+  },
+  {
+    id: 5,
+    title: 'Testing',
+    description: 'Rigorous testing ensures everything works flawlessly. We test across devices, browsers, and scenarios to deliver a reliable, bug-free experience.',
+    number: '05'
+  },
+  {
+    id: 6,
+    title: 'Launch & Support',
+    description: 'We handle deployment and provide ongoing support. From hosting to maintenance, we ensure your digital presence continues to perform at its best.',
+    number: '06'
+  }
+];
+---
+
+<section class="our-process-section" id="our-process">
+  <div class="our-process-container">
+    <!-- Title -->
+    <div class="our-process-header">
+      <h2 class="our-process-title">Our Process</h2>
+    </div>
+
+    <!-- Horizontal Scroll Container -->
+    <div class="our-process-scroll-wrapper">
+      <div class="our-process-cards-container">
+        {processSteps.map((step) => (
+          <div class="process-card" data-step={step.id}>
+            <div class="process-card-number">{step.number}</div>
+            <h3 class="process-card-title">{step.title}</h3>
+            <p class="process-card-description">{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .our-process-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #ffffff;
+    padding: 8rem 0;
+    overflow: hidden;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .our-process-container {
+    width: 100%;
+    max-width: 95%;
+    margin: 0 auto;
+    padding-left: 4rem;
+    padding-right: 4.5rem;
+  }
+
+  @media (max-width: 1440px) {
+    .our-process-container {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .our-process-container {
+      padding-left: 2rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .our-process-container {
+      padding-left: 1.5rem;
+      padding-right: 1rem;
+    }
+  }
+
+  .our-process-header {
+    margin-bottom: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .our-process-header {
+      margin-bottom: 6rem;
+    }
+  }
+
+  .our-process-title {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-family: 'HKGrotesk', system-ui, sans-serif !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 640px) {
+    .our-process-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .our-process-title {
+      font-size: clamp(3rem, 7vw, 6rem);
+    }
+  }
+
+  /* Horizontal Scroll Wrapper */
+  .our-process-scroll-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Cards Container - will be animated horizontally */
+  .our-process-cards-container {
+    display: flex;
+    gap: 1.5rem;
+    width: fit-content;
+    will-change: transform;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  @media (min-width: 768px) {
+    .our-process-cards-container {
+      gap: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .our-process-cards-container {
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .our-process-cards-container {
+      gap: 4rem;
+    }
+  }
+
+  /* Process Card - Responsive sizing */
+  .process-card {
+    flex-shrink: 0;
+    width: 280px;
+    padding: 2.5rem 2rem;
+    background: #f5f5f5;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  @media (min-width: 640px) {
+    .process-card {
+      width: 320px;
+      padding: 3rem 2.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .process-card {
+      width: 360px;
+      padding: 3.5rem 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .process-card {
+      width: 420px;
+      padding: 4rem 3.5rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .process-card {
+      width: 480px;
+      padding: 5rem 4rem;
+    }
+  }
+
+  .process-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+  }
+
+  .process-card-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-family: 'Nura', serif;
+    color: rgba(0, 0, 0, 0.1);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .process-card-number {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .process-card-number {
+      font-size: 5rem;
+    }
+  }
+
+  .process-card-title {
+    font-size: clamp(1.5rem, 2vw, 2.5rem);
+    font-weight: 900;
+    font-family: 'Nura', serif;
+    color: #000000;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .process-card-title {
+      margin-bottom: 2rem;
+    }
+  }
+
+  .process-card-description {
+    font-size: clamp(0.875rem, 1.2vw, 1.125rem);
+    font-family: 'HKGrotesk', system-ui, sans-serif;
+    color: rgba(0, 0, 0, 0.7);
+    line-height: 1.7;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+  import { getScrollSmoother } from '../scripts/smooth-scroll';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let scrollTriggers: ScrollTrigger[] = [];
+  let isInitialized = false;
+
+  function cleanupScrollTriggers() {
+    // Kill all triggers in our array
+    scrollTriggers.forEach(trigger => {
+      if (trigger && trigger.kill) {
+        trigger.kill();
+      }
+    });
+    scrollTriggers = [];
+    
+    // Also kill any triggers on the section by ID
+    const section = document.getElementById('our-process');
+    if (section) {
+      ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.vars && (trigger.vars.trigger === section || trigger.vars.trigger === '.our-process-section')) {
+          trigger.kill();
+        }
+      });
+    }
+    
+    isInitialized = false;
+  }
+
+  function initOurProcessScroll() {
+    // Prevent double initialization
+    if (isInitialized) {
+      cleanupScrollTriggers();
+    }
+
+    const section = document.getElementById('our-process') || document.querySelector('.our-process-section');
+    const cardsContainer = document.querySelector('.our-process-cards-container');
+    
+    if (!section || !cardsContainer) {
+      console.warn('Our Process section elements not found', { section: !!section, cardsContainer: !!cardsContainer });
+      return;
+    }
+
+    const cards = cardsContainer.querySelectorAll('.process-card');
+    if (cards.length === 0) {
+      console.warn('No process cards found');
+      return;
+    }
+
+    // Wait for ScrollSmoother and layout to be ready
+    const initScroll = () => {
+      // Check if ScrollSmoother is available
+      const smoother = getScrollSmoother();
+      
+      // Force a layout recalculation
+      const sectionEl = section as HTMLElement;
+      const containerEl = cardsContainer as HTMLElement;
+      void sectionEl.offsetHeight;
+      void containerEl.offsetHeight;
+
+      // Get the total width of all cards plus gaps
+      let totalWidth = 0;
+      const viewportWidth = window.innerWidth;
+      const gap = viewportWidth >= 1440 ? 64 : viewportWidth >= 1024 ? 48 : viewportWidth >= 768 ? 32 : 24;
+      
+      cards.forEach((card) => {
+        const cardElement = card as HTMLElement;
+        // Force layout calculation
+        const rect = cardElement.getBoundingClientRect();
+        const cardWidth = rect.width || cardElement.offsetWidth || 320;
+        totalWidth += cardWidth + gap;
+      });
+
+      // Subtract the last gap
+      totalWidth = totalWidth - gap;
+
+      // Set the container width to enable horizontal scroll
+      containerEl.style.width = `${totalWidth}px`;
+      containerEl.style.display = 'flex';
+      containerEl.style.visibility = 'visible';
+      containerEl.style.opacity = '1';
+      containerEl.style.position = 'relative';
+
+      // Calculate the actual horizontal scroll needed
+      // The cards container is inside .our-process-container which has padding
+      // We need to scroll so the last card is fully visible
+      
+      // Get the container element to read its actual padding
+      const containerElement = sectionEl.querySelector('.our-process-container') as HTMLElement;
+      const containerStyles = containerElement ? window.getComputedStyle(containerElement) : null;
+      const leftPadding = containerStyles ? parseFloat(containerStyles.paddingLeft) : (viewportWidth >= 1440 ? 48 : viewportWidth >= 1024 ? 32 : 24);
+      const rightPadding = containerStyles ? parseFloat(containerStyles.paddingRight) : (viewportWidth >= 1440 ? 48 : viewportWidth >= 1024 ? 24 : 16);
+      
+      // Available width for cards (viewport minus container padding)
+      const availableWidth = viewportWidth - leftPadding - rightPadding;
+      
+      // Calculate horizontal scroll amount
+      // The cards container starts at leftPadding from the viewport edge
+      // We need to scroll until the last card's right edge is at (viewportWidth - rightPadding)
+      // So: scrollAmount = totalWidth - availableWidth
+      // But we need to ensure the last card is FULLY visible, so add a small buffer
+      const horizontalScrollAmount = Math.max(0, totalWidth - availableWidth + 20); // +20px buffer to ensure last card is fully visible
+      
+      // Calculate scroll distance (vertical scroll needed for horizontal animation)
+      // The multiplier controls scroll speed - keep it reasonable (1.0-1.5)
+      const scrollMultiplier = 1.0; // 1.0 = natural speed
+      const scrollDistance = horizontalScrollAmount + (viewportWidth * scrollMultiplier);
+
+      console.log('Our Process Scroll Initialized:', {
+        totalWidth,
+        viewportWidth,
+        horizontalScrollAmount,
+        scrollDistance,
+        scrollMultiplier,
+        cardsCount: cards.length,
+        sectionFound: !!section,
+        containerFound: !!containerEl
+      });
+
+      // Reset position first
+      gsap.set(containerEl, { x: 0, clearProps: 'all' });
+      
+      // Store as direct value for ScrollTrigger (not a function)
+      const finalEndDistance = scrollDistance;
+      
+      // Create the horizontal scroll animation with pin in one ScrollTrigger
+      const scrollAnimation = gsap.to(containerEl, {
+        x: -horizontalScrollAmount,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: `+=${finalEndDistance}`, // Use direct value instead of function
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+          markers: false, // Set to true for debugging
+          onEnter: () => console.log('Our Process: Entered, end distance:', finalEndDistance),
+          onUpdate: (self) => {
+            if (self.progress > 0.9) {
+              console.log('Our Process: Near end, progress:', self.progress.toFixed(2));
+            }
+          }
+        }
+      });
+      
+      if (scrollAnimation.scrollTrigger) {
+        scrollTriggers.push(scrollAnimation.scrollTrigger);
+      }
+
+      // Animate cards on scroll
+      cards.forEach((card) => {
+        const cardElement = card as HTMLElement;
+        const cardAnimation = gsap.fromTo(cardElement,
+          {
+            opacity: 0.5,
+            y: 50,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: section,
+              start: 'top top',
+              end: () => `+=${scrollDistance * 0.3}`,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            }
+          }
+        );
+        if (cardAnimation.scrollTrigger) {
+          scrollTriggers.push(cardAnimation.scrollTrigger);
+        }
+      });
+
+      // Refresh ScrollTrigger
+      if (smoother) {
+        // ScrollSmoother will handle refresh
+        console.log('Our Process: Initialized with ScrollSmoother');
+      } else {
+        ScrollTrigger.refresh();
+        console.log('Our Process: Initialized without ScrollSmoother');
+      }
+      isInitialized = true;
+    };
+
+    // Initialize using requestAnimationFrame like other sections
+    requestAnimationFrame(() => {
+      const smoother = getScrollSmoother();
+      if (smoother) {
+        // ScrollSmoother is ready, initialize
+        setTimeout(initScroll, 100);
+      } else {
+        // Wait a bit more for ScrollSmoother to potentially load
+        setTimeout(() => {
+          initScroll();
+          ScrollTrigger.refresh();
+        }, 200);
+      }
+    });
+  }
+
+  // Initialize on load - wait for ScrollSmoother to be ready
+  if (typeof window !== 'undefined') {
+    const initialize = () => {
+      cleanupScrollTriggers();
+      // Wait longer for ScrollSmoother and all other scripts to initialize
+      setTimeout(() => {
+        initOurProcessScroll();
+      }, 1000);
+    };
+
+    // Wait for DOM and ScrollSmoother
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initialize, 500);
+      });
+    } else {
+      setTimeout(initialize, 500);
+    }
+
+    // Re-initialize on Astro page navigation
+    document.addEventListener('astro:page-load', () => {
+      setTimeout(() => {
+        cleanupScrollTriggers();
+        setTimeout(initOurProcessScroll, 500);
+      }, 200);
+    });
+
+    // Refresh on resize
+    let resizeTimer: NodeJS.Timeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        cleanupScrollTriggers();
+        setTimeout(initOurProcessScroll, 200);
+      }, 300);
+    });
+
+    // Also listen for ScrollTrigger refresh events
+    window.addEventListener('scroll', () => {
+      // This helps ensure ScrollTrigger updates
+    }, { passive: true });
+  }
+</script>

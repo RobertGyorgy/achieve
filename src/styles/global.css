@@ -1,0 +1,412 @@
+@import 'tailwindcss';
+
+/* Font Imports - Updated */
+@font-face {
+  font-family: 'HKGrotesk';
+  src:
+    url('/Fonts/HKGrotesk-ExtraLight.woff2') format('woff2'),
+    url('/Fonts/HKGrotesk-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HKGrotesk';
+  src:
+    url('/Fonts/HKGrotesk-Light.woff2') format('woff2'),
+    url('/Fonts/HKGrotesk-Light.woff') format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HKGrotesk';
+  src:
+    url('/Fonts/HKGrotesk-Regular.woff2') format('woff2'),
+    url('/Fonts/HKGrotesk-Regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HKGrotesk';
+  src:
+    url('/Fonts/HKGrotesk-Medium.woff2') format('woff2'),
+    url('/Fonts/HKGrotesk-Medium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HKGrotesk';
+  src:
+    url('/Fonts/HKGrotesk-Black.woff2') format('woff2'),
+    url('/Fonts/HKGrotesk-Black.woff') format('woff');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Thin.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Normal.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nura';
+  src: url('/Fonts/WOFF/Nura-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OSFont';
+  src: url('/Fonts/OSFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global Styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  isolation: auto;
+  /* Smooth scrolling enhancement */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+/* Smooth scrolling for main document */
+body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'HKGrotesk', sans-serif;
+  background-color: #F2F2F2;
+  color: #222831;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  isolation: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar but keep scrolling functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Utility Classes */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Hero-specific styles moved to HeroSection.astro component */
+
+.fade-bg {
+  background: linear-gradient(135deg, #222831 0%, #393E46 100%);
+}
+
+/* Text Reveal Support */
+.text-reveal {
+  overflow: hidden;
+}
+
+.text-reveal-word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.text-reveal-char {
+  display: inline-block;
+}
+
+/* Draggable States */
+.dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Menu States */
+.menu-open {
+  overflow: hidden;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 40;
+}
+
+/* Smooth Transitions */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Focus Visible */
+:focus-visible {
+  outline: 2px solid #ff4500;
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: #ff4500;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #ff4500;
+  color: #ffffff;
+}
+/* Marquee Styles */
+:root {
+  --step-0: clamp(4.5rem, 3.64rem + 4.29vw, 9rem);
+}
+
+.marquee {
+  overflow: hidden;
+  width: 100%;
+  background-color: black;
+}
+
+.marquee .track {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 0;
+  width: max-content;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  animation: marquee 30s linear infinite;
+}
+
+.marquee .track.-r {
+  animation: marquee-r 30s linear infinite;
+}
+
+.marquee:hover .track {
+  background: white;
+  color: black;
+}
+
+.marquee .text {
+  font-size: var(--step-0);
+  font-family: 'Nura', serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.marquee .text .-maroon {
+  color: #ff4500;
+}
+
+.marquee .pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 6rem;
+  width: 12rem;
+  border-radius: 9999px;
+  background-color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.marquee:hover .pill {
+  background-color: black;
+}
+
+.marquee .pill img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-r {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* ScrollSmoother Styles */
+#smooth-wrapper {
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#smooth-content {
+  overflow: visible;
+  width: 100%;
+  will-change: transform;
+}
+
+/* Ensure body doesn't scroll when ScrollSmoother is active */
+body.scroll-smoother-active {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Mobile: disable ScrollSmoother wrapper styles */
+@media (max-width: 1023px) {
+  #smooth-wrapper {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  #smooth-content {
+    overflow: visible !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  body.scroll-smoother-active {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  html, body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    position: static !important;
+    touch-action: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}

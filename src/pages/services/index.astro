@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+import Marquee from '../../components/Marquee.astro';
+import ServicesSection from '../../components/ServicesSection.astro';
+---
+
+<Layout
+  title="Services - Achieve Studio"
+  description="Explore our comprehensive web design, development, AI, and e-commerce services."
+>
+  <main class="pt-20">
+    <!-- Hero Section for Services -->
+    <section class="relative py-16 sm:py-24 md:py-32 bg-dark-bg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="space-y-6">
+          <h1
+            class="text-5xl sm:text-6xl md:text-7xl font-black font-nura text-accent-orange"
+          >
+            Our Services
+          </h1>
+          <p class="text-xl sm:text-2xl text-white/70 max-w-3xl">
+            Comprehensive solutions designed to transform your digital presence
+            and drive business growth.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <Marquee />
+    <ServicesSection />
+    <Marquee />
+  </main>
+</Layout>

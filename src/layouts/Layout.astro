@@ -1,0 +1,154 @@
+---
+import Navigation from '../components/NewNavigation.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  keywords?: string;
+  author?: string;
+  image?: string;
+  canonical?: string;
+}
+
+const {
+  title = 'Achieve Studio',
+  description = 'Premium web design and development studio',
+  keywords = 'web design, web development, studio',
+  author = 'Achieve Studio',
+  image = '/og-images/default.jpg',
+  canonical = Astro.url.href,
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content={author} />
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Font Preload -->
+    <link
+      rel="preload"
+      href="/Fonts/HKGrotesk-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Fonts/HKGrotesk-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Fonts/WOFF/Nura-Black.woff"
+      as="font"
+      type="font/woff"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Fonts/WOFF/Nura-Bold.woff"
+      as="font"
+      type="font/woff"
+      crossorigin
+    />
+
+    <!-- Astro View Transitions -->
+    <meta name="astro-view-transitions-enabled" content="true" />
+  </head>
+  <body class="bg-dark-bg text-white">
+    <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
+    <div
+      id="preloader"
+      class="fixed inset-0 bg-[#222831] z-[9999] flex items-center justify-center placeholder-preloader"
+      style="position: fixed; z-index: 9999; pointer-events: all; perspective: 1000px;"
+    >
+      <div id="preloader-text" class="flex">
+        {
+          ['A', 'C', 'H', 'I', 'E', 'V', 'E'].map((letter, i) => (
+            <span
+              class="preloader-letter text-[15vw] leading-none font-black font-nura text-[#ff4500] inline-block"
+              data-index={i}
+            >
+              {letter}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <Navigation />
+
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <slot />
+      </div>
+    </div>
+
+    <script type="module">
+      import '/src/scripts/main.ts';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import url('/src/styles/global.css');
+
+  /* Preloader styles - ensure it's visible */
+  #preloader {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: all;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #222831;
+  }
+
+  /* Preloader letters - staggered entrance */
+  .preloader-letter {
+    opacity: 0;
+    transform: translateY(30px) rotateX(-90deg);
+    transform-origin: center bottom;
+    font-family: 'Nura', serif;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+    will-change: transform, opacity;
+  }
+</style>
