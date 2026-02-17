@@ -339,61 +339,49 @@ import Layout from '../layouts/Layout.astro';
     initPreloader();
     initDraggable();
     initTooltip();
-    initScrollEffects();
+    safeInitHeroExitAnimation();
   });
 
-  function initScrollEffects() {
-    const section = document.querySelector('main') as HTMLElement; // Target the main tag for hero-test
-    const container = document.querySelector(
-      '.hero-test-container'
-    ) as HTMLElement;
+  document.addEventListener('astro:page-load', () => {
+    heroExitInitialized = false;
+    safeInitHeroExitAnimation();
+  });
+
+  let heroExitInitialized = false;
+
+  function runHeroExitAnimation() {
+    const section = document.querySelector('main');
+    const container = document.querySelector('.hero-test-container');
 
     if (!section || !container) return;
 
-    const isMobileDevice = isMobile();
-
-    // Reset styles
-    container.style.position = '';
-    container.style.top = '';
-
-    // Handle SECTION (main) styles
-    if (isMobileDevice) {
-      // Reset styles
-      section.style.position = '';
-      section.style.height = '';
-      section.style.zIndex = '';
-      container.style.position = '';
-      container.style.top = '';
-    }
-
-    const scrollConfig = isMobileDevice
-      ? {
-          trigger: section,
-          start: 'top top',
-          end: '+=100svh',
-          pin: true,
-          pinSpacing: false,
-          pinType: 'transform' as 'transform', // TS Fix
-          scrub: true,
-          anticipatePin: 1,
-        }
-      : {
-          trigger: section,
-          start: 'top top',
-          end: '+=100%',
-          pin: true,
-          pinSpacing: false,
-          scrub: true,
-          anticipatePin: 1,
-        };
-
+    // Unified parallax behavior for all devices
     gsap.to(container, {
-      scrollTrigger: scrollConfig,
-      filter: 'blur(10px)',
       scale: 0.9,
-      opacity: 0.2,
+      filter: 'blur(8px)',
+      opacity: 0.5,
       ease: 'none',
+      force3D: true,
+      scrollTrigger: {
+        trigger: section,
+        start: 'bottom bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+        pin: true, // Enabled on all devices
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      },
     });
+
+    (section as HTMLElement).dataset.exitAnimInit = 'true';
+  }
+
+  function safeInitHeroExitAnimation() {
+    if (heroExitInitialized) return;
+    const section = document.querySelector('main');
+    if (section && (section as HTMLElement).dataset.exitAnimInit) return;
+    heroExitInitialized = true;
+    runHeroExitAnimation();
   }
 </script>
 
