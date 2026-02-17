@@ -356,26 +356,28 @@ import Layout from '../layouts/Layout.astro';
     container.style.position = '';
     container.style.top = '';
 
-    // Handle SECTION (main) styles
+    // Handle SECTION
     if (isMobileDevice) {
-      // Reset styles
-      section.style.position = '';
-      section.style.height = '';
-      section.style.zIndex = '';
-      container.style.position = '';
-      container.style.top = '';
+      // Mobile: Fixed + Spacer
+      section.style.position = 'relative';
+      section.style.minHeight = '100svh';
+      section.style.zIndex = '1';
+
+      container.style.position = 'fixed';
+      container.style.top = '0';
+      container.style.width = '100%';
+      container.style.minHeight = '100svh';
+      container.style.zIndex = '0';
+      container.style.willChange = 'transform';
     }
 
     const scrollConfig = isMobileDevice
       ? {
           trigger: section,
           start: 'top top',
-          end: '+=100svh',
-          pin: true,
-          pinSpacing: false,
-          pinType: 'transform' as 'transform', // TS Fix
+          end: 'bottom top',
           scrub: true,
-          anticipatePin: 1,
+          pin: false, // CSS Fixed
         }
       : {
           trigger: section,

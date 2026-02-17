@@ -173,28 +173,29 @@
       // Mobile: Force Transform Pinning
       // This bypasses 'position: fixed' issues by using transforms to keep element in view.
 
-      // Spacer (Section)
-      section.style.position = '';
-      section.style.height = '';
-      section.style.zIndex = '';
-      container.style.position = '';
-      container.style.top = '';
-      container.style.width = '';
-      container.style.height = '';
+      // Mobile: Fixed + Spacer Pattern (Smoother than Transform Pin)
+      // Since we clear transforms in smooth-scroll.ts, this now works reliably.
 
-      // Enforce SVH for stability
+      // Spacer (Section)
+      section.style.position = 'relative';
       section.style.minHeight = '100svh';
+      section.style.zIndex = '1';
+
+      // Fixed Content (Container)
+      container.style.position = 'fixed';
+      container.style.top = '0';
+      container.style.left = '0';
+      container.style.width = '100%';
       container.style.minHeight = '100svh';
+      container.style.zIndex = '0';
+      container.style.willChange = 'transform'; // Optimization
 
       scrollConfig = {
         trigger: section,
         start: 'top top',
         end: 'bottom top',
-        pin: true,
-        pinSpacing: false,
-        pinType: 'transform' as 'transform', // Fixed TS Error and Logic
+        pin: false, // CSS Fixed handles it
         scrub: true,
-        anticipatePin: 1,
       };
     } else {
       // Desktop: Standard GSAP Pin
