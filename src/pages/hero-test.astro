@@ -4,11 +4,11 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Hero Test" description="Test page for new hero layout">
   <main
-    class="w-full min-h-screen lg:h-screen bg-transparent lg:bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
+    class="w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
   >
     <!-- Main Content Container with fixed padding to prevent gluing to edges -->
     <div
-      class="hero-test-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0 bg-[#F2F2F2] lg:bg-transparent"
+      class="hero-test-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0"
     >
       <!-- Top: ACHIEVE -->
       <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
@@ -147,17 +147,6 @@ import Layout from '../layouts/Layout.astro';
 
     const tl = gsap.timeline();
 
-    // Failsafe
-    setTimeout(() => {
-      if (
-        document
-          .querySelector('.hero-buttons-overlay')
-          ?.classList.contains('revealed')
-      )
-        return;
-      revealHeroContent();
-    }, 1000);
-
     // PHASE 1: Animate preloader letters in
     tl.to(preloaderLetters, {
       opacity: 1,
@@ -190,14 +179,10 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function revealHeroContent() {
-    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
-    if (buttonsOverlay && buttonsOverlay.classList.contains('revealed')) return;
-    if (buttonsOverlay) buttonsOverlay.classList.add('revealed');
-
     document.dispatchEvent(new CustomEvent('reveal-navbar'));
 
     const heroWords = document.querySelectorAll('.hero-text-word');
-    // buttonsOverlay declared at top
+    const buttonsOverlay = document.querySelector('.hero-buttons-overlay');
     const buttons = document.querySelectorAll('.hero-buttons-overlay button');
 
     heroWords.forEach((word) => wrapForSlide(word as HTMLElement));
@@ -371,32 +356,26 @@ import Layout from '../layouts/Layout.astro';
     container.style.position = '';
     container.style.top = '';
 
-    // Handle SECTION
+    // Handle SECTION (main) styles
     if (isMobileDevice) {
-      // Mobile: Fixed + Spacer
-      section.style.position = 'relative';
-      section.style.minHeight = '100svh';
-      section.style.zIndex = 'auto';
-
-      container.style.position = 'fixed';
-      container.style.top = '0';
-      container.style.width = '100%';
-      container.style.minHeight = '100svh';
-      container.style.minHeight = '100svh';
-      container.style.zIndex = '50'; // Force High Z-Index
-      container.style.willChange = 'transform';
-
-      // Mobile: Disable GSAP ScrollTrigger
-      return;
+      // Reset styles
+      section.style.position = '';
+      section.style.height = '';
+      section.style.zIndex = '';
+      container.style.position = '';
+      container.style.top = '';
     }
 
     const scrollConfig = isMobileDevice
       ? {
           trigger: section,
           start: 'top top',
-          end: 'bottom top',
+          end: '+=100svh',
+          pin: true,
+          pinSpacing: false,
+          pinType: 'transform' as 'transform', // TS Fix
           scrub: true,
-          pin: false, // CSS Fixed
+          anticipatePin: 1,
         }
       : {
           trigger: section,

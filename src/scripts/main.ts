@@ -7,7 +7,6 @@ import { initSmoothScroll, cleanupSmoothScroll } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
-import { initPreloader } from './preloader';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,16 +16,6 @@ gsap.registerPlugin(ScrollTrigger);
 async function initializeApp() {
   // Initialize GSAP
   initializeGsap();
-
-  // Run Preloader (Unlocks scroll when done)
-  initPreloader();
-
-  // Failsafe: Ensure scroll is unlocked after 5s no matter what
-  setTimeout(() => {
-    document.body.style.overflow = '';
-    const preloader = document.getElementById('preloader');
-    if (preloader) preloader.style.display = 'none';
-  }, 5000);
 
   // Initialize Smooth Scroll first
   await initSmoothScroll();
