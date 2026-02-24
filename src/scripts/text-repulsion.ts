@@ -219,8 +219,8 @@ export const initTextRepulsion = () => {
         {
           y: "0%",
           opacity: 1,
-          duration: 1,
-          stagger: 0.015,
+          duration: 0.5, // Faster duration
+          stagger: 0.005, // Faster stagger between characters
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
