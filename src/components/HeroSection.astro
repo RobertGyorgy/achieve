@@ -149,15 +149,12 @@
 
     initDraggable();
     initTooltip();
-    // safeInitHeroExitAnimation() is now triggered by 'scroll-smoother-ready'
+    safeInitHeroExitAnimation();
   }
 
   // Lifecycle
   document.addEventListener('astro:page-load', () => {
     heroExitInitialized = false;
-  });
-
-  document.addEventListener('scroll-smoother-ready', () => {
     safeInitHeroExitAnimation();
   });
 

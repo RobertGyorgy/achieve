@@ -42,15 +42,11 @@ const aboutText = `We believe in the power of thoughtful design and cutting-edge
 <style>
   /* Performance optimization - isolate blur animations */
   #about {
-    contain: layout style paint;
   }
 
   /* About section text padding - responsive with left padding */
   #about-text {
     padding: 1.5rem 1.5rem 1.5rem 2rem;
-    contain: layout style paint;
-    transform: translateZ(0); /* Force GPU layer */
-    will-change: filter, transform;
   }
 
   /* Image container - responsive padding */

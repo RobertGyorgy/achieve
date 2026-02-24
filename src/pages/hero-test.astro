@@ -339,13 +339,11 @@ import Layout from '../layouts/Layout.astro';
     initPreloader();
     initDraggable();
     initTooltip();
+    safeInitHeroExitAnimation();
   });
 
   document.addEventListener('astro:page-load', () => {
     heroExitInitialized = false;
-  });
-
-  document.addEventListener('scroll-smoother-ready', () => {
     safeInitHeroExitAnimation();
   });
 
