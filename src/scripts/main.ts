@@ -7,6 +7,9 @@ import { initSmoothScroll, cleanupSmoothScroll } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
+if (typeof history !== 'undefined' && history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,6 +37,7 @@ async function initializeApp() {
     // We wait 100ms to ensure layout is stable.
     setTimeout(() => {
       ScrollTrigger.refresh();
+      document.dispatchEvent(new Event('scroll-smoother-ready'));
       if (import.meta.env.DEV) {
         console.log('✓ Achieve Studio - Animations initialized & Refreshed');
       }
