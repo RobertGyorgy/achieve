@@ -407,6 +407,10 @@ const animatePerspective = (
 	// Create GSAP timeline
 	const timeline = gsap.timeline({
 		delay: options.delay || 0,
+		onComplete: () => {
+			const target = typeof element !== 'undefined' ? element : container;
+			target.dispatchEvent(new CustomEvent('reveal-complete', { bubbles: true }));
+		}
 	});
 
 	// Animate each line
@@ -605,6 +609,10 @@ const animateSlide = (
 	// Create GSAP timeline
 	const timeline = gsap.timeline({
 		delay: options.delay || 0,
+		onComplete: () => {
+			const target = typeof element !== 'undefined' ? element : container;
+			target.dispatchEvent(new CustomEvent('reveal-complete', { bubbles: true }));
+		}
 	});
 
 	// Animate each line
@@ -680,6 +688,10 @@ const animateWords = (
 	// Create GSAP timeline
 	const timeline = gsap.timeline({
 		delay: options.delay || 0,
+		onComplete: () => {
+			const target = typeof element !== 'undefined' ? element : container;
+			target.dispatchEvent(new CustomEvent('reveal-complete', { bubbles: true }));
+		}
 	});
 
 	// Animate each word
