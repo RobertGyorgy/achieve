@@ -208,11 +208,26 @@ export const initTextRepulsion = () => {
       gsap.set(el, { autoAlpha: 1 });
 
       const wrappers = el.querySelectorAll(".reveal-wrapper");
-      // Make text visible immediately - no reveal animation
-      gsap.set(wrappers, {
-        y: 0,
-        opacity: 1,
-      });
+      
+      // Animate text reveal natively to prevent DOM restructuring
+      gsap.fromTo(
+        wrappers,
+        {
+          y: "100%",
+          opacity: 0,
+        },
+        {
+          y: "0%",
+          opacity: 1,
+          duration: 1,
+          stagger: 0.015,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+          }
+        }
+      );
     });
   };
 

@@ -4,7 +4,7 @@
 ---
 
 <section
-  class="relative w-full py-16 sm:py-20 md:py-24 lg:py-32 bg-transparent intro-text-section"
+  class="relative z-10 w-full py-16 sm:py-20 md:py-24 lg:py-32 bg-transparent intro-text-section"
 >
   <div
     class="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-center min-h-[60vh]"
@@ -12,13 +12,7 @@
     <div class="w-full max-w-7xl mx-auto">
       <div class="intro-text-box">
         <div class="description-reveal">
-          <div
-            class="description-reveal-split intro-text-justified"
-            data-reveal="words"
-            data-reveal-duration="1"
-            data-reveal-delay="0.1"
-            data-reveal-stagger="0.015"
-          >
+          <div class="description-reveal-split intro-text-justified">
             We create digital experiences that blend cutting-edge design with
             powerful functionality. Our approach combines strategic thinking,
             creative vision, and technical excellence to deliver solutions that
@@ -112,31 +106,10 @@
 <script>
   import { initTextRepulsion } from '../scripts/text-repulsion';
 
-  function setupRepulsionAfterReveal() {
-    const textElement = document.querySelector('.description-reveal-split');
-
-    // If the element has already been animated, initialize immediately
-    if (textElement && textElement.hasAttribute('data-reveal-animated')) {
-      initTextRepulsion();
-    } else if (textElement) {
-      // Wait for the reveal animation to finish before starting the repulsion interaction
-      textElement.addEventListener(
-        'reveal-complete',
-        () => {
-          initTextRepulsion();
-        },
-        { once: true }
-      );
-    } else {
-      // Fallback
-      initTextRepulsion();
-    }
-  }
-
   if (typeof window !== 'undefined') {
     // Wait for DOM to be ready
-    document.addEventListener('DOMContentLoaded', setupRepulsionAfterReveal);
+    document.addEventListener('DOMContentLoaded', initTextRepulsion);
     // Also initialize on Astro page load
-    document.addEventListener('astro:page-load', setupRepulsionAfterReveal);
+    document.addEventListener('astro:page-load', initTextRepulsion);
   }
 </script>
