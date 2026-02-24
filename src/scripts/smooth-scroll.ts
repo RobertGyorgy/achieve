@@ -53,8 +53,11 @@ export const initSmoothScroll = async () => {
   // Configure ScrollTrigger first (must be before ScrollSmoother)
   ScrollTrigger.config({
     autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
-    ignoreMobileResize: isMobileDevice,
+    ignoreMobileResize: true, // Always ignore mobile resize to prevent layout thrashing
   });
+  
+  // Natively force normalizeScroll for mobile pinning stability
+  ScrollTrigger.normalizeScroll(true);
 
   // Try to load ScrollSmoother plugin
   const ScrollSmoother = await loadScrollSmoother();
@@ -85,8 +88,8 @@ export const initSmoothScroll = async () => {
       smooth: isMobileDevice ? 0 : 1.5, // Smooth scroll amount (0 = disabled, higher = smoother)
       effects: true, // Enable effects for parallax and other scroll effects
       smoothTouch: false, // Disable on touch devices for better performance
-      normalizeScroll: !isMobileDevice, // Normalize scroll on desktop
-      ignoreMobileResize: isMobileDevice,
+      normalizeScroll: true, // Force normalizeScroll on all devices to stabilize pinning
+      ignoreMobileResize: true, // Always ignore mobile address bar resize
       onUpdate: (self: any) => {
         // Optional: handle scroll updates
       },

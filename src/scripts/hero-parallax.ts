@@ -14,7 +14,8 @@ export const initHeroParallax = () => {
   const hasSmoothWrapper = document.querySelector('#smooth-wrapper') !== null;
   const smoothWrapperIsStatic = hasSmoothWrapper ? (document.querySelector('#smooth-wrapper') as HTMLElement).style.position === 'static' : true;
   // If ScrollSmoother is disabled (like on mobile), we MUST use 'fixed'
-  const calculatedPinType = (!hasSmoothWrapper || smoothWrapperIsStatic || isMobile()) ? "fixed" : "transform";
+  // HARDCODED: testing fixed on all platforms for parity
+  const calculatedPinType = isMobile() ? "fixed" : "transform";
 
   // 1. Initialize for the main portfolio index page (HeroSection.astro)
   // The 'section' at the root of HeroSection.astro is the trigger
@@ -22,8 +23,7 @@ export const initHeroParallax = () => {
   const heroContainerMain = document.querySelector('.hero-section-container') as HTMLElement;
 
 
-  const introSectionMain = document.querySelector('.intro-text-section');
-  if (heroSectionMain && heroContainerMain && introSectionMain && !document.querySelector('.hero-test-container')) {
+  if (heroSectionMain && heroContainerMain && !document.querySelector('.hero-test-container')) {
     gsap.to(heroContainerMain, {
       scale: 0.9,
       filter: "blur(4px)",
@@ -31,11 +31,13 @@ export const initHeroParallax = () => {
       ease: "none",
       force3D: true,
       scrollTrigger: {
-        trigger: introSectionMain, // The intro section overlaps it
-        start: "top bottom",       // Start effect when intro appears at bottom
-        end: "top top",            // End effect when intro reaches top
+        trigger: heroSectionMain, // Pin the section itself
+        start: "top top",         // Start when it hits top of viewport
+        end: "+=100%",            // Pin for full height of viewport
         scrub: 1,
-        pin: false,                // Never pin - CSS sticky does this natively
+        pin: true,                // Reactivate GSAP pin
+        pinSpacing: false,        // Let next section slide over!
+        pinType: calculatedPinType, // Use 'fixed' on mobile natively
         invalidateOnRefresh: true,
       },
     });
@@ -46,8 +48,7 @@ export const initHeroParallax = () => {
   const heroContainerTest = document.querySelector('.hero-test-container') as HTMLElement;
 
 
-  const introSectionTest = document.querySelector('.intro-test-section');
-  if (heroSectionTest && heroContainerTest && introSectionTest) {
+  if (heroSectionTest && heroContainerTest) {
     gsap.to(heroContainerTest, {
       scale: 0.9,
       filter: "blur(4px)",
@@ -55,11 +56,13 @@ export const initHeroParallax = () => {
       ease: "none",
       force3D: true,
       scrollTrigger: {
-        trigger: introSectionTest,
-        start: "top bottom",
-        end: "top top", 
+        trigger: heroSectionTest,
+        start: "top top",
+        end: "+=100%", 
         scrub: 1,         
-        pin: false, 
+        pin: true,
+        pinSpacing: false,
+        pinType: calculatedPinType,
         invalidateOnRefresh: true,
       },
     });

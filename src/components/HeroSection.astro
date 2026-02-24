@@ -2,101 +2,103 @@
 // HeroSection.astro - Refined Version
 ---
 
-<section
-  id="hero-section"
-  class="sticky top-0 w-full h-[100dvh] bg-[#F2F2F2] z-0"
->
-  <div
-    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0 relative"
+<div class="hero-pin-wrapper relative w-full overflow-hidden">
+  <section
+    id="hero-section"
+    class="sticky top-0 w-full h-[100dvh] bg-[#F2F2F2] z-0"
   >
-    <!-- Top: ACHIEVE -->
-    <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
-      <h1 class="achieve-hero-title flex justify-between w-full">
-        <span class="hero-text-word" data-tooltip="Drag">A</span>
-        <span class="hero-text-word" data-tooltip="Drag">C</span>
-        <span class="hero-text-word" data-tooltip="Drag">H</span>
-        <span class="hero-text-word" data-tooltip="Drag">I</span>
-        <span class="hero-text-word" data-tooltip="Drag">E</span>
-        <span class="hero-text-word" data-tooltip="Drag">V</span>
-        <span class="hero-text-word" data-tooltip="Drag">E</span>
-      </h1>
-    </div>
-
-    <!-- Middle: Headline -->
     <div
-      class="hero-middle flex-1 md:flex-none flex flex-col justify-center items-center md:items-start pl-0 md:pl-2 md:mb-32 lg:mb-0 w-full"
+      class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0 relative"
     >
-      <!-- Mobile Layout: 3 Stacked Rows (Visible only on mobile) -->
-      <div class="md:hidden w-full flex flex-col items-center justify-center">
-        <div class="hero-title-row flex justify-center w-full">
+      <!-- Top: ACHIEVE -->
+      <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
+        <h1 class="achieve-hero-title flex justify-between w-full">
+          <span class="hero-text-word" data-tooltip="Drag">A</span>
+          <span class="hero-text-word" data-tooltip="Drag">C</span>
+          <span class="hero-text-word" data-tooltip="Drag">H</span>
+          <span class="hero-text-word" data-tooltip="Drag">I</span>
+          <span class="hero-text-word" data-tooltip="Drag">E</span>
+          <span class="hero-text-word" data-tooltip="Drag">V</span>
+          <span class="hero-text-word" data-tooltip="Drag">E</span>
+        </h1>
+      </div>
+
+      <!-- Middle: Headline -->
+      <div
+        class="hero-middle flex-1 md:flex-none flex flex-col justify-center items-center md:items-start pl-0 md:pl-2 md:mb-32 lg:mb-0 w-full"
+      >
+        <!-- Mobile Layout: 3 Stacked Rows (Visible only on mobile) -->
+        <div class="md:hidden w-full flex flex-col items-center justify-center">
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max"
+              data-tooltip="Drag">CREĂM</span
+            >
+          </div>
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max"
+              data-tooltip="Drag">IMPACT</span
+            >
+          </div>
+          <div class="hero-title-row flex justify-center w-full">
+            <span
+              class="hero-text-word headline-word mobile-max accent text-[#ff4500]"
+              data-tooltip="Drag">DIGITAL</span
+            >
+          </div>
+        </div>
+
+        <!-- Desktop Layout: 1 Single Row (Visible only on desktop) -->
+        <div
+          class="hidden md:flex hero-title-row justify-start gap-x-[1vw] w-full"
+        >
           <span
-            class="hero-text-word headline-word mobile-max"
+            class="hero-text-word headline-word desktop-min"
             data-tooltip="Drag">CREĂM</span
           >
-        </div>
-        <div class="hero-title-row flex justify-center w-full">
           <span
-            class="hero-text-word headline-word mobile-max"
+            class="hero-text-word headline-word desktop-min"
             data-tooltip="Drag">IMPACT</span
           >
-        </div>
-        <div class="hero-title-row flex justify-center w-full">
           <span
-            class="hero-text-word headline-word mobile-max accent text-[#ff4500]"
+            class="hero-text-word headline-word desktop-min accent text-[#ff4500]"
             data-tooltip="Drag">DIGITAL</span
           >
         </div>
       </div>
 
-      <!-- Desktop Layout: 1 Single Row (Visible only on desktop) -->
+      <!-- Bottom Row -->
       <div
-        class="hidden md:flex hero-title-row justify-start gap-x-[1vw] w-full"
+        class="hero-bottom w-full flex flex-col md:flex-row items-center md:items-end justify-between gap-12 md:gap-32 lg:gap-0"
       >
-        <span
-          class="hero-text-word headline-word desktop-min"
-          data-tooltip="Drag">CREĂM</span
-        >
-        <span
-          class="hero-text-word headline-word desktop-min"
-          data-tooltip="Drag">IMPACT</span
-        >
-        <span
-          class="hero-text-word headline-word desktop-min accent text-[#ff4500]"
-          data-tooltip="Drag">DIGITAL</span
-        >
+        <!-- Functional Buttons (Literal 1:1 Copy from HeroSection.astro) -->
+        <div class="hero-buttons-overlay">
+          <button class="cutout-button primary blob-btn" id="lets-talk-btn"
+            >Let's Talk</button
+          >
+          <button class="cutout-button secondary blob-btn" id="process-btn"
+            >Our Process</button
+          >
+        </div>
+
+        <!-- Studio Label -->
+        <div class="text-right hidden md:block">
+          <p
+            class="font-nura font-bold text-[#222831] text-xs md:text-xl uppercase leading-tight tracking-wide"
+          >
+            PREMIUM<br />
+            WEB DEVELOPMENT<br />
+            & DESIGN STUDIO
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- Bottom Row -->
-    <div
-      class="hero-bottom w-full flex flex-col md:flex-row items-center md:items-end justify-between gap-12 md:gap-32 lg:gap-0"
-    >
-      <!-- Functional Buttons (Literal 1:1 Copy from HeroSection.astro) -->
-      <div class="hero-buttons-overlay">
-        <button class="cutout-button primary blob-btn" id="lets-talk-btn"
-          >Let's Talk</button
-        >
-        <button class="cutout-button secondary blob-btn" id="process-btn"
-          >Our Process</button
-        >
-      </div>
-
-      <!-- Studio Label -->
-      <div class="text-right hidden md:block">
-        <p
-          class="font-nura font-bold text-[#222831] text-xs md:text-xl uppercase leading-tight tracking-wide"
-        >
-          PREMIUM<br />
-          WEB DEVELOPMENT<br />
-          & DESIGN STUDIO
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Drag Tooltip -->
-  <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
-</section>
+    <!-- Drag Tooltip -->
+    <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
+  </section>
+</div>
 
 <script>
   import gsap from 'gsap';
