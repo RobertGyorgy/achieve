@@ -149,76 +149,12 @@
 
     initDraggable();
     initTooltip();
-    safeInitHeroExitAnimation();
   }
 
   // Lifecycle
   document.addEventListener('astro:page-load', () => {
-    heroExitInitialized = false;
-    safeInitHeroExitAnimation();
+    // Other cleanups if needed
   });
-
-  let heroExitInitialized = false;
-
-  function runHeroExitAnimation() {
-    const heroSection = document.querySelector(
-      '.hero-section-container[data-scroll-section]'
-    );
-    const heroContent = heroSection?.querySelector('.hero-content-wrapper'); // Verify class name in HTML?
-    // Wait, the HTML doesn't have 'hero-content-wrapper'.
-    // It has 'hero-middle', 'hero-top', 'hero-bottom'.
-    // The container itself is the pinned element?
-    // "gsap.to(heroContent, ...)"
-    // In the user's snippet, "heroContent" is the target.
-    // In current code: "gsap.to(container, ...)" where container = .hero-section-container
-    // BUT if we pin the Section, we animate the Content?
-    // Or do we pin the Content?
-    // User said: "gsap.to(heroContent, ... scrollTrigger: { trigger: heroSection ... pin: true })"
-    // If pin:true is on scrollTrigger, it pins the TRIGGER (heroSection).
-    // And it animates heroContent (scale/blur).
-
-    // Let's look at the HTML structure:
-    // <section> (wrapper)
-    //   <div class="hero-section-container"> (content)
-
-    // If I pin the SECTION, the DIV inside stays fixed relative to it?
-    // Actually, if we pin the section, the section stays in the viewport.
-    // And we want the *content* to fade out?
-
-    const section = document.querySelector('section');
-    const container = document.querySelector('.hero-section-container');
-
-    if (!section || !container) return;
-
-    // Unified parallax behavior for all devices
-    gsap.to(container, {
-      scale: 0.9,
-      filter: 'blur(8px)',
-      opacity: 0.5,
-      ease: 'none',
-      force3D: true,
-      scrollTrigger: {
-        trigger: section,
-        start: 'bottom bottom',
-        end: 'bottom top',
-        scrub: 0.5,
-        pin: true, // Enabled on all devices
-        pinSpacing: false,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    (section as HTMLElement).dataset.exitAnimInit = 'true';
-  }
-
-  function safeInitHeroExitAnimation() {
-    if (heroExitInitialized) return;
-    const heroSection = document.querySelector('section');
-    if (heroSection && (heroSection as HTMLElement).dataset.exitAnimInit)
-      return;
-    heroExitInitialized = true;
-    runHeroExitAnimation();
-  }
 
   function initPreloader(preloader: HTMLElement, letters: NodeList) {
     const tl = gsap.timeline();

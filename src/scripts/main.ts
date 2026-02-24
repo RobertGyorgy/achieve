@@ -7,6 +7,7 @@ import { initSmoothScroll, cleanupSmoothScroll } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
+import { initHeroParallax } from './hero-parallax';
 if (typeof history !== 'undefined' && history.scrollRestoration) {
   history.scrollRestoration = 'manual';
 }
@@ -32,6 +33,7 @@ async function initializeApp() {
     initBackgroundTransition();
     initFAQAccordion();
     initFAQAnimations();
+    initHeroParallax();
 
     // Critical: refreshing ScrollTrigger too early on reload can cause freezes.
     // We wait 100ms to ensure layout is stable.

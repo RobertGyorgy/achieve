@@ -339,50 +339,11 @@ import Layout from '../layouts/Layout.astro';
     initPreloader();
     initDraggable();
     initTooltip();
-    safeInitHeroExitAnimation();
   });
 
   document.addEventListener('astro:page-load', () => {
-    heroExitInitialized = false;
-    safeInitHeroExitAnimation();
+    // Keep page clean
   });
-
-  let heroExitInitialized = false;
-
-  function runHeroExitAnimation() {
-    const section = document.querySelector('main');
-    const container = document.querySelector('.hero-test-container');
-
-    if (!section || !container) return;
-
-    // Unified parallax behavior for all devices
-    gsap.to(container, {
-      scale: 0.9,
-      filter: 'blur(8px)',
-      opacity: 0.5,
-      ease: 'none',
-      force3D: true,
-      scrollTrigger: {
-        trigger: section,
-        start: 'bottom bottom',
-        end: 'bottom top',
-        scrub: 0.5,
-        pin: true, // Enabled on all devices
-        pinSpacing: false,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    (section as HTMLElement).dataset.exitAnimInit = 'true';
-  }
-
-  function safeInitHeroExitAnimation() {
-    if (heroExitInitialized) return;
-    const section = document.querySelector('main');
-    if (section && (section as HTMLElement).dataset.exitAnimInit) return;
-    heroExitInitialized = true;
-    runHeroExitAnimation();
-  }
 </script>
 
 <style is:global>
