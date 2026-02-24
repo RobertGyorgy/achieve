@@ -47,6 +47,7 @@ async function initializeApp() {
 
 // Initialize on page load
 document.addEventListener('astro:page-load', () => {
+  window.scrollTo(0, 0);
   initializeApp();
 });
 
@@ -59,9 +60,20 @@ document.addEventListener('astro:before-swap', () => {
   cleanupSmoothScroll();
 });
 
+// Force scroll to top on manual reload before JS initializes
+if (typeof window !== 'undefined') {
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+  };
+}
+
 // Initial load
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp);
+  document.addEventListener('DOMContentLoaded', () => {
+    window.scrollTo(0, 0);
+    initializeApp();
+  });
 } else {
+  window.scrollTo(0, 0);
   initializeApp();
 }
