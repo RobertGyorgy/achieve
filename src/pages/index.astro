@@ -15,7 +15,7 @@ import Footer from '../components/Footer.astro';
   title="Achieve Studio - Web Design & Development"
   description="Premium web design and development studio. We create beautiful, high-performance websites and applications for modern brands."
 >
-  <main>
+  <main class="w-full relative">
     <HeroSection />
 
     <IntroTextSection />
@@ -38,38 +38,38 @@ import Footer from '../components/Footer.astro';
 
     <Footer />
   </main>
+
+  <style is:global>
+    main {
+      min-height: 100vh;
+    }
+
+    /* Smooth page transitions */
+    @media (prefers-reduced-motion: no-preference) {
+      ::view-transition-old(*) {
+        animation: fade-out 0.6s ease-out forwards;
+      }
+      ::view-transition-new(*) {
+        animation: fade-in 0.6s ease-out forwards;
+      }
+    }
+
+    @keyframes fade-out {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
 </Layout>
-
-<style is:global>
-  main {
-    min-height: 100vh;
-  }
-
-  /* Smooth page transitions */
-  @media (prefers-reduced-motion: no-preference) {
-    ::view-transition-old(*) {
-      animation: fade-out 0.6s ease-out forwards;
-    }
-    ::view-transition-new(*) {
-      animation: fade-in 0.6s ease-out forwards;
-    }
-  }
-
-  @keyframes fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-</style>

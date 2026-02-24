@@ -22,21 +22,20 @@ export const initHeroParallax = () => {
   const heroContainerMain = document.querySelector('.hero-section-container') as HTMLElement;
 
 
-  if (heroSectionMain && heroContainerMain && !document.querySelector('.hero-test-container')) {
+  const introSectionMain = document.querySelector('.intro-text-section');
+  if (heroSectionMain && heroContainerMain && introSectionMain && !document.querySelector('.hero-test-container')) {
     gsap.to(heroContainerMain, {
       scale: 0.9,
-      filter: "blur(4px)", // Lighter blur for performance
-      opacity: 0, // Fade out completely as intro overlaps
+      filter: "blur(4px)",
+      opacity: 0,
       ease: "none",
       force3D: true,
       scrollTrigger: {
-        trigger: heroSectionMain, // The hero section itself is the trigger
-        start: "top top",         // Start pinning when top of hero hits top of viewport
-        end: "+=100%",            // Pin for the entire height of the viewport
+        trigger: introSectionMain, // The intro section overlaps it
+        start: "top bottom",       // Start effect when intro appears at bottom
+        end: "top top",            // End effect when intro reaches top
         scrub: 1,
-        pin: true,
-        pinSpacing: false,
-        pinType: calculatedPinType,
+        pin: false,                // Never pin - CSS sticky does this natively
         invalidateOnRefresh: true,
       },
     });
@@ -47,7 +46,8 @@ export const initHeroParallax = () => {
   const heroContainerTest = document.querySelector('.hero-test-container') as HTMLElement;
 
 
-  if (heroSectionTest && heroContainerTest) {
+  const introSectionTest = document.querySelector('.intro-test-section');
+  if (heroSectionTest && heroContainerTest && introSectionTest) {
     gsap.to(heroContainerTest, {
       scale: 0.9,
       filter: "blur(4px)",
@@ -55,13 +55,11 @@ export const initHeroParallax = () => {
       ease: "none",
       force3D: true,
       scrollTrigger: {
-        trigger: heroSectionTest,
-        start: "top top",
-        end: "+=100%", 
+        trigger: introSectionTest,
+        start: "top bottom",
+        end: "top top", 
         scrub: 1,         
-        pin: true, 
-        pinSpacing: false,
-        pinType: calculatedPinType,
+        pin: false, 
         invalidateOnRefresh: true,
       },
     });

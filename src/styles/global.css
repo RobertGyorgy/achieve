@@ -139,6 +139,7 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   isolation: auto;
+  overflow-x: clip; /* clip prevents horizontal scroll but preserves sticky pinning unlike hidden */
   /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
