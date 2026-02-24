@@ -58,7 +58,10 @@ export const initTextRepulsion = () => {
 
       splitElements.forEach((splitEl) => {
         if (splitEl instanceof HTMLElement && !splitEl.dataset.split) {
-          const text = splitEl.textContent || "";
+          // Fix double text: RevealAnimationHandler adds an .sr-only span and an aria-hidden div.
+          const srOnly = splitEl.querySelector('.sr-only');
+          const text = srOnly ? srOnly.textContent || "" : splitEl.textContent || "";
+
           // Split into characters, preserving whitespace
           const html = text
             .split("")
@@ -273,7 +276,6 @@ export const initTextRepulsion = () => {
 
     // Cleanup function
     return () => {
-      if (scrollTrigger) scrollTrigger.kill();
       gsap.ticker.remove(physicsLoop);
       window.removeEventListener("pointermove", updateMouseVelocity);
     };
