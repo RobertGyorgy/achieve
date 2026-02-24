@@ -74,14 +74,6 @@ export const initSmoothScroll = async () => {
     smoothWrapper.style.overflow = 'visible';
     smoothContent.style.overflow = 'visible';
     
-    // CRITICAL: CSS position:sticky completely breaks if ANY parent has overflow: hidden or clip.
-    // ScrollSmoother defaults to locking the body, so we MUST violently unlock it on mobile
-    // to allow our new native Hybrid CSS sticky hero pinning to function.
-    document.documentElement.style.overflow = 'visible';
-    document.body.style.overflow = 'visible';
-    document.documentElement.style.overflowX = 'hidden'; // Keep X locked for horizontal scroll prevention
-    document.body.style.overflowX = 'hidden';
-    
     return null;
   }
 
