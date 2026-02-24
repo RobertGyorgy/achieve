@@ -2,73 +2,81 @@
 // Video-based Marquee Component using Reeller
 ---
 
-<div class="sw-partner-marquee">
+<div class="sw-partner-marquee bg-[#F2F2F2]">
   <div class="sw-partner-marquee-row">
     <div class="sw-partner-marquee-row-item">
-      {[...Array(14)].map((_, i) => (
-        <div class="sw-partner-logo">
-          <div class="display-expla">
-            <span>
-              DESIGN <br />
-              STUDIO
-            </span>
+      {
+        [...Array(14)].map((_, i) => (
+          <div class="sw-partner-logo">
+            <div class="display-expla">
+              <span>
+                DESIGN <br />
+                STUDIO
+              </span>
+            </div>
+            <div class="display-video">
+              <video
+                src={
+                  i % 2 === 0
+                    ? 'https://cdn.cuberto.com/cb/hello/overview/1.mp4'
+                    : 'https://cdn.cuberto.com/cb/hello/overview/3.webm'
+                }
+                autoplay
+                playsinline
+                loop
+                muted
+                poster={
+                  i % 2 === 0
+                    ? 'https://i.postimg.cc/Z5zTypN3/videoframe-2436.png'
+                    : 'https://i.postimg.cc/nhKnKrKW/videoframe-6866.png'
+                }
+              />
+            </div>
           </div>
-          <div class="display-video">
-            <video
-              src={i % 2 === 0 
-                ? "https://cdn.cuberto.com/cb/hello/overview/1.mp4"
-                : "https://cdn.cuberto.com/cb/hello/overview/3.webm"
-              }
-              autoplay
-              playsinline
-              loop
-              muted
-              poster={i % 2 === 0
-                ? "https://i.postimg.cc/Z5zTypN3/videoframe-2436.png"
-                : "https://i.postimg.cc/nhKnKrKW/videoframe-6866.png"
-              }
-            ></video>
-          </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
     <!-- Duplicate for seamless loop -->
     <div class="sw-partner-marquee-row-item" aria-hidden="true">
-      {[...Array(14)].map((_, i) => (
-        <div class="sw-partner-logo">
-          <div class="display-expla">
-            <span>
-              DESIGN <br />
-              STUDIO
-            </span>
+      {
+        [...Array(14)].map((_, i) => (
+          <div class="sw-partner-logo">
+            <div class="display-expla">
+              <span>
+                DESIGN <br />
+                STUDIO
+              </span>
+            </div>
+            <div class="display-video">
+              <video
+                src={
+                  i % 2 === 0
+                    ? 'https://cdn.cuberto.com/cb/hello/overview/1.mp4'
+                    : 'https://cdn.cuberto.com/cb/hello/overview/3.webm'
+                }
+                autoplay
+                playsinline
+                loop
+                muted
+                poster={
+                  i % 2 === 0
+                    ? 'https://i.postimg.cc/Z5zTypN3/videoframe-2436.png'
+                    : 'https://i.postimg.cc/nhKnKrKW/videoframe-6866.png'
+                }
+              />
+            </div>
           </div>
-          <div class="display-video">
-            <video
-              src={i % 2 === 0 
-                ? "https://cdn.cuberto.com/cb/hello/overview/1.mp4"
-                : "https://cdn.cuberto.com/cb/hello/overview/3.webm"
-              }
-              autoplay
-              playsinline
-              loop
-              muted
-              poster={i % 2 === 0
-                ? "https://i.postimg.cc/Z5zTypN3/videoframe-2436.png"
-                : "https://i.postimg.cc/nhKnKrKW/videoframe-6866.png"
-              }
-            ></video>
-          </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </div>
 </div>
 
 <style>
   @font-face {
-    font-family: "Uzi";
-    src: url("https://raw.githubusercontent.com/vickkie/uzitrake/main/fonts/MonumentExtended-Regular.woff")
-      format("woff");
+    font-family: 'Uzi';
+    src: url('https://raw.githubusercontent.com/vickkie/uzitrake/main/fonts/MonumentExtended-Regular.woff')
+      format('woff');
     font-weight: normal;
     font-style: normal;
   }
@@ -293,4 +301,3 @@
     font-family: Uzi;
   }
 </style>
-
