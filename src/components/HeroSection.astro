@@ -113,22 +113,31 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Helper to prepare elements for Character-by-Character Reveal
+  // Helper to prepare elements for Character-by-Character or Word Reveal
   function wrapForAppearance(element: HTMLElement, splitByCharacters = false) {
-    const text = element.innerText;
-
-    if (splitByCharacters) {
-      // Split into single characters
-      element.innerHTML = text
-        .split('')
-        .map((char) => {
-          if (char === ' ') return ' ';
-          return `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${char}</span>`;
-        })
-        .join('');
+    if (element.children.length > 0 && !splitByCharacters) {
+      // If it has children (like the mobile 3 rows of spans) and we're not splitting by char,
+      // iterate and wrap the text of each child span, preserving the DOM structure.
+      Array.from(element.children).forEach((child) => {
+        const text = (child as HTMLElement).innerText;
+        child.innerHTML = `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${text}</span>`;
+      });
     } else {
-      // Split into word inner (for headline words)
-      element.innerHTML = `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${text}</span>`;
+      const text = element.innerText;
+
+      if (splitByCharacters) {
+        // Split into single characters
+        element.innerHTML = text
+          .split('')
+          .map((char) => {
+            if (char === ' ') return ' ';
+            return `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${char}</span>`;
+          })
+          .join('');
+      } else {
+        // Split into word inner (for headline words)
+        element.innerHTML = `<span class="char-inner" style="display: inline-block; will-change: transform, opacity;">${text}</span>`;
+      }
     }
 
     // Ensure parent has perspective for 3D state
