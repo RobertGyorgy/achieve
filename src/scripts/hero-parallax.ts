@@ -1,8 +1,6 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
-import { isMobile } from './smooth-scroll';
-
 /**
  * Initializes the unified parallax effect for the Hero section.
  * This function should only be called once ScrollSmoother is fully initialized.
@@ -10,67 +8,64 @@ import { isMobile } from './smooth-scroll';
 export const initHeroParallax = () => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Determine correct pin type based on environment context
-  const hasSmoothWrapper = document.querySelector('#smooth-wrapper') !== null;
-  const smoothWrapperIsStatic = hasSmoothWrapper ? (document.querySelector('#smooth-wrapper') as HTMLElement).style.position === 'static' : true;
-  // If ScrollSmoother is disabled (like on mobile), we MUST use 'fixed'
-  const isMobileDevice = isMobile();
-  const calculatedPinType = isMobileDevice ? "fixed" : "transform";
+  const isMobileDevice = window.innerWidth < 1024;
 
   // 1. Initialize for the main portfolio index page (HeroSection.astro)
-  // The 'section' at the root of HeroSection.astro is the trigger
-  const heroSectionMain = document.querySelector('#hero-section') || document.querySelector('section.bg-\\[\\#F2F2F2\\]');
-  const heroContainerMain = document.querySelector('.hero-section-container') as HTMLElement;
-  const hybridWrapperMain = document.querySelector('#hero-hybrid-wrapper') as HTMLElement;
+  const heroSectionMain = document.querySelector('#hero-section');
+  const heroContentMain = document.querySelector('#hero-content-wrapper') as HTMLElement;
+  const isTestPage = document.querySelector('.hero-test-container') !== null;
 
-
-  if (heroSectionMain && heroContainerMain && !document.querySelector('.hero-test-container')) {
-    // If mobile, trigger off the 200vh wrapper instead of the sticky content so it stays active
-    const triggerTarget = isMobileDevice && hybridWrapperMain ? hybridWrapperMain : heroSectionMain;
-    
-    gsap.to(heroContainerMain, {
-      scale: 0.9,
-      filter: "blur(4px)",
-      opacity: 0,
-      ease: "none",
-      force3D: true,
-      scrollTrigger: {
-        trigger: triggerTarget,   // Pin the section itself (or wrapper on mobile)
-        start: "top top",         // Start when it hits top of viewport
-        end: "+=100%",            // Pin for full height of viewport
-        scrub: 1,
-        pin: !isMobileDevice,     // NEVER pin on mobile via GSAP, use native CSS instead
-        pinSpacing: false,        
-        invalidateOnRefresh: true,
-      },
-    });
+  if (heroSectionMain && heroContentMain && !isTestPage) {
+    if (isMobileDevice) {
+      // Per reference logic: Disable GSAP pin and exit animation on mobile
+      (heroSectionMain as HTMLElement).dataset.exitAnimInit = "true";
+      // We skip setting up the trigger so it just scrolls natively.
+    } else {
+      gsap.to(heroContentMain, {
+        scale: 0.9,
+        filter: "blur(8px)",
+        opacity: 0.5,
+        ease: "none",
+        force3D: true,
+        scrollTrigger: {
+          trigger: heroSectionMain,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.5,
+          pin: true, 
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        },
+      });
+      (heroSectionMain as HTMLElement).dataset.exitAnimInit = "true";
+    }
   }
 
   // 2. Initialize for the standalone test page (hero-test.astro)
-  // On the standalone test page, trigger off the main wrapper
-  const heroSectionTest = document.querySelector('main') || document.querySelector('.hero-test-container')?.closest('section');
-  const heroContainerTest = document.querySelector('.hero-test-container') as HTMLElement;
-  const hybridWrapperTest = document.querySelector('#hero-hybrid-wrapper') as HTMLElement;
+  const heroSectionTest = document.querySelector('main');
+  const heroContentTest = document.querySelector('.hero-test-container') as HTMLElement;
 
-
-  if (heroSectionTest && heroContainerTest) {
-    const triggerTargetTest = isMobileDevice && hybridWrapperTest ? hybridWrapperTest : heroSectionTest;
-    
-    gsap.to(heroContainerTest, {
-      scale: 0.9,
-      filter: "blur(4px)",
-      opacity: 0,
-      ease: "none",
-      force3D: true,
-      scrollTrigger: {
-        trigger: triggerTargetTest,
-        start: "top top",
-        end: "+=100%", 
-        scrub: 1,         
-        pin: !isMobileDevice,
-        pinSpacing: false,
-        invalidateOnRefresh: true,
-      },
-    });
+  if (heroSectionTest && heroContentTest && isTestPage) {
+    if (isMobileDevice) {
+      (heroSectionTest as HTMLElement).dataset.exitAnimInit = "true";
+    } else {
+      gsap.to(heroContentTest, {
+        scale: 0.9,
+        filter: "blur(8px)",
+        opacity: 0.5,
+        ease: "none",
+        force3D: true,
+        scrollTrigger: {
+          trigger: heroSectionTest,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.5,
+          pin: true, 
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        },
+      });
+      (heroSectionTest as HTMLElement).dataset.exitAnimInit = "true";
+    }
   }
 };
