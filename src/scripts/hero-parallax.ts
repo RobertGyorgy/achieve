@@ -22,11 +22,10 @@ export const initHeroParallax = () => {
       force3D: true,
       scrollTrigger: {
         trigger: heroSectionMain,
-        start: "bottom bottom",
-        end: "bottom top",
-        scrub: 0.5,
-        pin: true,
-        pinSpacing: false,
+        start: "top top",
+        end: "bottom top", // Animate until the section leaves the viewport normally
+        scrub: 1,
+        pin: false, // Let CSS sticky handle pinning for zero lag
         invalidateOnRefresh: true,
       },
     });
@@ -45,11 +44,10 @@ export const initHeroParallax = () => {
       force3D: true,
       scrollTrigger: {
         trigger: heroSectionTest,
-        start: "bottom bottom",
-        end: "bottom top",
-        scrub: 0.5,
-        pin: true,
-        pinSpacing: false,
+        start: "top top",
+        end: "bottom top", 
+        scrub: 1,         
+        pin: false, // Let CSS sticky handle pinning
         invalidateOnRefresh: true,
       },
     });

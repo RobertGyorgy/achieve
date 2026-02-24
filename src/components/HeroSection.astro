@@ -4,11 +4,11 @@
 
 <section
   id="hero-section"
-  class="relative w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-hidden"
+  class="relative w-full min-h-screen lg:h-screen bg-[#F2F2F2] overflow-x-hidden lg:overflow-clip"
 >
-  <!-- Main Content Container with fixed padding to prevent gluing to edges -->
+  <!-- Main Content Container with CSS sticky for zero-lag mobile pinning -->
   <div
-    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0"
+    class="hero-section-container w-full h-full flex flex-col justify-between box-border gap-12 md:gap-32 lg:gap-0 sticky top-0 h-screen h-[100svh]"
   >
     <!-- Top: ACHIEVE -->
     <div class="hero-top hidden md:block mb-12 md:mb-32 lg:mb-0">
