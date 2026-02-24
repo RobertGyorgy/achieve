@@ -72,7 +72,12 @@ export const initSmoothScroll = async () => {
     smoothWrapper.style.position = 'static';
     smoothWrapper.style.height = 'auto';
     smoothWrapper.style.overflow = 'visible';
+    
+    // CRITICAL: Strip any leftover transform or will-change properties
+    // that create a new containing block, which fatally breaks GSAP pin (position: fixed)
     smoothContent.style.overflow = 'visible';
+    smoothContent.style.willChange = 'auto';
+    smoothContent.style.transform = 'none';
     
     return null;
   }

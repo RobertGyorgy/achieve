@@ -394,6 +394,8 @@ body.scroll-smoother-active {
     overflow: visible !important;
     width: auto !important;
     height: auto !important;
+    will-change: auto !important;
+    transform: none !important;
   }
 
   body.scroll-smoother-active {
