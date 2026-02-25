@@ -85,7 +85,7 @@ const featuredProjects = [
 </div>
 
 <!-- Custom "View Project" Cursor Follower -->
-<div id="feature-cursor" class="fixed top-0 left-0 w-24 h-24 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white flex items-center justify-center pointer-events-none z-[100] mix-blend-difference" style="transform: translate(-50%, -50%) scale(0); opacity: 0; transition: transform 0.1s ease-out, opacity 0.3s ease-out, scale 0.3s ease-out;">
+<div id="feature-cursor" class="fixed top-0 left-0 w-24 h-24 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white flex items-center justify-center pointer-events-none z-[99999] mix-blend-difference opacity-0" style="transform: scale(0);">
   <span class="text-[10px] uppercase tracking-widest font-bold text-center leading-tight">View<br/>Project</span>
 </div>
 
@@ -95,41 +95,4 @@ const featuredProjects = [
     box-shadow: 0 -20px 50px rgba(0,0,0,0.1);
     cursor: none; /* Hide default cursor when hovering this section */
   }
-  
-  /* When hovering links, we might want the cursor to pop a bit more */
-  #featured-work-container a:hover ~ #feature-cursor {
-    background-color: white;
-    color: black;
-    mix-blend-mode: normal;
-  }
 </style>
-
-<script>
-  function initFeatureCursor() {
-    const container = document.getElementById('featured-work-container');
-    const cursor = document.getElementById('feature-cursor');
-    
-    if (!container || !cursor) return;
-
-    // Track mouse movement inside the container
-    container.addEventListener('mousemove', (e) => {
-      // Use clientX/Y for fixed positioning
-      cursor.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%)) scale(1)`;
-    });
-
-    // Show cursor when entering container
-    container.addEventListener('mouseenter', () => {
-      cursor.style.opacity = '1';
-    });
-
-    // Hide cursor when leaving container
-    container.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
-      cursor.style.transform = `translate(-50%, -50%) scale(0)`;
-    });
-  }
-
-  // Run on load and ViewTransitions
-  document.addEventListener('DOMContentLoaded', initFeatureCursor);
-  document.addEventListener('astro:page-load', initFeatureCursor);
-</script>

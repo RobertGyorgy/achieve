@@ -143,4 +143,28 @@ export const initFeaturedWorkScroll = () => {
     preventDefault: true
   });
   observer.disable();
+
+  // --- Global Cursor Logic ---
+  const cursor = document.getElementById('feature-cursor');
+  if (cursor) {
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.2, ease: "power3" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.2, ease: "power3" });
+    
+    // Function to handle movement
+    const moveCursor = (e: PointerEvent | MouseEvent) => {
+      // Offset by 48px because w-24 h-24 is 96px/96px
+      xTo(e.clientX - 48);
+      yTo(e.clientY - 48);
+    };
+
+    window.addEventListener("pointermove", moveCursor);
+
+    container.addEventListener("mouseenter", () => {
+      gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' });
+    });
+
+    container.addEventListener("mouseleave", () => {
+      gsap.to(cursor, { scale: 0, opacity: 0, duration: 0.3, ease: 'power2.in' });
+    });
+  }
 };
