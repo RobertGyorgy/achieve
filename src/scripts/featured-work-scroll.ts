@@ -17,6 +17,9 @@ const initFeaturedWorkAnimation = () => {
   // so each card gets exactly 1 viewport height of scroll distance to slide up.
   const totalScrollHeight = (cards.length - 1) * window.innerHeight;
 
+  // Immediately hide all cards except the first one
+  gsap.set(cards.slice(1), { yPercent: 100, y: 0 });
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
@@ -26,15 +29,12 @@ const initFeaturedWorkAnimation = () => {
       scrub: 1, // Smooth scrubbing
       anticipatePin: 1,
       invalidateOnRefresh: true,
+      id: 'featured-work-pin',
     }
   });
 
-  // Loop through all cards except the first one (which is already visible at index 0)
-  // and slide them up from yPercent: 100 (which is translate-y-full) to yPercent: 0
+  // Loop through all hidden cards and slide them up from yPercent: 100 to yPercent: 0
   cards.slice(1).forEach((card) => {
-    // Ensure GSAP knows we use percent to override the Tailwind translate-y-full class cleanly
-    gsap.set(card, { yPercent: 100, y: 0 }); 
-
     tl.to(card, {
       yPercent: 0,
       ease: 'none',
@@ -46,15 +46,20 @@ const initFeaturedWorkAnimation = () => {
 export const initFeaturedWorkScroll = () => {
   if (typeof window === 'undefined') return;
 
-  requestAnimationFrame(() => {
-    const smoother = getScrollSmoother();
-    if (smoother) {
-      initFeaturedWorkAnimation();
-    } else {
-      initFeaturedWorkAnimation();
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 50);
+  // Kill existing triggers to prevent duplicates
+  ScrollTrigger.getAll().forEach(trigger => {
+    if ((trigger.vars as any).id === 'featured-work-pin') {
+      trigger.kill();
     }
+  });
+
+  // Always initialize the animation to ensure DOM is bound
+  initFeaturedWorkAnimation();
+
+  // Force a refresh after layout to lock strictly to DOM dims
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
   });
 };

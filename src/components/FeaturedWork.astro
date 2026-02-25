@@ -25,68 +25,76 @@ const featuredProjects = [
 ];
 ---
 
-<section class="bg-[#F2F2F2] px-4 pt-24 pb-12 sm:px-6 lg:px-10 lg:pt-32" id="work-header">
-  <div id="featured-work-header" class="mx-auto w-full lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
-    <div class="inline-block justify-start">
-      <h2 class="text-4xl sm:text-5xl md:text-6xl font-black font-nura text-accent-orange mb-2 pt-8 pb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
-        Featured Work
-      </h2>
+
+
+<div class="relative w-full z-20">
+  <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a]">
+    
+    <!-- Static Overlay Header (Stays on top of sliding cards) -->
+    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 pt-24 sm:px-6 lg:px-10 lg:pt-32">
+      <div class="mx-auto w-full max-w-[90rem] xl:px-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div class="inline-block justify-start">
+          <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-nura text-white mb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
+            Featured Work
+          </h2>
+        </div>
+        <p class="text-base sm:text-lg text-white/60 max-w-sm md:text-xl md:text-right pb-2" data-reveal="slide" data-reveal-duration="0.7" data-reveal-delay="0.2">
+          Showcase of our latest projects and creative endeavors
+        </p>
+      </div>
     </div>
-    <p class="text-base sm:text-lg text-black/60 max-w-2xl md:text-xl lg:text-2xl pt-0" data-reveal="slide" data-reveal-duration="0.7" data-reveal-delay="0.2">
-      Showcase of our latest projects and creative endeavors
-    </p>
-  </div>
-</section>
 
-<section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a] overflow-hidden">
-  {featuredProjects.map((project, index) => (
-    <article 
-      class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-20 lg:pb-32 will-change-transform ${index === 0 ? 'z-10' : 'z-20 transform translate-y-full'}`}
-      style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'};`}
-    >
-      <!-- Background Asset (Video/Image Placeholder) -->
-      <div class="absolute inset-0 w-full h-full overflow-hidden">
-        <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
-        
-        <!-- Center Play Button Mock -->
-        <div class="absolute inset-0 flex items-center justify-center z-20">
-          <div class="w-24 h-24 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white/50">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12 ml-2">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Content -->
-      <div class="relative z-30 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12">
-        <div class="flex flex-wrap gap-3">
-          {project.tags.map((tag) => (
-            <span class="text-white/90 text-sm md:text-base border border-white/20 px-5 py-2 rounded-full backdrop-blur-md bg-white/5">
-              {tag}
-            </span>
-          ))}
-        </div>
-        
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-          <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight max-w-4xl">
-            {project.title}
-          </h3>
-          
-          <a href={`/work/${project.slug}`} class="inline-flex items-center gap-6 text-white hover:text-accent-orange transition-colors group mb-2">
-            <span class="text-lg md:text-xl font-bold uppercase tracking-widest">View Project</span>
-            <div class="w-14 h-14 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-accent-orange group-hover:bg-accent-orange/10 transition-all duration-300">
-              <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
+    <div class="absolute inset-0 w-full h-full overflow-hidden">
+      {featuredProjects.map((project, index) => (
+        <article 
+          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-20 lg:pb-32 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
+          style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'};`}
+        >
+          <!-- Background Asset (Video/Image Placeholder) -->
+          <div class="absolute inset-0 w-full h-full overflow-hidden">
+            <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+            
+            <!-- Center Play Button Mock -->
+            <div class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-24 h-24 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white/50">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12 ml-2">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
             </div>
-          </a>
-        </div>
-      </div>
-    </article>
-  ))}
-</section>
+          </div>
+
+          <!-- Content -->
+          <div class="relative z-30 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12">
+            <div class="flex flex-wrap gap-3">
+              {project.tags.map((tag) => (
+                <span class="text-white/90 text-sm md:text-base border border-white/20 px-5 py-2 rounded-full backdrop-blur-md bg-white/5">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+              <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight max-w-4xl">
+                {project.title}
+              </h3>
+              
+              <a href={`/work/${project.slug}`} class="inline-flex items-center gap-6 text-white hover:text-accent-orange transition-colors group mb-2">
+                <span class="text-lg md:text-xl font-bold uppercase tracking-widest">View Project</span>
+                <div class="w-14 h-14 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-accent-orange group-hover:bg-accent-orange/10 transition-all duration-300">
+                  <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</div>
 
 <!-- View All Button below the pinned stack -->
 <section class="w-full bg-[#0d141a] flex justify-center py-20 lg:py-32 relative z-[90]">
