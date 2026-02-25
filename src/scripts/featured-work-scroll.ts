@@ -33,11 +33,11 @@ export const initFeaturedWorkScroll = () => {
 
   const vh = window.innerHeight || 800;
 
-  // ScrollTrigger to manage the pin boundary - MASSIVE BUFFER for captive pinning
+  // ScrollTrigger to manage the pin boundary - REFINED BUFFER for less friction
   const st = ScrollTrigger.create({
     trigger: container,
     start: 'top top',
-    end: `+=${cards.length * 400}%`, // Huge buffer to win against "momentum"
+    end: `+=${cards.length * 150}%`, // Reduced buffer for faster exit
     pin: true,
     anticipatePin: 1,
     id: 'featured-work-pin',
@@ -62,14 +62,14 @@ export const initFeaturedWorkScroll = () => {
     let targetScroll = st.start + (st.end - st.start) / 2; // Default to middle
     
     if (currentIndex === 0) {
-      targetScroll = st.start + 5; // Near top gate
+      targetScroll = st.start + 2; // Extremely close to top gate
     } else if (currentIndex === cards.length - 1) {
-      targetScroll = st.end - 5; // Near bottom gate
+      targetScroll = st.end - 2; // Extremely close to bottom gate
     }
 
     gsap.to(window, {
       scrollTo: targetScroll,
-      duration: 0.3,
+      duration: 0.2, // Faster re-anchor
       overwrite: true,
       ease: 'power2.out'
     });
@@ -103,7 +103,7 @@ export const initFeaturedWorkScroll = () => {
       }
     });
 
-    const animDuration = 0.7;
+    const animDuration = 0.6; // Snappier transitions
     const ease = 'power3.inOut';
 
     tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
@@ -112,7 +112,7 @@ export const initFeaturedWorkScroll = () => {
       tl.to(currentContent, {
         opacity: 0,
         y: direction === 'next' ? -30 : 30,
-        duration: 0.4,
+        duration: 0.3,
         ease: 'power2.inOut'
       }, 0);
     }
@@ -120,7 +120,7 @@ export const initFeaturedWorkScroll = () => {
     tl.to(masks, {
       scaleX: 1,
       duration: animDuration,
-      stagger: 0.1,
+      stagger: 0.08, // Faster stagger
       ease: ease,
       force3D: true
     }, "<0.1");
@@ -133,7 +133,7 @@ export const initFeaturedWorkScroll = () => {
     tl.to(masks, {
       scaleX: 0,
       duration: animDuration,
-      stagger: 0.1,
+      stagger: 0.08,
       ease: ease,
       force3D: true
     });
@@ -141,7 +141,7 @@ export const initFeaturedWorkScroll = () => {
     if (nextContent) {
       tl.fromTo(nextContent,
         { opacity: 0, y: direction === 'next' ? 30 : -30 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
         "<0.2"
       );
     }
@@ -158,12 +158,12 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex < cards.length - 1) {
         gotoSlide(currentIndex + 1, 'next');
       } else {
-        // BREAK OUT DOWN: We are already at st.end - 5, so one more swipe unpins us
+        // BREAK OUT DOWN: Near-instant release
         observer.disable();
         gsap.to(window, { 
-          scrollTo: st.end + 200, 
-          duration: 0.8,
-          ease: 'power2.inOut'
+          scrollTo: st.end + 150, 
+          duration: 0.4, // Fast unpin
+          ease: 'power1.in'
         });
       }
     },
@@ -172,16 +172,16 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex > 0) {
         gotoSlide(currentIndex - 1, 'prev');
       } else {
-        // BREAK OUT UP: We are already at st.start + 5
+        // BREAK OUT UP
         observer.disable();
         gsap.to(window, { 
-          scrollTo: st.start - 200, 
-          duration: 0.8,
-          ease: 'power2.inOut'
+          scrollTo: st.start - 150, 
+          duration: 0.4,
+          ease: 'power1.in'
         });
       }
     },
-    tolerance: 40,
+    tolerance: 20, // Lower tolerance = triggers faster
     preventDefault: true 
   });
   
