@@ -46,11 +46,6 @@ const featuredProjects = [
     </div>
 
     <div class="absolute inset-0 w-full h-full overflow-hidden js-projects-container">
-      <!-- Custom Cursor Follower -->
-      <div class="featured-work-cursor pointer-events-none fixed z-[100] w-24 h-24 bg-white rounded-full flex items-center justify-center opacity-0 scale-0 will-change-transform shadow-2xl">
-        <span class="text-black font-nura font-bold text-sm tracking-widest uppercase">View</span>
-      </div>
-
       {featuredProjects.map((project, index) => (
         <article 
           class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform z-10 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
@@ -73,19 +68,22 @@ const featuredProjects = [
 
           <!-- Content (Stays above everything via z-50, but we'll fade it with GSAP) -->
           <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
-            <a href={`/work/${project.slug}`} class="group block w-full max-w-max featured-work-link">
+            
+            <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
               <div class="flex items-center relative">
-                <h3 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
+                <h3 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-500 ease-out will-change-transform group-hover:translate-x-24 sm:group-hover:translate-x-32 md:group-hover:translate-x-40 lg:group-hover:translate-x-48 lg:group-hover:pl-4">
                   {project.title}
                 </h3>
-                <!-- Legacy Hover Arrow -->
-                <span class="absolute left-0 top-1/2 -translate-y-1/2 overflow-hidden h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16">
-                  <span class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full opacity-0 transition-all duration-300 ease-in-out group-hover:translate-x-0 group-hover:opacity-100 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" role="img" fill="none" class="h-8 w-8 sm:h-10 sm:w-10 lg:h-14 lg:w-14 text-white">
+                
+                <!-- View Project Hover Popup -->
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 overflow-hidden h-12 md:h-16 w-[200px] pointer-events-none">
+                  <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:opacity-100 flex items-center justify-start gap-2 md:gap-4 pl-1">
+                    <span class="text-white text-xs md:text-sm uppercase tracking-widest font-bold whitespace-nowrap">View Project</span>
+                    <svg viewBox="0 0 24 24" role="img" fill="none" class="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-white">
                       <path fill-rule="evenodd" clip-rule="evenodd" d="M1.9999 11.9998C1.9999 12.552 2.44762 12.9997 2.9999 12.9997H18.9757C18.8901 13.148 18.7838 13.2876 18.657 13.4144L12.2931 19.7784C11.9025 20.1689 11.9025 20.8021 12.2931 21.1926C12.6836 21.5831 13.3168 21.5831 13.7073 21.1926L22.1926 12.7073C22.5831 12.3168 22.5831 11.6836 22.1926 11.2931L22.1924 11.293L13.7071 2.80767C13.3166 2.41715 12.6834 2.41715 12.2929 2.80767C11.9024 3.1982 11.9024 3.83136 12.2929 4.22189L18.657 10.586C18.7836 10.7126 18.8896 10.8518 18.9752 10.9998H2.9999C2.44762 10.9997 1.9999 11.4475 1.9999 11.9998Z" fill="currentColor" />
                     </svg>
-                  </span>
-                </span>
+                  </div>
+                </div>
               </div>
             </a>
           </div>
