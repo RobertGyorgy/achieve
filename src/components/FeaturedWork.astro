@@ -31,7 +31,7 @@ const featuredProjects = [
   <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a]">
     
     <!-- Static Overlay Header (Stays on top of sliding cards) -->
-    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 pt-24 sm:px-6 lg:px-10 lg:pt-32">
+    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 pt-32 sm:px-6 md:pt-40 lg:px-10 lg:pt-48">
       <div class="mx-auto w-full max-w-[90rem] xl:px-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div class="inline-block justify-start">
           <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-nura text-white mb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
@@ -47,7 +47,7 @@ const featuredProjects = [
     <div class="absolute inset-0 w-full h-full overflow-hidden">
       {featuredProjects.map((project, index) => (
         <article 
-          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-20 lg:pb-32 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
+          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-32 md:pb-40 lg:pb-48 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
           style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'};`}
         >
           <!-- Background Asset (Video/Image Placeholder) -->
@@ -75,21 +75,23 @@ const featuredProjects = [
               ))}
             </div>
             
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-              <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight max-w-4xl">
-                {project.title}
-              </h3>
-              
-              <a href={`/work/${project.slug}`} class="inline-flex items-center gap-6 text-white hover:text-accent-orange transition-colors group mb-2">
-                <span class="text-lg md:text-xl font-bold uppercase tracking-widest">View Project</span>
-                <div class="w-14 h-14 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-accent-orange group-hover:bg-accent-orange/10 transition-all duration-300">
-                  <svg class="w-6 h-6 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                </div>
-              </a>
-            </div>
+            <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
+              <div class="flex items-center relative">
+                <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
+                  {project.title}
+                </h3>
+                <!-- Legacy Hover Arrow -->
+                <span class="absolute left-0 top-1/2 -translate-y-1/2 overflow-hidden h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16">
+                  <span class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full opacity-0 transition-all duration-300 ease-in-out group-hover:translate-x-0 group-hover:opacity-100 flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" role="img" fill="none" class="h-8 w-8 sm:h-10 sm:w-10 lg:h-14 lg:w-14 text-white">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.9999 11.9998C1.9999 12.552 2.44762 12.9997 2.9999 12.9997H18.9757C18.8901 13.148 18.7838 13.2876 18.657 13.4144L12.2931 19.7784C11.9025 20.1689 11.9025 20.8021 12.2931 21.1926C12.6836 21.5831 13.3168 21.5831 13.7073 21.1926L22.1926 12.7073C22.5831 12.3168 22.5831 11.6836 22.1926 11.2931L22.1924 11.293L13.7071 2.80767C13.3166 2.41715 12.6834 2.41715 12.2929 2.80767C11.9024 3.1982 11.9024 3.83136 12.2929 4.22189L18.657 10.586C18.7836 10.7126 18.8896 10.8518 18.9752 10.9998H2.9999C2.44762 10.9997 1.9999 11.4475 1.9999 11.9998Z" fill="currentColor" />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </a>
           </div>
+
         </article>
       ))}
     </div>
