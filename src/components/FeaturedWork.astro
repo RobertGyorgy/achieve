@@ -31,10 +31,10 @@ const featuredProjects = [
   <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a]">
     
     <!-- Static Overlay Header (Stays on top of sliding cards) -->
-    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 pt-32 sm:px-6 md:pt-40 lg:px-10 lg:pt-48">
+    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 pt-40 sm:px-6 md:pt-48 lg:px-10 xl:pt-56">
       <div class="mx-auto w-full max-w-[90rem] xl:px-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div class="inline-block justify-start">
-          <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-nura text-white mb-2" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
+          <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-nura text-white mb-2 leading-none" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
             Featured Work
           </h2>
         </div>
@@ -47,7 +47,7 @@ const featuredProjects = [
     <div class="absolute inset-0 w-full h-full overflow-hidden">
       {featuredProjects.map((project, index) => (
         <article 
-          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-32 md:pb-40 lg:pb-48 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
+          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-36 sm:pb-40 md:pb-48 lg:pb-60 xl:pb-64 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
           style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'};`}
         >
           <!-- Background Asset (Video/Image Placeholder) -->
