@@ -99,98 +99,12 @@ const featuredProjects = [
   </section>
 </div>
 
-<!-- View All Button below the pinned stack -->
-<section class="w-full bg-[#0d141a] flex justify-center py-20 lg:py-32 relative z-[90]">
-  <a href="/work" class="work-btn-view-all inline-flex items-center gap-4 px-10 py-5 rounded-full bg-white text-black font-bold uppercase tracking-wider hover:bg-accent-orange hover:text-white transition-all duration-300">
-    <span>View All Projects</span>
-    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M5 12h14M12 5l7 7-7 7"/>
-    </svg>
-  </a>
-</section>
+  </section>
+</div>
 
 <style>
   /* Local overrides for the wrapper */
   #featured-work-container {
     box-shadow: 0 -20px 50px rgba(0,0,0,0.1);
   }
-
-  .work-btn-view-all {
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-  }
-
-  :global(.work-blob-view-all) {
-    z-index: 0;
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    margin-left: 0;
-    margin-top: 0;
-    background: #ff4500;
-    border-radius: 50%;
-    transition: transform 0.45s ease-in-out;
-    transform: scale(1);
-  }
-
-  :global(.work-expand-view-all) {
-    transform: scale(300);
-  }
-  
-  .work-btn-view-all span, .work-btn-view-all svg {
-    position: relative;
-    z-index: 10;
-  }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    initWorkButton();
-  });
-
-  document.addEventListener('astro:page-load', () => {
-    initWorkButton();
-  });
-
-  function initWorkButton() {
-    const btn = document.querySelector('.work-btn-view-all') as HTMLElement;
-    if (!btn) return;
-
-    btn.addEventListener('mouseenter', function(this: HTMLElement, e: MouseEvent) {
-      const existing = this.querySelector('.work-blob-view-all');
-      if (existing) existing.remove();
-
-      const rect = this.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const blob = document.createElement('div');
-      blob.className = 'work-blob-view-all';
-      blob.style.left = x + 'px';
-      blob.style.top = y + 'px';
-      this.appendChild(blob);
-      
-      setTimeout(function() {
-        blob.classList.add('work-expand-view-all');
-      }, 20);
-    });
-
-    btn.addEventListener('mouseleave', function(this: HTMLElement, e: MouseEvent) {
-      const rect = this.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const blobs = this.querySelectorAll('.work-blob-view-all');
-      blobs.forEach(function(blob: Element) {
-        const htmlBlob = blob as HTMLElement;
-        htmlBlob.style.left = x + 'px';
-        htmlBlob.style.top = y + 'px';
-        blob.classList.remove('work-expand-view-all');
-        setTimeout(function() {
-          blob.remove();
-        }, 450);
-      });
-    });
-  }
-</script>
