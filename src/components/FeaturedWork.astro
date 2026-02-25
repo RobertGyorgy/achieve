@@ -125,12 +125,17 @@ const featuredProjects = [
 
 <script>
   function initViewProjectTooltip() {
+    console.log('INIT VIEW PROJECT TOOLTIP CALLED');
     if (window.innerWidth < 1024) return; // Desktop only
 
     const tooltip = document.getElementById('view-project-tooltip');
-    if (!tooltip) return;
+    if (!tooltip) {
+      console.warn('Tooltip element not found!');
+      return;
+    }
 
     const triggers = document.querySelectorAll('.view-project-trigger');
+    console.log('Found tooltip triggers: ', triggers.length);
 
     const updateTooltipPosition = (e: MouseEvent) => {
       const rect = tooltip.getBoundingClientRect();
@@ -172,6 +177,7 @@ const featuredProjects = [
   }
 
   // Run on load and ViewTransitions
-  document.addEventListener('DOMContentLoaded', initViewProjectTooltip);
+  // Because Astro bundles scripts as type="module", DOM is already parsed upon execution.
+  initViewProjectTooltip();
   document.addEventListener('astro:page-load', initViewProjectTooltip);
 </script>
