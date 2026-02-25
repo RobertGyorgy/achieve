@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import Observer from 'gsap/Observer';
+import { Observer } from 'gsap/Observer';
 
 gsap.registerPlugin(ScrollTrigger, Observer);
 
@@ -64,7 +64,6 @@ export const initFeaturedWorkScroll = () => {
 
     tl.to(masks, {
       scaleX: 1,
-      stagger: direction === 'next' ? 0.15 : -0.15,
       duration: animDuration,
       ease: ease,
       force3D: true
@@ -79,7 +78,6 @@ export const initFeaturedWorkScroll = () => {
 
     tl.to(masks, {
       scaleX: 0,
-      stagger: direction === 'next' ? 0.15 : -0.15,
       duration: animDuration,
       ease: ease,
       force3D: true

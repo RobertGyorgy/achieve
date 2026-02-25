@@ -32,17 +32,17 @@ const featuredProjects = [
   <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a] overflow-hidden">
     
     <!-- Static Slice Borders overlay -->
-    <div class="absolute inset-0 w-full h-full pointer-events-none z-[40] flex">
-      <div class="w-1/3 h-full border-r border-white/20"></div>
-      <div class="w-1/3 h-full border-r border-white/20"></div>
-      <div class="w-1/3 h-full"></div>
+    <div class="absolute inset-0 w-full h-full pointer-events-none z-[40] grid grid-cols-2 md:grid-cols-3">
+      <div class="w-full h-full border-r border-white/20"></div>
+      <div class="w-full h-full border-r border-white/20 md:border-r-0 lg:border-r lg:border-white/20"></div>
+      <div class="w-full h-full hidden md:block"></div>
     </div>
 
     <!-- Global Transition Mask (Wipes over videos) -->
-    <div class="absolute inset-0 w-full h-full pointer-events-none z-[35] flex js-transition-mask">
-      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
-      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
-      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+    <div class="absolute inset-0 w-full h-full pointer-events-none z-[35] grid grid-cols-2 md:grid-cols-3 js-transition-mask">
+      <div class="w-full h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+      <div class="w-full h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+      <div class="w-full h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform hidden md:block"></div>
     </div>
 
     <div class="absolute inset-0 w-full h-full overflow-hidden js-projects-container">
