@@ -29,6 +29,12 @@ const initFeaturedWorkAnimation = () => {
       end: `+=${totalScrollHeight}`,
       pin: true,
       scrub: 1,
+      snap: {
+        snapTo: 1 / (cards.length - 1),
+        duration: { min: 0.5, max: 1.0 },
+        delay: 0,
+        ease: 'power3.inOut'
+      },
       anticipatePin: 1,
       invalidateOnRefresh: true,
       id: 'featured-work-pin',
