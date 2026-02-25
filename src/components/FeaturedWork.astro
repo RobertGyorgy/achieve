@@ -70,7 +70,7 @@ const featuredProjects = [
           <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
             <div class="flex flex-wrap gap-3">
               {project.tags.map((tag) => (
-                <span class="text-black text-base md:text-lg bg-white px-7 py-2.5 rounded-full font-medium shadow-lg">
+                <span class="text-black text-xs md:text-sm bg-white px-5 py-2 rounded-full font-medium shadow-lg uppercase tracking-wider">
                   {tag}
                 </span>
               ))}
@@ -78,7 +78,7 @@ const featuredProjects = [
             
             <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
               <div class="flex items-center relative">
-                <h3 class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl lg:max-w-4xl font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
+                <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
                   {project.title}
                 </h3>
                 <!-- Legacy Hover Arrow -->
