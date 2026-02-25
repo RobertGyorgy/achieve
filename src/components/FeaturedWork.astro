@@ -35,7 +35,7 @@ const featuredProjects = [
       {featuredProjects.map((project, index) => (
         <article 
           class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
-          style={`z-index: ${10 + index}; background-color: #0d141a;`}
+          style={`z-index: ${10 + index}; pointer-events: ${index === 0 ? 'auto' : 'none'};`}
         >
           <!-- Sliced Background Asset Container -->
           <div class="slices-container absolute inset-0 w-full h-full flex overflow-hidden">

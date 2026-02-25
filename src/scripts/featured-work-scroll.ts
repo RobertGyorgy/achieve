@@ -60,10 +60,9 @@ const initFeaturedWorkAnimation = () => {
       ease: 'power2.inOut'
     });
 
-    // 2. White wipe from right to left, staggered across the 3 columns
+    // 2. White wipe from right to left, all 3 columns simultaneously
     tl.to(whites, {
       xPercent: 0,
-      stagger: 0.15,
       duration: 0.8,
       ease: 'power3.inOut',
       force3D: true
@@ -72,7 +71,6 @@ const initFeaturedWorkAnimation = () => {
     // 3. Video wipe closely following the white wipe
     tl.to(videos, {
       xPercent: 0,
-      stagger: 0.15,
       duration: 0.8,
       ease: 'power3.inOut',
       force3D: true
