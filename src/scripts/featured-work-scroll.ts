@@ -6,132 +6,118 @@ gsap.registerPlugin(ScrollTrigger);
 export const initFeaturedWorkScroll = () => {
   if (typeof window === 'undefined') return;
 
-  // STABILITY FIX: Wait for full window load + settling before calculating pinning layout
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const container = document.getElementById('featured-work-container');
-      if (!container) return;
+  const container = document.getElementById('featured-work-container');
+  if (!container) return;
 
-      const cards = gsap.utils.toArray('#featured-work-container .featured-card') as HTMLElement[];
-      if (cards.length < 2) return;
+  const cards = gsap.utils.toArray('#featured-work-container .featured-card') as HTMLElement[];
+  if (cards.length < 2) return;
 
-      const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
-      
-      // State
-      let currentIndex = 0;
+  const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
+  
+  // State
+  let currentIndex = 0;
 
-      // Initial Setup
-      cards.forEach((card, i) => {
-        const content = card.querySelector('.card-content');
-        const video = card.querySelector('video');
+  // Initial Setup
+  cards.forEach((card, i) => {
+    const content = card.querySelector('.card-content');
+    const video = card.querySelector('video');
+    
+    if (i !== 0) {
+      gsap.set(card, { opacity: 0, pointerEvents: 'none' });
+      if (content) gsap.set(content, { opacity: 0, y: 30 });
+      if (video) video.pause();
+    } else {
+      gsap.set(card, { opacity: 1, pointerEvents: 'auto' });
+      if (content) gsap.set(content, { opacity: 1, y: 0 });
+      if (video) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+    }
+  });
+
+  // Create Master Sliced Reveal Timeline
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: container,
+      start: 'top top',
+      end: `+=${(cards.length - 1) * 100}%`, // Precisely match transition count
+      pin: true,
+      scrub: true, // Immediate response, no lag
+      id: 'featured-work-scroll',
+      onUpdate: (self) => {
+        // Calculate current index based on progress
+        // progress 0 to 1 covers the swap between cards
+        const progress = self.progress;
+        const newIndex = Math.min(
+          cards.length - 1,
+          Math.max(0, Math.floor(progress * cards.length))
+        );
         
-        if (i !== 0) {
-          gsap.set(card, { opacity: 0, pointerEvents: 'none' });
-          if (content) gsap.set(content, { opacity: 0, y: 30 });
-          // Ensure video is non-offensive on load
-          if (video) {
-            video.pause();
-            video.removeAttribute('src'); // Absolute deferral
-          }
-        } else {
-          gsap.set(card, { opacity: 1, pointerEvents: 'auto' });
-          if (content) gsap.set(content, { opacity: 1, y: 0 });
-          if (video) {
-            // Load and play the FIRST video only
-            const dataSrc = video.getAttribute('data-src');
-            if (dataSrc) video.src = dataSrc;
-            video.play().catch(() => {});
-          }
-        }
-      });
-
-      // Create Master Sliced Reveal Timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: `+=${cards.length * 150}%`,
-          pin: true,
-          scrub: 1,
-          id: 'featured-work-scroll',
-          onUpdate: (self) => {
-            const segment = 1 / (cards.length - 1);
-            const newIndex = Math.round(self.progress / segment);
-            
-            if (newIndex !== currentIndex && newIndex >= 0 && newIndex < cards.length) {
-              const video = cards[newIndex].querySelector('video');
-              if (video) {
-                // Ensure source is loaded before playing
-                if (!video.src) {
-                  const dataSrc = video.getAttribute('data-src');
-                  if (dataSrc) video.src = dataSrc;
-                }
+        if (newIndex !== currentIndex) {
+          // Play active video, pause others
+          cards.forEach((card, i) => {
+            const video = card.querySelector('video');
+            if (video) {
+              if (i === newIndex) {
                 video.play().catch(() => {});
+              } else {
+                video.pause();
               }
-
-              // Pause other videos
-              cards.forEach((card, i) => {
-                if (i !== newIndex) {
-                  const v = card.querySelector('video');
-                  if (v) v.pause();
-                }
-              });
-              currentIndex = newIndex;
             }
-          },
-          snap: {
-            snapTo: 1 / (cards.length - 1),
-            duration: { min: 0.2, max: 0.5 },
-            delay: 0.2,
-            directional: true,
-            ease: 'power2.inOut'
-          }
+          });
+          currentIndex = newIndex;
         }
-      });
+      },
+      snap: {
+        snapTo: 1 / (cards.length - 1),
+        duration: { min: 0.1, max: 0.3 },
+        delay: 0, // No delay for snappier snapping
+        ease: 'power1.inOut'
+      }
+    }
+  });
 
-      // Build the transitions in the timeline
-      cards.forEach((_, i) => {
-        if (i === cards.length - 1) return;
+  // Build the transitions in the timeline
+  cards.forEach((_, i) => {
+    if (i === cards.length - 1) return; // Last card doesn't transition to a next one
 
-        const currentCard = cards[i];
-        const nextCard = cards[i + 1];
-        const currentContent = currentCard.querySelector('.card-content');
-        const nextContent = nextCard.querySelector('.card-content');
+    const currentCard = cards[i];
+    const nextCard = cards[i + 1];
+    const currentContent = currentCard.querySelector('.card-content');
+    const nextContent = nextCard.querySelector('.card-content');
 
-        tl.set(masks, { transformOrigin: 'left' }, i);
-        tl.to(masks, {
-          scaleX: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'none'
-        }, i);
+    // MASK TRANSITION (WHITE WIPE)
+    tl.set(masks, { transformOrigin: 'left' }, i);
+    tl.to(masks, {
+      scaleX: 1,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'none'
+    }, i);
 
-        tl.set(currentCard, { opacity: 0, pointerEvents: 'none' }, i + 0.5);
-        tl.set(nextCard, { opacity: 1, pointerEvents: 'auto' }, i + 0.5);
-        
-        if (currentContent) {
-          tl.to(currentContent, { opacity: 0, y: -30, duration: 0.3 }, i);
-        }
-        if (nextContent) {
-          tl.fromTo(nextContent, 
-            { opacity: 0, y: 30 }, 
-            { opacity: 1, y: 0, duration: 0.3 }, 
-            i + 0.6
-          );
-        }
+    // SWAP CONTENT
+    tl.set(currentCard, { opacity: 0, pointerEvents: 'none' }, i + 0.5);
+    tl.set(nextCard, { opacity: 1, pointerEvents: 'auto' }, i + 0.5);
+    
+    if (currentContent) {
+      tl.to(currentContent, { opacity: 0, y: -30, duration: 0.3 }, i);
+    }
+    if (nextContent) {
+      tl.fromTo(nextContent, 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.3 }, 
+        i + 0.6
+      );
+    }
 
-        tl.set(masks, { transformOrigin: 'right' }, i + 0.5);
-        tl.to(masks, {
-          scaleX: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'none'
-        }, i + 0.5);
-      });
-
-      // FINAL REFRESH
-      ScrollTrigger.refresh();
-      console.log('FEATURED WORK INITIALIZED STABLY');
-    }, 200);
+    // REVEAL NEXT PROJECT (WHITE DISAPPEARS)
+    tl.set(masks, { transformOrigin: 'right' }, i + 0.5);
+    tl.to(masks, {
+      scaleX: 0,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'none'
+    }, i + 0.5);
   });
 };

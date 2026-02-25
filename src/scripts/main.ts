@@ -37,15 +37,23 @@ async function initializeApp() {
     initFAQAnimations();
     initHeroParallax();
 
-    // Critical: refreshing ScrollTrigger too early on reload can cause freezes.
-    // We wait 100ms to ensure layout is stable.
+    // Critical: refreshing ScrollTrigger too early on reload can cause jumps.
+    // We wait longer on mobile for full paint.
+    const refreshDelay = window.innerWidth < 1024 ? 400 : 200;
+    
     setTimeout(() => {
+      // One final pull to the top before we release the page
+      if (window.scrollY < 200) {
+        window.scrollTo(0, 0);
+      }
+      
       ScrollTrigger.refresh();
       document.dispatchEvent(new Event('scroll-smoother-ready'));
+      
       if (import.meta.env.DEV) {
         console.log('✓ Achieve Studio - Animations initialized & Refreshed');
       }
-    }, 100);
+    }, refreshDelay);
   });
 }
 
