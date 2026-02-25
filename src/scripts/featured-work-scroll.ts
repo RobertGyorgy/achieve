@@ -143,29 +143,4 @@ export const initFeaturedWorkScroll = () => {
     preventDefault: true
   });
   observer.disable();
-
-  // --- Global Cursor Logic ---
-  const cursor = document.getElementById('feature-cursor');
-  if (cursor) {
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.15, ease: "power3" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
-    
-    // Function to handle movement
-    const moveCursor = (e: PointerEvent | MouseEvent) => {
-      // Offset slightly to the bottom right of the cursor, identical to Hero drag tooltip
-      xTo(e.clientX + 10);
-      yTo(e.clientY + 10);
-    };
-
-    window.addEventListener("pointermove", moveCursor);
-
-    // Instead of scaling, we'll fade it and slightly translate it up
-    container.addEventListener("mouseenter", () => {
-      gsap.to(cursor, { opacity: 1, duration: 0.2, ease: 'power2.out' });
-    });
-
-    container.addEventListener("mouseleave", () => {
-      gsap.to(cursor, { opacity: 0, duration: 0.2, ease: 'power2.in' });
-    });
-  }
 };

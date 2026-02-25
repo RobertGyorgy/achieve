@@ -85,7 +85,7 @@ const featuredProjects = [
 </div>
 
 <!-- Custom "View Project" Cursor Follower (Matching Hero Drag Tooltip) -->
-<div id="feature-cursor" class="fixed pointer-events-none z-[100000] opacity-0 flex items-center justify-center bg-[#f2f2f2] text-[#222831] px-6 py-3 rounded-full text-base font-semibold font-nura shadow-[0_4px_12px_rgba(0,0,0,0.15)] whitespace-nowrap" style="top: 0; left: 0; transform: translate(10px, 10px);">
+<div id="feature-cursor" class="feature-tooltip">
   View Project
 </div>
 
@@ -95,4 +95,85 @@ const featuredProjects = [
     box-shadow: 0 -20px 50px rgba(0,0,0,0.1);
     cursor: none; /* Hide default cursor when hovering this section */
   }
+
+  .feature-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    opacity: 0;
+    transform: translate(10px, 10px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    background: #f2f2f2;
+    color: #222831;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Nura', serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-left: -10px;
+    margin-top: 10px;
+  }
+
+  .feature-tooltip.visible {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
 </style>
+
+<script>
+  function initFeatureCursor() {
+    if (window.innerWidth < 1024) return; // Desktop only, like drag-tooltip
+
+    const tooltip = document.getElementById('feature-cursor');
+    const container = document.getElementById('featured-work-container');
+    
+    if (!tooltip || !container) return;
+
+    const updateTooltipPosition = (e: MouseEvent) => {
+      const rect = tooltip.getBoundingClientRect();
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+      const tooltipWidth = rect.width || 120;
+      const tooltipHeight = rect.height || 40;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
+        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
+      }
+      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
+        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
+      }
+    };
+
+    container.addEventListener('mouseenter', (e: MouseEvent) => {
+      tooltip.classList.add('visible');
+      updateTooltipPosition(e);
+    });
+
+    container.addEventListener('mousemove', (e: MouseEvent) => {
+      updateTooltipPosition(e);
+    });
+
+    container.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+
+    container.addEventListener('mousedown', () => {
+      tooltip.classList.remove('visible');
+    });
+    
+    // Also, ensure we show it when MouseUp inside after Click
+    container.addEventListener('mouseup', () => {
+      tooltip.classList.add('visible');
+    });
+  }
+
+  // Run on load and ViewTransitions
+  document.addEventListener('DOMContentLoaded', initFeatureCursor);
+  document.addEventListener('astro:page-load', initFeatureCursor);
+</script>
