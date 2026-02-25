@@ -26,10 +26,7 @@ export function initBackgroundTransition() {
     if (main) {
       // Find all text elements in sections after services
       const allTextElements = main.querySelectorAll(
-        '#about p, #about h1, #about h2, #about h3, #about h4, #about h5, #about h6, #about span, #about a, #about li, ' +
-        'footer p, footer h1, footer h2, footer h3, footer h4, footer h5, footer h6, footer span, footer a, footer li, ' +
-        '.footer-link, .footer-hero-title, .hero-letter, ' +
-        '.sw-partner-marquee span, .sw-partner-marquee .display-expla'
+        '.footer-link, .footer-hero-title, .hero-letter'
       );
       
       // Filter elements that have white text
@@ -57,17 +54,7 @@ export function initBackgroundTransition() {
       });
     }
     
-    // Collect background elements
-    if (aboutSection) {
-      backgroundElementsToChange.push(aboutSection as HTMLElement);
-    }
-    if (footer) {
-      backgroundElementsToChange.push(footer as HTMLElement);
-    }
-    const marquees = document.querySelectorAll('.sw-partner-marquee');
-    marquees.forEach((marquee) => {
-      backgroundElementsToChange.push(marquee as HTMLElement);
-    });
+    // Collect background elements (Removed About and Footer to keep them dark)
 
     // Create timeline for smooth transition
     const tl = gsap.timeline({
@@ -80,12 +67,7 @@ export function initBackgroundTransition() {
       },
     });
 
-    // Animate body background from black to white
-    tl.to('body', {
-      backgroundColor: '#ffffff',
-      duration: 1,
-      ease: 'power2.inOut',
-    }, 0);
+    // Animate body background from black to white (Removed to prevent global wash out)
 
     // Animate section backgrounds
     backgroundElementsToChange.forEach((element) => {

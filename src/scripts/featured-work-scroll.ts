@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { Observer } from 'gsap/Observer';
+import { Observer } from 'gsap/all';
 
 gsap.registerPlugin(ScrollTrigger, Observer);
 
@@ -33,29 +33,58 @@ export const initFeaturedWorkScroll = () => {
 
   const vh = window.innerHeight || 800;
 
-  // ScrollTrigger to manage the pin boundary
+  // ScrollTrigger to manage the pin boundary - MASSIVE BUFFER for captive pinning
   const st = ScrollTrigger.create({
     trigger: container,
     start: 'top top',
-    end: `+=${cards.length * vh}`,
+    end: `+=${cards.length * 400}%`, // Huge buffer to win against "momentum"
     pin: true,
     anticipatePin: 1,
     id: 'featured-work-pin',
-    onEnter: () => observer.enable(),
+    onEnter: () => {
+      observer.enable();
+      anchorScroll();
+    },
     onEnterBack: () => {
       observer.enable();
+      anchorScroll();
       if (currentIndex !== cards.length - 1) {
         currentIndex = cards.length - 1;
-        cards.forEach((c, i) => {
-          gsap.set(c, { opacity: i === currentIndex ? 1 : 0, pointerEvents: i === currentIndex ? 'auto' : 'none' });
-          const content = c.querySelector('.card-content');
-          if (content) gsap.set(content, { opacity: i === currentIndex ? 1 : 0, y: 0 });
-        });
+        updateSlidesInstant();
       }
     },
     onLeave: () => observer.disable(),
     onLeaveBack: () => observer.disable()
   });
+
+  // Keep the user "locked" in the middle of the pin space, but move to "Exit Gates" at ends
+  function anchorScroll() {
+    let targetScroll = st.start + (st.end - st.start) / 2; // Default to middle
+    
+    if (currentIndex === 0) {
+      targetScroll = st.start + 5; // Near top gate
+    } else if (currentIndex === cards.length - 1) {
+      targetScroll = st.end - 5; // Near bottom gate
+    }
+
+    gsap.to(window, {
+      scrollTo: targetScroll,
+      duration: 0.3,
+      overwrite: true,
+      ease: 'power2.out'
+    });
+  }
+
+  function updateSlidesInstant() {
+    cards.forEach((c, i) => {
+      gsap.set(c, { 
+        opacity: i === currentIndex ? 1 : 0, 
+        pointerEvents: i === currentIndex ? 'auto' : 'none' 
+      });
+      const content = c.querySelector('.card-content');
+      if (content) gsap.set(content, { opacity: i === currentIndex ? 1 : 0, y: 0 });
+    });
+  }
 
   const gotoSlide = (index: number, direction: 'next' | 'prev') => {
     if (index < 0 || index >= cards.length || isAnimating) return false;
@@ -70,15 +99,12 @@ export const initFeaturedWorkScroll = () => {
       onComplete: () => {
         currentIndex = index;
         isAnimating = false;
-        
-        // SYNC SCROLL POSITION
-        const scrollTarget = st.start + (index / (cards.length - 1)) * (st.end - st.start);
-        st.scroll(scrollTarget);
+        anchorScroll(); // Move the car to the correct "gate"
       }
     });
 
-    const animDuration = 0.8;
-    const ease = 'power4.inOut';
+    const animDuration = 0.7;
+    const ease = 'power3.inOut';
 
     tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
     
@@ -86,7 +112,7 @@ export const initFeaturedWorkScroll = () => {
       tl.to(currentContent, {
         opacity: 0,
         y: direction === 'next' ? -30 : 30,
-        duration: 0.5,
+        duration: 0.4,
         ease: 'power2.inOut'
       }, 0);
     }
@@ -94,9 +120,10 @@ export const initFeaturedWorkScroll = () => {
     tl.to(masks, {
       scaleX: 1,
       duration: animDuration,
+      stagger: 0.1,
       ease: ease,
       force3D: true
-    }, "<0.2");
+    }, "<0.1");
 
     tl.set(currentCard, { opacity: 0, pointerEvents: 'none' });
     tl.set(nextCard, { opacity: 1, pointerEvents: 'auto' });
@@ -106,6 +133,7 @@ export const initFeaturedWorkScroll = () => {
     tl.to(masks, {
       scaleX: 0,
       duration: animDuration,
+      stagger: 0.1,
       ease: ease,
       force3D: true
     });
@@ -113,8 +141,8 @@ export const initFeaturedWorkScroll = () => {
     if (nextContent) {
       tl.fromTo(nextContent,
         { opacity: 0, y: direction === 'next' ? 30 : -30 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
-        "<0.3"
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+        "<0.2"
       );
     }
 
@@ -126,21 +154,36 @@ export const initFeaturedWorkScroll = () => {
     type: "wheel,touch,pointer",
     wheelSpeed: -1,
     onUp: () => {
+      if (isAnimating) return;
       if (currentIndex < cards.length - 1) {
-        if (!isAnimating) gotoSlide(currentIndex + 1, 'next');
+        gotoSlide(currentIndex + 1, 'next');
       } else {
+        // BREAK OUT DOWN: We are already at st.end - 5, so one more swipe unpins us
         observer.disable();
+        gsap.to(window, { 
+          scrollTo: st.end + 200, 
+          duration: 0.8,
+          ease: 'power2.inOut'
+        });
       }
     },
     onDown: () => {
+      if (isAnimating) return;
       if (currentIndex > 0) {
-        if (!isAnimating) gotoSlide(currentIndex - 1, 'prev');
+        gotoSlide(currentIndex - 1, 'prev');
       } else {
+        // BREAK OUT UP: We are already at st.start + 5
         observer.disable();
+        gsap.to(window, { 
+          scrollTo: st.start - 200, 
+          duration: 0.8,
+          ease: 'power2.inOut'
+        });
       }
     },
-    tolerance: 10,
-    preventDefault: true
+    tolerance: 40,
+    preventDefault: true 
   });
+  
   observer.disable();
 };
