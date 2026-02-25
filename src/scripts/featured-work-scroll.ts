@@ -149,14 +149,13 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex < cards.length - 1) {
         gotoSlide(currentIndex + 1, 'next');
       } else {
-        // FORCED INSTANT BREAKOUT DOWN: 
-        // We programmatically jump past the pin boundary to ensure 
-        // exactly one scroll gesture always exits the section.
+        // ZERO-THRESHOLD BREAKOUT DOWN: 
+        // Tiny tolerance (5) + fast jump (0.3s) ensures effortless exit.
         observer.disable();
         gsap.to(window, { 
-          scrollTo: st.end + 20, 
-          duration: 0.5,
-          ease: 'power1.in',
+          scrollTo: st.end + 100, 
+          duration: 0.3,
+          ease: 'power2.in',
           overwrite: true
         });
       }
@@ -166,17 +165,17 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex > 0) {
         gotoSlide(currentIndex - 1, 'prev');
       } else {
-        // FORCED INSTANT BREAKOUT UP: Jump past top boundary
+        // ZERO-THRESHOLD BREAKOUT UP
         observer.disable();
         gsap.to(window, { 
-          scrollTo: st.start - 20, 
-          duration: 0.5,
-          ease: 'power1.in',
+          scrollTo: st.start - 100, 
+          duration: 0.3,
+          ease: 'power2.in',
           overwrite: true
         });
       }
     },
-    tolerance: 15,
+    tolerance: 5, // Extremely sensitive
     preventDefault: true
   });
 
