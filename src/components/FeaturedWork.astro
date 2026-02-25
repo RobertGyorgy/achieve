@@ -37,11 +37,11 @@ const featuredProjects = [
     </p>
   </div>
 
-  <div id="work-component-vt" class="flex flex-col items-center space-y-2 pt-8 py-4 sm:space-y-4 sm:pt-12 md:space-y-8 md:pt-16 lg:space-y-32 lg:pt-24 lg:pb-24">
+  <div id="work-component-vt" class="flex flex-col items-center w-full">
     <!-- Desktop Layout (Original Perspective Stack) -->
-    <div class="hidden lg:flex flex-col items-center space-y-32 lg:pt-24 lg:pb-24 w-full">
+    <div class="hidden lg:flex flex-col items-center space-y-32 lg:pt-24 lg:pb-24 w-full" id="desktop-work-stack-container">
       {featuredProjects.map((project, index) => (
-        <article class="w-full lg:w-auto desktop-work-card hidden lg:block">
+        <article class="w-full lg:w-auto desktop-work-card">
           <a href={`/work/${project.slug}`} class="group block w-full">
             <div class="card-wrapper mx-auto w-full perspective-[500px] lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
               <div class={`card lg:bg-main-bg h-auto overflow-hidden rounded-none will-change-transform lg:rounded-2xl transition-shadow duration-300 lg:shadow-[0_2px_43px_rgba(30,30,30,0.1),0_-30px_100px_rgba(30,30,30,0.6)] ${index === featuredProjects.length - 1 ? 'card-last' : ''}`}>

@@ -25,11 +25,11 @@ if (typeof window !== 'undefined') {
 
 const initWorkSectionAnimation = () => {
   if (typeof window === 'undefined') return;
-  
-  const isMobileDevice = isMobile();
 
-  if (isMobileDevice) {
-    // Mobile: Full-Screen Stack Logic
+  const mm = gsap.matchMedia();
+
+  // Mobile/Tablet Logic (< 1024px) - Full-Screen Stack
+  mm.add("(max-width: 1023px)", () => {
     const container = document.querySelector('#mobile-work-stack-container') as HTMLElement;
     const cards = gsap.utils.toArray('.mobile-work-card') as HTMLElement[];
     
@@ -57,11 +57,12 @@ const initWorkSectionAnimation = () => {
             ease: "none"
         });
     });
+  });
 
-  } else {
-    // Desktop: Perspective Stack Logic (Original)
-    const cardWrappers = gsap.utils.toArray('#work-component-vt .card-wrapper') as HTMLElement[];
-    const cards = gsap.utils.toArray('#work-component-vt .card') as HTMLElement[];
+  // Desktop Logic (>= 1024px) - Perspective Stack
+  mm.add("(min-width: 1024px)", () => {
+    const cardWrappers = gsap.utils.toArray('#desktop-work-stack-container .card-wrapper') as HTMLElement[];
+    const cards = gsap.utils.toArray('#desktop-work-stack-container .card') as HTMLElement[];
     
     if (!cardWrappers.length || !cards.length) return;
     
@@ -84,7 +85,7 @@ const initWorkSectionAnimation = () => {
           trigger: wrapper,
           start: 'top 180',
           end: 'top 180',
-          endTrigger: '#work-component-vt .card-last',
+          endTrigger: '#desktop-work-stack-container .card-last',
           scrub: 1.2, 
           pin: true,
           pinSpacing: false,
@@ -95,7 +96,7 @@ const initWorkSectionAnimation = () => {
         },
       });
     });
-  }
+  });
 };
 
 export const initWorkSection = () => {
