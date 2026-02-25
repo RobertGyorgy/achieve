@@ -26,44 +26,76 @@ if (typeof window !== 'undefined') {
 const initWorkSectionAnimation = () => {
   if (typeof window === 'undefined') return;
   
-  const cardWrappers = gsap.utils.toArray('#work-component-vt .card-wrapper') as HTMLElement[];
-  const cards = gsap.utils.toArray('#work-component-vt .card') as HTMLElement[];
-  
-  if (!cardWrappers.length || !cards.length) return;
-  
-  // Set 3D properties
-  gsap.set(cards, { force3D: true, backfaceVisibility: 'hidden' });
-  
-  // Check if mobile to adjust animation parameters
   const isMobileDevice = isMobile();
-  
-  cardWrappers.forEach((wrapper, index) => {
-    if (!cards[index] || !wrapper) return;
+
+  if (isMobileDevice) {
+    // Mobile: Full-Screen Stack Logic
+    const container = document.querySelector('#mobile-work-stack-container') as HTMLElement;
+    const cards = gsap.utils.toArray('.mobile-work-card') as HTMLElement[];
     
-    const y = -125 + 60 * index;
-    const scale = 0.94 + 0.03 * index;
-    
-    gsap.to(cards[index], {
-      y: y,
-      scale: scale,
-      rotationX: 0,
-      transformOrigin: 'center center',
-      ease: 'none',
+    if (!container || cards.length < 2) return;
+
+    // Set initial states: Card 0 is natively visible. Card 1+ start below viewport.
+    gsap.set(cards.slice(1), { yPercent: 100 });
+
+    const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: wrapper,
-        start: isMobileDevice ? 'top 120' : 'top 180',
-        end: isMobileDevice ? 'top 120' : 'top 180',
-        endTrigger: '#work-component-vt .card-last',
-        scrub: isMobileDevice ? 0.5 : 1.2, // Smoother scrub value for desktop (higher = smoother, more lag)
+        trigger: container,
+        start: 'top top',
+        end: `+=${cards.length * 100}%`, // Scroll down 100vh per card to reveal
         pin: true,
-        pinSpacing: false,
-        id: `work-card-${index}`,
-        anticipatePin: isMobileDevice ? 0.5 : 1,
-        fastScrollEnd: true,
+        scrub: 0.5,
+        id: 'mobile-work-stack',
         invalidateOnRefresh: true,
-      },
+      }
     });
-  });
+
+    // Animate each subsequent card sliding up over the previous one
+    cards.slice(1).forEach((card, i) => {
+        tl.to(card, {
+            yPercent: 0,
+            ease: "none"
+        });
+    });
+
+  } else {
+    // Desktop: Perspective Stack Logic (Original)
+    const cardWrappers = gsap.utils.toArray('#work-component-vt .card-wrapper') as HTMLElement[];
+    const cards = gsap.utils.toArray('#work-component-vt .card') as HTMLElement[];
+    
+    if (!cardWrappers.length || !cards.length) return;
+    
+    // Set 3D properties
+    gsap.set(cards, { force3D: true, backfaceVisibility: 'hidden' });
+    
+    cardWrappers.forEach((wrapper, index) => {
+      if (!cards[index] || !wrapper) return;
+      
+      const y = -125 + 60 * index;
+      const scale = 0.94 + 0.03 * index;
+      
+      gsap.to(cards[index], {
+        y: y,
+        scale: scale,
+        rotationX: 0,
+        transformOrigin: 'center center',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: wrapper,
+          start: 'top 180',
+          end: 'top 180',
+          endTrigger: '#work-component-vt .card-last',
+          scrub: 1.2, 
+          pin: true,
+          pinSpacing: false,
+          id: `work-card-${index}`,
+          anticipatePin: 1,
+          fastScrollEnd: true,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+  }
 };
 
 export const initWorkSection = () => {

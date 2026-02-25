@@ -38,20 +38,20 @@ const featuredProjects = [
   </div>
 
   <div id="work-component-vt" class="flex flex-col items-center space-y-2 pt-8 py-4 sm:space-y-4 sm:pt-12 md:space-y-8 md:pt-16 lg:space-y-32 lg:pt-24 lg:pb-24">
-    {featuredProjects.map((project, index) => (
-      <article class="w-full lg:w-auto">
-        <a href={`/work/${project.slug}`} class="group block w-full">
-          <div class="card-wrapper mx-auto w-full perspective-[500px] lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
-            <div class={`card lg:bg-main-bg h-auto overflow-hidden rounded-none will-change-transform lg:rounded-2xl transition-shadow duration-300 lg:shadow-[0_2px_43px_rgba(30,30,30,0.1),0_-30px_100px_rgba(30,30,30,0.6)] ${index === featuredProjects.length - 1 ? 'card-last' : ''}`}>
-              <!-- Desktop layout -->
-              <div class="hidden lg:block">
+    <!-- Desktop Layout (Original Perspective Stack) -->
+    <div class="hidden lg:flex flex-col items-center space-y-32 lg:pt-24 lg:pb-24 w-full">
+      {featuredProjects.map((project, index) => (
+        <article class="w-full lg:w-auto desktop-work-card hidden lg:block">
+          <a href={`/work/${project.slug}`} class="group block w-full">
+            <div class="card-wrapper mx-auto w-full perspective-[500px] lg:w-[85vw] xl:w-[80vw] 2xl:w-[75vw]">
+              <div class={`card lg:bg-main-bg h-auto overflow-hidden rounded-none will-change-transform lg:rounded-2xl transition-shadow duration-300 lg:shadow-[0_2px_43px_rgba(30,30,30,0.1),0_-30px_100px_rgba(30,30,30,0.6)] ${index === featuredProjects.length - 1 ? 'card-last' : ''}`}>
                 <div class="flex items-end justify-between pt-8 lg:px-8 lg:pt-10 pb-6 relative">
                   <div class="text-white flex flex-col lg:w-full lg:flex-row lg:items-center lg:justify-between lg:gap-6">
                     <div class="flex items-center lg:items-center relative">
                       <h3 class="ml-2 truncate text-2xl font-nura lg:ml-0 lg:max-w-[40vw] lg:text-3xl lg:transition-transform lg:duration-300 lg:ease-in-out lg:will-change-transform lg:group-hover:translate-x-16 pl-4 lg:pl-8">
                         {project.title}
                       </h3>
-                      <!-- Arrow Icon - aligned with text -->
+                      <!-- Arrow Icon -->
                       <span class="absolute left-4 top-1/2 -translate-y-1/2 hidden h-8 w-8 overflow-hidden lg:left-8 lg:block">
                         <span class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full opacity-0 transition-all duration-200 ease-in-out group-hover:translate-x-0 group-hover:opacity-100">
                           <svg viewBox="0 0 24 24" role="img" width="24" height="24" fill="none" class="h-7 w-7 text-white">
@@ -69,51 +69,63 @@ const featuredProjects = [
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <!-- Video placeholder -->
-              <div class="overflow-hidden pt-4 pb-4 lg:px-8 lg:pt-6 lg:pb-8">
-                <div class="aspect-[16/9] w-full overflow-hidden rounded-xl lg:rounded-lg bg-gradient-to-br from-accent-orange/30 via-accent-orange/20 to-transparent flex items-center justify-center relative border border-white/10">
-                  <!-- Video play button mock -->
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 hover:bg-white/30 transition-all cursor-pointer">
-                      <svg viewBox="0 0 24 24" fill="white" class="w-10 h-10 ml-1">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
+                
+                <!-- Video placeholder -->
+                <div class="overflow-hidden pt-4 pb-4 lg:px-8 lg:pt-6 lg:pb-8">
+                  <div class="aspect-[16/9] w-full overflow-hidden rounded-xl lg:rounded-lg bg-gradient-to-br from-accent-orange/30 via-accent-orange/20 to-transparent flex items-center justify-center relative border border-white/10">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 hover:bg-white/30 transition-all cursor-pointer">
+                        <svg viewBox="0 0 24 24" fill="white" class="w-10 h-10 ml-1"><path d="M8 5v14l11-7z"/></svg>
+                      </div>
                     </div>
+                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
                   </div>
-                  <!-- Subtle grid pattern -->
-                  <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
-                </div>
-              </div>
-
-              <!-- Mobile layout -->
-              <div class="overflow-hidden pt-6 pb-10 px-4 lg:hidden lg:px-6 lg:pt-4">
-                <div class="flex flex-wrap gap-x-4 gap-y-3 mb-6 pr-8">
-                  {project.tags.map((tag) => (
-                    <span class="text-white text-xs whitespace-nowrap sm:text-base md:text-lg">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div class="relative mt-8 flex items-center">
-                  <span class="flex items-center overflow-hidden">
-                    <span class="transform">
-                      <svg viewBox="0 0 24 24" role="img" width="24" height="24" fill="none" class="h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.9999 11.9998C1.9999 12.552 2.44762 12.9997 2.9999 12.9997H18.9757C18.8901 13.148 18.7838 13.2876 18.657 13.4144L12.2931 19.7784C11.9025 20.1689 11.9025 20.8021 12.2931 21.1926C12.6836 21.5831 13.3168 21.5831 13.7073 21.1926L22.1926 12.7073C22.5831 12.3168 22.5831 11.6836 22.1926 11.2931L22.1924 11.293L13.7071 2.80767C13.3166 2.41715 12.6834 2.41715 12.2929 2.80767C11.9024 3.1982 11.9024 3.83136 12.2929 4.22189L18.657 10.586C18.7836 10.7126 18.8896 10.8518 18.9752 10.9998H2.9999C2.44762 10.9997 1.9999 11.4475 1.9999 11.9998Z" fill="currentColor" />
-                      </svg>
-                    </span>
-                  </span>
-                  <h3 class="text-white ml-4 transform text-2xl font-nura sm:text-3xl md:text-4xl pl-4">
-                    {project.title}
-                  </h3>
                 </div>
               </div>
             </div>
-          </div>
-        </a>
-      </article>
-    ))}
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <!-- Mobile Layout (Full Screen Pinned Stack) -->
+    <div id="mobile-work-stack-container" class="lg:hidden w-full h-[100svh] relative overflow-hidden">
+      {featuredProjects.map((project, index) => (
+        <article class="absolute inset-0 w-full h-full flex flex-col justify-center mobile-work-card bg-[#1e1e1e] will-change-transform pb-[10vh]" style={`z-index: ${index + 10};`}>
+          <a href={`/work/${project.slug}`} class="block w-full h-full p-4 md:p-8 flex flex-col justify-between relative overflow-hidden rounded-t-3xl border-t border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+            <!-- Background Image/Video representation for mobile -->
+            <div class="absolute inset-0 opacity-40 bg-gradient-to-br from-accent-orange/40 via-black to-black pointer-events-none"></div>
+            
+            <!-- Top Metadata -->
+            <div class="relative z-10 flex flex-wrap gap-x-4 gap-y-3 pt-4">
+              {project.tags.map((tag) => (
+                <span class="text-white/80 text-xs sm:text-base font-medium tracking-wide">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            
+            <!-- Center Video Icon -->
+            <div class="relative z-10 flex-1 flex items-center justify-center">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl">
+                <svg viewBox="0 0 24 24" fill="white" class="w-8 h-8 sm:w-10 sm:h-10 ml-1 opacity-80"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+
+            <!-- Bottom Title -->
+            <div class="relative z-10 pb-6 w-full flex items-end justify-between">
+              <h3 class="text-white text-4xl sm:text-5xl md:text-6xl font-black font-nura leading-[1.1] tracking-tight w-3/4">
+                {project.title.split(' ').map(word => <div>{word}</div>)}
+              </h3>
+              <!-- Arrow Icon -->
+              <div class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center shrink-0">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
   </div>
 
   <!-- View All Button -->
