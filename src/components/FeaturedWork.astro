@@ -46,6 +46,11 @@ const featuredProjects = [
     </div>
 
     <div class="absolute inset-0 w-full h-full overflow-hidden js-projects-container">
+      <!-- Custom Cursor Follower -->
+      <div class="featured-work-cursor pointer-events-none fixed z-[100] w-24 h-24 bg-white rounded-full flex items-center justify-center opacity-0 scale-0 will-change-transform shadow-2xl">
+        <span class="text-black font-nura font-bold text-sm tracking-widest uppercase">View</span>
+      </div>
+
       {featuredProjects.map((project, index) => (
         <article 
           class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform z-10 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
@@ -68,17 +73,9 @@ const featuredProjects = [
 
           <!-- Content (Stays above everything via z-50, but we'll fade it with GSAP) -->
           <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
-            <div class="flex flex-wrap gap-3">
-              {project.tags.map((tag) => (
-                <span class="text-black text-xs md:text-sm bg-white px-8 py-3.5 rounded-full font-bold shadow-xl uppercase tracking-[0.2em] inline-flex items-center justify-center min-w-[120px]">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
+            <a href={`/work/${project.slug}`} class="group block w-full max-w-max featured-work-link">
               <div class="flex items-center relative">
-                <h3 class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
+                <h3 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[6rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-300 ease-in-out will-change-transform group-hover:translate-x-12 sm:group-hover:translate-x-16 lg:group-hover:translate-x-20">
                   {project.title}
                 </h3>
                 <!-- Legacy Hover Arrow -->

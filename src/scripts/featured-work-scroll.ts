@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { Observer } from 'gsap/Observer';
+import { Observer } from 'gsap/observer';
 
 gsap.registerPlugin(ScrollTrigger, Observer);
 
@@ -143,4 +143,38 @@ export const initFeaturedWorkScroll = () => {
     preventDefault: true
   });
   observer.disable();
+
+  // --- Custom Cursor Logic ---
+  const cursor = container.querySelector('.featured-work-cursor') as HTMLElement;
+  const links = container.querySelectorAll('.featured-work-link');
+  
+  if (cursor && links.length > 0) {
+    const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const mouse = { x: pos.x, y: pos.y };
+    
+    const xSetter = gsap.quickSetter(cursor, "x", "px");
+    const ySetter = gsap.quickSetter(cursor, "y", "px");
+
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    }, { passive: true });
+
+    gsap.ticker.add(() => {
+      const dt = 1.0 - Math.pow(1.0 - 0.15, gsap.ticker.deltaRatio());
+      pos.x += (mouse.x - pos.x) * dt;
+      pos.y += (mouse.y - pos.y) * dt;
+      xSetter(pos.x - 48); // 48 is half of w-24 (96px)
+      ySetter(pos.y - 48);
+    });
+
+    links.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.3, ease: 'power2.out' });
+      });
+      link.addEventListener('mouseleave', () => {
+        gsap.to(cursor, { scale: 0, opacity: 0, duration: 0.3, ease: 'power2.in' });
+      });
+    });
+  }
 };
