@@ -48,7 +48,7 @@ const featuredProjects = [
     <div class="absolute inset-0 w-full h-full overflow-hidden js-projects-container">
       {featuredProjects.map((project, index) => (
         <article 
-          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform z-10 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+          class={`featured-card group absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform z-10 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
           style={`pointer-events: ${index === 0 ? 'auto' : 'none'};`}
           data-index={index}
         >
@@ -66,10 +66,10 @@ const featuredProjects = [
             ></video>
           </div>
 
-          <!-- Content (Stays above everything via z-50, but we'll fade it with GSAP) -->
-          <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
-            
-            <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
+          <!-- Content and Click Overlay (Combined to guarantee group-hover works) -->
+          <a href={`/work/${project.slug}`} class="group relative z-40 block w-full h-full cursor-pointer" aria-label={`View ${project.title}`}>
+            <div class={`card-content pointer-events-none absolute inset-0 w-full max-w-[90rem] mx-auto flex flex-col justify-end gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="padding-bottom: 15vh !important; padding-left: 4vw !important;">
+              
               <div class="flex items-center relative">
                 <!-- Hover Arrow (Left Side, No Circle) -->
                 <div class="absolute left-0 opacity-0 -translate-x-4 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:translate-x-0 flex items-center">
@@ -83,11 +83,9 @@ const featuredProjects = [
                   {project.title}
                 </h3>
               </div>
-            </a>
-          </div>
-
-          <!-- Full Card Clickable Overlay -->
-          <a href={`/work/${project.slug}`} class="absolute inset-0 z-40 w-full h-full block" aria-label={`View ${project.title}`}></a>
+              
+            </div>
+          </a>
 
         </article>
       ))}
