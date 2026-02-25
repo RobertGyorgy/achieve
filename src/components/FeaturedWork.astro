@@ -71,12 +71,23 @@ const featuredProjects = [
             
             <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
               <div class="flex items-center relative">
-                <h3 class="view-project-trigger text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-500 ease-out will-change-transform group-hover:pl-4">
+                <!-- Hover Arrow (Left Side, No Circle) -->
+                <div class="absolute left-0 opacity-0 -translate-x-4 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:translate-x-0 flex items-center">
+                  <svg class="w-8 h-8 md:w-10 md:h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </div>
+                
+                <!-- Project Title (Slides Right on Hover) -->
+                <h3 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-nura uppercase leading-[0.9] tracking-tight transition-all duration-500 ease-out will-change-transform group-hover:pl-10 md:group-hover:pl-14">
                   {project.title}
                 </h3>
               </div>
             </a>
           </div>
+
+          <!-- Full Card Clickable Overlay -->
+          <a href={`/work/${project.slug}`} class="absolute inset-0 z-40 w-full h-full block" aria-label={`View ${project.title}`}></a>
 
         </article>
       ))}
@@ -134,8 +145,12 @@ const featuredProjects = [
       return;
     }
 
-    const triggers = document.querySelectorAll('.view-project-trigger');
-    console.log('Found tooltip triggers: ', triggers.length);
+    // CRITICAL FIX: Move tooltip to document.body to break out of all GSAP/Parent stacking contexts!
+    document.body.appendChild(tooltip);
+
+    // Use the container as the trigger for the tooltip
+    const container = document.getElementById('featured-work-container');
+    if (!container) return;
 
     const updateTooltipPosition = (e: MouseEvent) => {
       const rect = tooltip.getBoundingClientRect();
@@ -154,25 +169,25 @@ const featuredProjects = [
       }
     };
 
-    triggers.forEach((el) => {
-      const element = el as HTMLElement;
+    container.addEventListener('mouseenter', (e: MouseEvent) => {
+      tooltip.classList.add('visible');
+      updateTooltipPosition(e);
+    });
 
-      element.addEventListener('mouseenter', (e: MouseEvent) => {
-        tooltip.classList.add('visible');
-        updateTooltipPosition(e);
-      });
+    container.addEventListener('mousemove', (e: MouseEvent) => {
+      updateTooltipPosition(e);
+    });
 
-      element.addEventListener('mousemove', (e: MouseEvent) => {
-        updateTooltipPosition(e);
-      });
+    container.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
 
-      element.addEventListener('mouseleave', () => {
-        tooltip.classList.remove('visible');
-      });
+    container.addEventListener('mousedown', () => {
+      tooltip.classList.remove('visible');
+    });
 
-      element.addEventListener('mousedown', () => {
-        tooltip.classList.remove('visible');
-      });
+    container.addEventListener('mouseup', () => {
+      tooltip.classList.add('visible');
     });
   }
 
