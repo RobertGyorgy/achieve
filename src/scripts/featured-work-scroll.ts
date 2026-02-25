@@ -16,9 +16,7 @@ const initFeaturedWorkAnimation = () => {
   const totalScrollHeight = (cards.length - 1) * window.innerHeight * 1.5; // Slightly longer for the multi-step wiping
 
   // Initial Setup: 
-  // All cards are stacked at inset-0 and rendered.
-  // The CSS clip-path polygons handle hiding the incoming cards.
-  // We only need to hide the incoming text content.
+  // We only need to prepare the incoming text content. The global mask starts hidden via CSS.
   cards.slice(1).forEach((card) => {
     const content = card.querySelector('.card-content');
     if (content) gsap.set(content, { opacity: 0, y: 30 });
@@ -37,25 +35,20 @@ const initFeaturedWorkAnimation = () => {
     }
   });
 
+  const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
+  const animDuration = 0.8;
+  const ease = 'power3.inOut';
+
   // Build the sequence
   cards.slice(1).forEach((card, index) => {
     const prevCard = cards[index]; // The card currently visible before this transition
     const prevContent = prevCard.querySelector('.card-content');
     const currentContent = card.querySelector('.card-content');
 
-    const whites = [
-      card.querySelector('.slice-white-0'),
-      card.querySelector('.slice-white-1'),
-      card.querySelector('.slice-white-2')
-    ];
+    // 1. Wipe IN the white slices to cover the screen
+    tl.set(masks, { transformOrigin: 'left' });
 
-    const videos = [
-      card.querySelector('.slice-video-0'),
-      card.querySelector('.slice-video-1'),
-      card.querySelector('.slice-video-2')
-    ];
-
-    // 1. Fade out the previous card's text
+    // Fade out previous text while masks are wiping in
     if (prevContent) {
       tl.to(prevContent, {
         opacity: 0,
@@ -65,34 +58,45 @@ const initFeaturedWorkAnimation = () => {
       });
     }
 
-    const animDuration = 0.8;
-    const ease = 'power3.inOut';
+    // Mask wipe IN (Left to Right stagger)
+    tl.to(masks, {
+      scaleX: 1,
+      stagger: 0.15,
+      duration: animDuration,
+      ease: ease,
+      force3D: true
+    }, "<0.2"); // Start shortly after text begins fading
 
-    // 2 & 3. Iterate through columns 0, 1, 2 to create the Left-to-Right stagger wave.
-    // Inside each column, the clip-path animates right-to-left.
-    whites.forEach((w, i) => {
-      if (!w || !videos[i]) return;
-      const whiteEl = w as HTMLElement;
-      const videoEl = videos[i] as HTMLElement;
-      
-      const whiteFull = whiteEl.dataset.full;
-      const videoFull = videoEl.dataset.full;
-
-      // Position: First slice waits a bit after text fade. Subsequent slices wait relative to previous video wipe.
-      const posWhite = i === 0 ? "<0.2" : "<0.15";
-      
-      tl.to(whiteEl, { clipPath: whiteFull, duration: animDuration, ease }, posWhite);
-      tl.to(videoEl, { clipPath: videoFull, duration: animDuration, ease }, "<0.2"); // Video tracks closely behind white
+    // 2. SWAP the visible card underneath the white mask
+    // The mask is completely covering the screen at this point
+    tl.set(prevCard, { opacity: 0, pointerEvents: 'none' });
+    tl.set(card, { opacity: 1, pointerEvents: 'auto' });
+    
+    // 3. Wipe OUT the white slices to reveal the new screen
+    // We want the white blocks to shrink away towards the right
+    tl.set(masks, { transformOrigin: 'right' }); 
+    
+    // Mask wipe OUT
+    tl.to(masks, {
+      scaleX: 0,
+      stagger: 0.15,
+      duration: animDuration,
+      ease: ease,
+      force3D: true
     });
 
-    // 4. Fade in the new card's text
+    // 4. Fade IN the new text
     if (currentContent) {
-      tl.to(currentContent, {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, "<0.4");
+      tl.fromTo(currentContent, 
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        }, 
+        "<0.3" // Start fading text in before mask wipe out fully finishes
+      );
     }
   });
 };

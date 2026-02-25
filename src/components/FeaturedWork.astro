@@ -29,7 +29,7 @@ const featuredProjects = [
 ---
 
 <div class="relative w-full z-20">
-  <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a]">
+  <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a] overflow-hidden">
     
     <!-- Static Slice Borders overlay -->
     <div class="absolute inset-0 w-full h-full pointer-events-none z-[40] flex">
@@ -38,55 +38,36 @@ const featuredProjects = [
       <div class="w-1/3 h-full"></div>
     </div>
 
-    <div class="absolute inset-0 w-full h-full overflow-hidden">
+    <!-- Global Transition Mask (Wipes over videos) -->
+    <div class="absolute inset-0 w-full h-full pointer-events-none z-[35] flex js-transition-mask">
+      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+      <div class="w-1/3 h-full bg-white origin-left mask-slice transform scale-x-0 will-change-transform"></div>
+    </div>
+
+    <div class="absolute inset-0 w-full h-full overflow-hidden js-projects-container">
       {featuredProjects.map((project, index) => (
         <article 
-          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
-          style={`z-index: ${10 + index}; pointer-events: ${index === 0 ? 'auto' : 'none'};`}
+          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end will-change-transform z-10 ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+          style={`pointer-events: ${index === 0 ? 'auto' : 'none'};`}
+          data-index={index}
         >
-          <!-- Background Asset Container -->
-          <div class="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
-            {[0, 1, 2].map((sliceIndex) => {
-              // The fully closed states (right edge of each column)
-              const startClip = sliceIndex === 0 ? 'polygon(33.333% 0%, 33.333% 0%, 33.333% 100%, 33.333% 100%)' :
-                                sliceIndex === 1 ? 'polygon(66.666% 0%, 66.666% 0%, 66.666% 100%, 66.666% 100%)' :
-                                                   'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)';
-              
-              // The fully open states (full 1/3 rectangular block)
-              const fullClip = sliceIndex === 0 ? 'polygon(0% 0%, 33.333% 0%, 33.333% 100%, 0% 100%)' :
-                               sliceIndex === 1 ? 'polygon(33.333% 0%, 66.666% 0%, 66.666% 100%, 33.333% 100%)' :
-                                                  'polygon(66.666% 0%, 100% 0%, 100% 100%, 66.666% 100%)';
-
-              // Card 0 starts fully visible. Cards 1+ start hidden as a hairline string.
-              const initialClip = index === 0 ? fullClip : startClip;
-
-              return (
-                <div class="absolute inset-0 w-full h-full z-0">
-                  <!-- White Wipe Overlay -->
-                  {index > 0 && (
-                     <div class={`slice-white slice-white-${sliceIndex} absolute inset-0 bg-white z-20`} style={`clip-path: ${initialClip};`} data-full={fullClip} data-start={startClip}></div>
-                  )}
-                  
-                  <!-- Video Background Wrap -->
-                  <div class={`slice-video slice-video-${sliceIndex} absolute inset-0 z-10`} style={`clip-path: ${initialClip};`} data-full={fullClip} data-start={startClip}>
-                    <div class="absolute inset-0 opacity-20 z-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20"></div>
-                    <video 
-                      src={project.videoUrl}
-                      class="absolute inset-0 w-full h-full object-cover object-center"
-                      autoplay
-                      muted
-                      loop
-                      playsinline
-                    ></video>
-                  </div>
-                </div>
-              );
-            })}
+          <!-- Base Full-Screen Video -->
+          <div class="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-10">
+            <div class="absolute inset-0 opacity-20 z-10" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-20"></div>
+            <video 
+              src={project.videoUrl}
+              class="absolute inset-0 w-full h-full object-cover object-center"
+              autoplay
+              muted
+              loop
+              playsinline
+            ></video>
           </div>
 
-          <!-- Content (Stays above everything) -->
-          <div class="relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12" style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
+          <!-- Content (Stays above everything via z-50, but we'll fade it with GSAP) -->
+          <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col gap-6 lg:gap-8 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important; padding-left: 4vw !important;">
             <div class="flex flex-wrap gap-3">
               {project.tags.map((tag) => (
                 <span class="text-white/90 text-sm md:text-base border border-white/20 px-5 py-2 rounded-full backdrop-blur-md bg-white/5">
