@@ -71,7 +71,7 @@ const featuredProjects = [
             
             <a href={`/work/${project.slug}`} class="group block w-full max-w-max">
               <div class="flex items-center relative">
-                <h3 class="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-500 ease-out will-change-transform group-hover:pl-4">
+                <h3 class="view-project-trigger text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-nura uppercase leading-[0.9] tracking-tight transition-transform duration-500 ease-out will-change-transform group-hover:pl-4">
                   {project.title}
                 </h3>
               </div>
@@ -85,7 +85,7 @@ const featuredProjects = [
 </div>
 
 <!-- Custom "View Project" Cursor Follower (Matching Hero Drag Tooltip) -->
-<div id="feature-cursor" class="feature-tooltip">
+<div id="view-project-tooltip" class="drag-tooltip">
   View Project
 </div>
 
@@ -93,10 +93,9 @@ const featuredProjects = [
   /* Local overrides for the wrapper */
   #featured-work-container {
     box-shadow: 0 -20px 50px rgba(0,0,0,0.1);
-    cursor: none; /* Hide default cursor when hovering this section */
   }
 
-  .feature-tooltip {
+  .drag-tooltip {
     position: fixed;
     pointer-events: none;
     z-index: 100000;
@@ -118,20 +117,20 @@ const featuredProjects = [
     margin-top: 10px;
   }
 
-  .feature-tooltip.visible {
+  .drag-tooltip.visible {
     opacity: 1;
     transform: translate(10px, 10px);
   }
 </style>
 
 <script>
-  function initFeatureCursor() {
-    if (window.innerWidth < 1024) return; // Desktop only, like drag-tooltip
+  function initViewProjectTooltip() {
+    if (window.innerWidth < 1024) return; // Desktop only
 
-    const tooltip = document.getElementById('feature-cursor');
-    const container = document.getElementById('featured-work-container');
-    
-    if (!tooltip || !container) return;
+    const tooltip = document.getElementById('view-project-tooltip');
+    if (!tooltip) return;
+
+    const triggers = document.querySelectorAll('.view-project-trigger');
 
     const updateTooltipPosition = (e: MouseEvent) => {
       const rect = tooltip.getBoundingClientRect();
@@ -150,30 +149,29 @@ const featuredProjects = [
       }
     };
 
-    container.addEventListener('mouseenter', (e: MouseEvent) => {
-      tooltip.classList.add('visible');
-      updateTooltipPosition(e);
-    });
+    triggers.forEach((el) => {
+      const element = el as HTMLElement;
 
-    container.addEventListener('mousemove', (e: MouseEvent) => {
-      updateTooltipPosition(e);
-    });
+      element.addEventListener('mouseenter', (e: MouseEvent) => {
+        tooltip.classList.add('visible');
+        updateTooltipPosition(e);
+      });
 
-    container.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('visible');
-    });
+      element.addEventListener('mousemove', (e: MouseEvent) => {
+        updateTooltipPosition(e);
+      });
 
-    container.addEventListener('mousedown', () => {
-      tooltip.classList.remove('visible');
-    });
-    
-    // Also, ensure we show it when MouseUp inside after Click
-    container.addEventListener('mouseup', () => {
-      tooltip.classList.add('visible');
+      element.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+
+      element.addEventListener('mousedown', () => {
+        tooltip.classList.remove('visible');
+      });
     });
   }
 
   // Run on load and ViewTransitions
-  document.addEventListener('DOMContentLoaded', initFeatureCursor);
-  document.addEventListener('astro:page-load', initFeatureCursor);
+  document.addEventListener('DOMContentLoaded', initViewProjectTooltip);
+  document.addEventListener('astro:page-load', initViewProjectTooltip);
 </script>
