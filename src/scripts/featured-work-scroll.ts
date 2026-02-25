@@ -1,10 +1,10 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { getScrollSmoother } from './smooth-scroll';
+import Observer from 'gsap/Observer';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Observer);
 
-const initFeaturedWorkAnimation = () => {
+export const initFeaturedWorkScroll = () => {
   if (typeof window === 'undefined') return;
 
   const container = document.getElementById('featured-work-container');
@@ -13,117 +13,137 @@ const initFeaturedWorkAnimation = () => {
   const cards = gsap.utils.toArray('#featured-work-container .featured-card') as HTMLElement[];
   if (cards.length < 2) return;
 
-  const totalScrollHeight = (cards.length - 1) * window.innerHeight * 1.5; // Slightly longer for the multi-step wiping
+  const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
+  
+  // State
+  let currentIndex = 0;
+  let isAnimating = false;
 
-  // Initial Setup: 
-  // We only need to prepare the incoming text content. The global mask starts hidden via CSS.
-  cards.slice(1).forEach((card) => {
+  // Initial Setup
+  cards.forEach((card, i) => {
     const content = card.querySelector('.card-content');
-    if (content) gsap.set(content, { opacity: 0, y: 30 });
-  });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: container,
-      start: 'top top',
-      end: `+=${totalScrollHeight}`,
-      pin: true,
-      scrub: 1,
-      snap: {
-        snapTo: 1 / (cards.length - 1),
-        duration: { min: 0.5, max: 1.0 },
-        delay: 0,
-        ease: 'power3.inOut'
-      },
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      id: 'featured-work-pin',
+    if (i !== 0) {
+      gsap.set(card, { opacity: 0, pointerEvents: 'none' });
+      if (content) gsap.set(content, { opacity: 0, y: 30 });
+    } else {
+      gsap.set(card, { opacity: 1, pointerEvents: 'auto' });
+      if (content) gsap.set(content, { opacity: 1, y: 0 });
     }
   });
 
-  const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
-  const animDuration = 0.8;
-  const ease = 'power3.inOut';
+  const gotoSlide = (index: number, direction: 'next' | 'prev') => {
+    if (index < 0 || index >= cards.length || isAnimating) return false;
+    isAnimating = true;
 
-  // Build the sequence
-  cards.slice(1).forEach((card, index) => {
-    const prevCard = cards[index]; // The card currently visible before this transition
-    const prevContent = prevCard.querySelector('.card-content');
-    const currentContent = card.querySelector('.card-content');
+    const currentCard = cards[currentIndex];
+    const nextCard = cards[index];
+    const currentContent = currentCard.querySelector('.card-content');
+    const nextContent = nextCard.querySelector('.card-content');
 
-    // 1. Wipe IN the white slices to cover the screen
-    tl.set(masks, { transformOrigin: 'left' });
+    const tl = gsap.timeline({
+      onComplete: () => {
+        currentIndex = index;
+        isAnimating = false;
+      }
+    });
 
-    // Fade out previous text while masks are wiping in
-    if (prevContent) {
-      tl.to(prevContent, {
+    const animDuration = 0.8;
+    const ease = 'power4.inOut';
+
+    // 1. Wipe IN masks (stagger from left to right if next, right to left if prev)
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
+    
+    if (currentContent) {
+      tl.to(currentContent, {
         opacity: 0,
-        y: -30,
+        y: direction === 'next' ? -30 : 30,
         duration: 0.5,
         ease: 'power2.inOut'
-      });
+      }, 0);
     }
 
-    // Mask wipe IN (Left to Right stagger)
     tl.to(masks, {
       scaleX: 1,
-      stagger: 0.15,
+      stagger: direction === 'next' ? 0.15 : -0.15,
       duration: animDuration,
       ease: ease,
       force3D: true
-    }, "<0.2"); // Start shortly after text begins fading
+    }, "<0.2");
 
-    // 2. SWAP the visible card underneath the white mask
-    // The mask is completely covering the screen at this point
-    tl.set(prevCard, { opacity: 0, pointerEvents: 'none' });
-    tl.set(card, { opacity: 1, pointerEvents: 'auto' });
-    
-    // 3. Wipe OUT the white slices to reveal the new screen
-    // We want the white blocks to shrink away towards the right
-    tl.set(masks, { transformOrigin: 'right' }); 
-    
-    // Mask wipe OUT
+    // 2. Swap physical cards midway
+    tl.set(currentCard, { opacity: 0, pointerEvents: 'none' });
+    tl.set(nextCard, { opacity: 1, pointerEvents: 'auto' });
+
+    // 3. Wipe OUT masks (opposite direction)
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' });
+
     tl.to(masks, {
       scaleX: 0,
-      stagger: 0.15,
+      stagger: direction === 'next' ? 0.15 : -0.15,
       duration: animDuration,
       ease: ease,
       force3D: true
     });
 
-    // 4. Fade IN the new text
-    if (currentContent) {
-      tl.fromTo(currentContent, 
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power2.out'
-        }, 
-        "<0.3" // Start fading text in before mask wipe out fully finishes
+    // 4. Fade in new text
+    if (nextContent) {
+      tl.fromTo(nextContent,
+        { opacity: 0, y: direction === 'next' ? 30 : -30 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        "<0.3"
       );
     }
+
+    return true; // We handled the scroll
+  };
+
+  // Create an Observer to hijack scroll events while inside the section
+  // It only captures if we are actually sliding between elements.
+  const observer = Observer.create({
+    target: window,
+    type: "wheel,touch,pointer",
+    wheelSpeed: -1,
+    onUp: () => {
+      // User scrolling DOWN the page (next slide)
+      if (currentIndex < cards.length - 1) {
+        if (!isAnimating) gotoSlide(currentIndex + 1, 'next');
+      } else {
+        // At the end, let normal scrolling resume
+        observer.disable();
+      }
+    },
+    onDown: () => {
+      // User scrolling UP the page (previous slide)
+      if (currentIndex > 0) {
+        if (!isAnimating) gotoSlide(currentIndex - 1, 'prev');
+      } else {
+        // At the top, let normal scrolling resume
+        observer.disable();
+      }
+    },
+    tolerance: 10,
+    preventDefault: true
   });
-};
+  observer.disable(); // Only enable when pinned
 
-export const initFeaturedWorkScroll = () => {
-  if (typeof window === 'undefined') return;
-
-  // Kill existing triggers to prevent duplicates
-  ScrollTrigger.getAll().forEach(trigger => {
-    if ((trigger.vars as any).id === 'featured-work-pin') {
-      trigger.kill();
-    }
-  });
-
-  // Always initialize the animation to ensure DOM is bound
-  initFeaturedWorkAnimation();
-
-  // Force a refresh after layout to lock strictly to DOM dims
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
+  // ScrollTrigger to manage the pin boundary
+  ScrollTrigger.create({
+    trigger: container,
+    start: 'top top',
+    end: `+=${cards.length * window.innerHeight}`,
+    pin: true,
+    anticipatePin: 1,
+    id: 'featured-work-pin',
+    onEnter: () => observer.enable(),
+    onEnterBack: () => {
+      observer.enable();
+      // Ensure we are logically back at the last slide
+      if (currentIndex !== cards.length - 1) {
+        currentIndex = cards.length - 1;
+        cards.forEach((c, i) => gsap.set(c, { opacity: i === currentIndex ? 1 : 0 }));
+      }
+    },
+    onLeave: () => observer.disable(),
+    onLeaveBack: () => observer.disable()
   });
 };
