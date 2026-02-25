@@ -30,25 +30,11 @@ const featuredProjects = [
 <div class="relative w-full z-20">
   <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a]">
     
-    <!-- Static Overlay Header (Stays on top of sliding cards) -->
-    <div class="absolute top-0 left-0 w-full z-50 pointer-events-none px-4 sm:px-6 lg:px-10" style="padding-top: max(18vh, 10rem);">
-      <div class="mx-auto w-full max-w-[90rem] xl:px-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div class="inline-block justify-start">
-          <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-nura text-white mb-2 leading-none" data-reveal="perspective" data-reveal-duration="0.8" data-reveal-delay="0.1">
-            Featured Work
-          </h2>
-        </div>
-        <p class="text-base sm:text-lg text-white/60 max-w-sm md:text-xl md:text-right pb-2" data-reveal="slide" data-reveal-duration="0.7" data-reveal-delay="0.2">
-          Showcase of our latest projects and creative endeavors
-        </p>
-      </div>
-    </div>
-
     <div class="absolute inset-0 w-full h-full overflow-hidden">
       {featuredProjects.map((project, index) => (
         <article 
-          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
-          style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'}; padding-bottom: max(22vh, 12rem);`}
+          class={`featured-card absolute inset-0 w-full h-full flex flex-col justify-end p-6 sm:p-12 lg:p-24 pb-16 sm:pb-20 md:pb-24 lg:pb-32 will-change-transform ${index === 0 ? 'z-10' : 'z-20'}`}
+          style={`z-index: ${10 + index}; background-color: ${index % 2 === 0 ? '#111822' : '#0d141a'};`}
         >
           <!-- Background Asset (Video/Image Placeholder) -->
           <div class="absolute inset-0 w-full h-full overflow-hidden">
