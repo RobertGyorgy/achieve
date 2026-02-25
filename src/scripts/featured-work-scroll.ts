@@ -31,6 +31,32 @@ export const initFeaturedWorkScroll = () => {
     }
   });
 
+  const vh = window.innerHeight || 800;
+
+  // ScrollTrigger to manage the pin boundary
+  const st = ScrollTrigger.create({
+    trigger: container,
+    start: 'top top',
+    end: `+=${cards.length * vh}`,
+    pin: true,
+    anticipatePin: 1,
+    id: 'featured-work-pin',
+    onEnter: () => observer.enable(),
+    onEnterBack: () => {
+      observer.enable();
+      if (currentIndex !== cards.length - 1) {
+        currentIndex = cards.length - 1;
+        cards.forEach((c, i) => {
+          gsap.set(c, { opacity: i === currentIndex ? 1 : 0, pointerEvents: i === currentIndex ? 'auto' : 'none' });
+          const content = c.querySelector('.card-content');
+          if (content) gsap.set(content, { opacity: i === currentIndex ? 1 : 0, y: 0 });
+        });
+      }
+    },
+    onLeave: () => observer.disable(),
+    onLeaveBack: () => observer.disable()
+  });
+
   const gotoSlide = (index: number, direction: 'next' | 'prev') => {
     if (index < 0 || index >= cards.length || isAnimating) return false;
     isAnimating = true;
@@ -44,13 +70,16 @@ export const initFeaturedWorkScroll = () => {
       onComplete: () => {
         currentIndex = index;
         isAnimating = false;
+        
+        // SYNC SCROLL POSITION
+        const scrollTarget = st.start + (index / (cards.length - 1)) * (st.end - st.start);
+        st.scroll(scrollTarget);
       }
     });
 
     const animDuration = 0.8;
     const ease = 'power4.inOut';
 
-    // 1. Wipe IN masks (stagger from left to right if next, right to left if prev)
     tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
     
     if (currentContent) {
@@ -69,11 +98,9 @@ export const initFeaturedWorkScroll = () => {
       force3D: true
     }, "<0.2");
 
-    // 2. Swap physical cards midway
     tl.set(currentCard, { opacity: 0, pointerEvents: 'none' });
     tl.set(nextCard, { opacity: 1, pointerEvents: 'auto' });
 
-    // 3. Wipe OUT masks (opposite direction)
     tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' });
 
     tl.to(masks, {
@@ -83,7 +110,6 @@ export const initFeaturedWorkScroll = () => {
       force3D: true
     });
 
-    // 4. Fade in new text
     if (nextContent) {
       tl.fromTo(nextContent,
         { opacity: 0, y: direction === 'next' ? 30 : -30 },
@@ -92,56 +118,29 @@ export const initFeaturedWorkScroll = () => {
       );
     }
 
-    return true; // We handled the scroll
+    return true;
   };
 
-  // Create an Observer to hijack scroll events while inside the section
-  // It only captures if we are actually sliding between elements.
   const observer = Observer.create({
     target: window,
     type: "wheel,touch,pointer",
     wheelSpeed: -1,
     onUp: () => {
-      // User scrolling DOWN the page (next slide)
       if (currentIndex < cards.length - 1) {
         if (!isAnimating) gotoSlide(currentIndex + 1, 'next');
       } else {
-        // At the end, let normal scrolling resume
         observer.disable();
       }
     },
     onDown: () => {
-      // User scrolling UP the page (previous slide)
       if (currentIndex > 0) {
         if (!isAnimating) gotoSlide(currentIndex - 1, 'prev');
       } else {
-        // At the top, let normal scrolling resume
         observer.disable();
       }
     },
     tolerance: 10,
     preventDefault: true
   });
-  observer.disable(); // Only enable when pinned
-
-  // ScrollTrigger to manage the pin boundary
-  ScrollTrigger.create({
-    trigger: container,
-    start: 'top top',
-    end: `+=${cards.length * window.innerHeight}`,
-    pin: true,
-    anticipatePin: 1,
-    id: 'featured-work-pin',
-    onEnter: () => observer.enable(),
-    onEnterBack: () => {
-      observer.enable();
-      // Ensure we are logically back at the last slide
-      if (currentIndex !== cards.length - 1) {
-        currentIndex = cards.length - 1;
-        cards.forEach((c, i) => gsap.set(c, { opacity: i === currentIndex ? 1 : 0 }));
-      }
-    },
-    onLeave: () => observer.disable(),
-    onLeaveBack: () => observer.disable()
-  });
+  observer.disable();
 };
