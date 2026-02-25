@@ -149,8 +149,16 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex < cards.length - 1) {
         gotoSlide(currentIndex + 1, 'next');
       } else {
-        // Yield to native scroll for unpinning
+        // FORCED INSTANT BREAKOUT DOWN: 
+        // We programmatically jump past the pin boundary to ensure 
+        // exactly one scroll gesture always exits the section.
         observer.disable();
+        gsap.to(window, { 
+          scrollTo: st.end + 20, 
+          duration: 0.5,
+          ease: 'power1.in',
+          overwrite: true
+        });
       }
     },
     onDown: () => {
@@ -158,8 +166,14 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex > 0) {
         gotoSlide(currentIndex - 1, 'prev');
       } else {
-        // Yield to native scroll for unpinning
+        // FORCED INSTANT BREAKOUT UP: Jump past top boundary
         observer.disable();
+        gsap.to(window, { 
+          scrollTo: st.start - 20, 
+          duration: 0.5,
+          ease: 'power1.in',
+          overwrite: true
+        });
       }
     },
     tolerance: 15,
