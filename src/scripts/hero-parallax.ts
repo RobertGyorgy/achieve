@@ -19,7 +19,7 @@ export const initHeroParallax = () => {
     gsap.to(heroContentMain, {
       scale: 0.9,
       filter: "blur(8px)",
-      opacity: 0.5,
+      opacity: isMobileDevice ? 1 : 0.5,
       ease: "none",
       force3D: true,
       scrollTrigger: {
@@ -43,7 +43,7 @@ export const initHeroParallax = () => {
     gsap.to(heroContentTest, {
       scale: 0.9,
       filter: "blur(8px)",
-      opacity: 0.5,
+      opacity: isMobileDevice ? 1 : 0.5,
       ease: "none",
       force3D: true,
       scrollTrigger: {

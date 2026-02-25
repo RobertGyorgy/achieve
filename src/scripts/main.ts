@@ -2,7 +2,8 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { initializeGsap, setupPageTransitions } from './gsap-utils';
 import { initTextAnimations } from '../utils/RevealAnimationHandler';
-import { initWorkSection, initServicesSection } from './scroll-stack';
+import { initServicesSection } from './scroll-stack';
+import { initFeaturedWorkScroll } from './featured-work-scroll';
 import { initSmoothScroll, cleanupSmoothScroll } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
@@ -29,7 +30,7 @@ async function initializeApp() {
   requestAnimationFrame(() => {
     setupPageTransitions();
     initTextAnimations();
-    initWorkSection();
+    initFeaturedWorkScroll();
     initServicesSection();
     initBackgroundTransition();
     initFAQAccordion();
