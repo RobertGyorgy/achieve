@@ -80,27 +80,30 @@ export const initFeaturedWorkScroll = () => {
       onComplete: () => {
         currentIndex = index;
         isAnimating = false;
-        
-        // BOUNDARY YIELDING:
-        // If we reach the first or last slide, we disable the observer.
-        // This allows the VERY NEXT scroll to be native, which immediately
-        // triggers ScrollTrigger to unpin and move the page.
-        if (currentIndex === 0 || currentIndex === cards.length - 1) {
-          // We stay enabled here so the CURRENT gesture doesn't bleed,
-          // but the handlers will check if they should yield.
-        }
       }
     });
 
-    tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
+    // SCROLLBAR SYNC:
+    // Move the native scrollbar to match the slide progress.
+    // This ensures that when we reach the last slide, we are at st.end.
+    const scrollProgress = index / (cards.length - 1);
+    const targetScroll = st.start + scrollProgress * (st.end - st.start);
+    
+    tl.to(window, {
+      scrollTo: targetScroll,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    }, 0);
 
-    // Wipe IN (White)
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' }, 0);
+
+    // Wipe IN (White) - Faster (0.4s)
     tl.to(masks, {
       scaleX: 1,
-      duration: 0.6,
-      stagger: 0.1,
+      duration: 0.4,
+      stagger: 0.08,
       ease: 'power2.inOut'
-    });
+    }, 0);
 
     // SWAP DATA
     tl.add(() => {
@@ -111,31 +114,31 @@ export const initFeaturedWorkScroll = () => {
         nextVideo.currentTime = 0;
         nextVideo.play().catch(() => {});
       }
-    });
+    }, 0.4);
 
     if (currentContent) {
       tl.to(currentContent, { 
         opacity: 0, 
-        y: direction === 'next' ? -30 : 30, 
-        duration: 0.3 
+        y: direction === 'next' ? -20 : 20, 
+        duration: 0.2 
       }, 0);
     }
 
-    tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' });
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' }, 0.4);
 
     // Wipe OUT (Video appears)
     tl.to(masks, {
       scaleX: 0,
-      duration: 0.6,
-      stagger: 0.1,
+      duration: 0.4,
+      stagger: 0.08,
       ease: 'power2.inOut'
-    });
+    }, 0.4);
 
     if (nextContent) {
       tl.fromTo(nextContent, 
-        { opacity: 0, y: direction === 'next' ? 30 : -30 }, 
-        { opacity: 1, y: 0, duration: 0.3 }, 
-        "-=0.4"
+        { opacity: 0, y: direction === 'next' ? 20 : -20 }, 
+        { opacity: 1, y: 0, duration: 0.2 }, 
+        0.5
       );
     }
   };
@@ -149,15 +152,9 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex < cards.length - 1) {
         gotoSlide(currentIndex + 1, 'next');
       } else {
-        // ZERO-THRESHOLD BREAKOUT DOWN: 
-        // Tiny tolerance (5) + fast jump (0.3s) ensures effortless exit.
+        // SCROLLBAR IS ALREADY AT st.end 
+        // We disable observer so the NEXT scroll is 100% native.
         observer.disable();
-        gsap.to(window, { 
-          scrollTo: st.end + 100, 
-          duration: 0.3,
-          ease: 'power2.in',
-          overwrite: true
-        });
       }
     },
     onDown: () => {
@@ -165,17 +162,10 @@ export const initFeaturedWorkScroll = () => {
       if (currentIndex > 0) {
         gotoSlide(currentIndex - 1, 'prev');
       } else {
-        // ZERO-THRESHOLD BREAKOUT UP
         observer.disable();
-        gsap.to(window, { 
-          scrollTo: st.start - 100, 
-          duration: 0.3,
-          ease: 'power2.in',
-          overwrite: true
-        });
       }
     },
-    tolerance: 5, // Extremely sensitive
+    tolerance: 5,
     preventDefault: true
   });
 
