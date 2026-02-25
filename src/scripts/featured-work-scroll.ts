@@ -16,18 +16,12 @@ const initFeaturedWorkAnimation = () => {
   const totalScrollHeight = (cards.length - 1) * window.innerHeight * 1.5; // Slightly longer for the multi-step wiping
 
   // Initial Setup: 
-  // All cards are stacked at inset-0.
-  // We need to hide the slices of all cards EXCEPT the first one.
+  // All cards are stacked at inset-0 and rendered.
+  // The CSS clip-path polygons handle hiding the incoming cards.
+  // We only need to hide the incoming text content.
   cards.slice(1).forEach((card) => {
-    const whites = card.querySelectorAll('.slice-white');
-    const videos = card.querySelectorAll('.slice-video');
-    const content = card.querySelector('.relative.z-50'); // The text content
-    
-    // Push slices offscreen to the right
-    gsap.set(whites, { xPercent: 100 });
-    gsap.set(videos, { xPercent: 100 });
-    // Hide incoming text
-    gsap.set(content, { opacity: 0, y: 30 });
+    const content = card.querySelector('.card-content');
+    if (content) gsap.set(content, { opacity: 0, y: 30 });
   });
 
   const tl = gsap.timeline({
@@ -46,43 +40,60 @@ const initFeaturedWorkAnimation = () => {
   // Build the sequence
   cards.slice(1).forEach((card, index) => {
     const prevCard = cards[index]; // The card currently visible before this transition
-    const prevContent = prevCard.querySelector('.relative.z-50');
-    
-    const whites = card.querySelectorAll('.slice-white');
-    const videos = card.querySelectorAll('.slice-video');
-    const currentContent = card.querySelector('.relative.z-50');
+    const prevContent = prevCard.querySelector('.card-content');
+    const currentContent = card.querySelector('.card-content');
+
+    const whites = [
+      card.querySelector('.slice-white-0'),
+      card.querySelector('.slice-white-1'),
+      card.querySelector('.slice-white-2')
+    ];
+
+    const videos = [
+      card.querySelector('.slice-video-0'),
+      card.querySelector('.slice-video-1'),
+      card.querySelector('.slice-video-2')
+    ];
 
     // 1. Fade out the previous card's text
-    tl.to(prevContent, {
-      opacity: 0,
-      y: -30,
-      duration: 0.5,
-      ease: 'power2.inOut'
+    if (prevContent) {
+      tl.to(prevContent, {
+        opacity: 0,
+        y: -30,
+        duration: 0.5,
+        ease: 'power2.inOut'
+      });
+    }
+
+    const animDuration = 0.8;
+    const ease = 'power3.inOut';
+
+    // 2 & 3. Iterate through columns 0, 1, 2 to create the Left-to-Right stagger wave.
+    // Inside each column, the clip-path animates right-to-left.
+    whites.forEach((w, i) => {
+      if (!w || !videos[i]) return;
+      const whiteEl = w as HTMLElement;
+      const videoEl = videos[i] as HTMLElement;
+      
+      const whiteFull = whiteEl.dataset.full;
+      const videoFull = videoEl.dataset.full;
+
+      // Position: First slice waits a bit after text fade. Subsequent slices wait relative to previous video wipe.
+      const posWhite = i === 0 ? "<0.2" : "<0.15";
+      
+      tl.to(whiteEl, { clipPath: whiteFull, duration: animDuration, ease }, posWhite);
+      tl.to(videoEl, { clipPath: videoFull, duration: animDuration, ease }, "<0.2"); // Video tracks closely behind white
     });
 
-    // 2. White wipe from right to left, all 3 columns simultaneously
-    tl.to(whites, {
-      xPercent: 0,
-      duration: 0.8,
-      ease: 'power3.inOut',
-      force3D: true
-    }, "<0.2"); // Start slightly after text begins fading
-
-    // 3. Video wipe closely following the white wipe
-    tl.to(videos, {
-      xPercent: 0,
-      duration: 0.8,
-      ease: 'power3.inOut',
-      force3D: true
-    }, "<0.3"); // Overlap with the white wipe
-
     // 4. Fade in the new card's text
-    tl.to(currentContent, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, "<0.4");
+    if (currentContent) {
+      tl.to(currentContent, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, "<0.4");
+    }
   });
 };
 
