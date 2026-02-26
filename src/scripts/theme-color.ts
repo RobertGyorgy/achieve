@@ -27,9 +27,14 @@ let smootherCleanup: (() => void) | null = null;
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function applyColor(hex: string) {
-  // Only update #smooth-wrapper (the actual painted background layer).
-  // html/body MUST stay transparent — if html has any background color,
-  // Safari reads it and tints the address bar. transparent = native glass bar.
+  // 1. theme-color meta — Safari reads this for bar chrome color during the
+  //    collapse animation (when the address bar shrinks as you scroll).
+  //    Without it, Safari flashes white during the collapse transition.
+  const meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+  if (meta) meta.content = hex;
+
+  // 2. smooth-wrapper — visual background layer (position:fixed on desktop).
+  //    Keeps the painted background in sync for ScrollTrigger pin gaps.
   const smoothWrapper = document.getElementById('smooth-wrapper');
   if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
