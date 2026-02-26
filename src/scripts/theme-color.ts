@@ -26,32 +26,16 @@ let smootherCleanup: (() => void) | null = null;
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
-function getThemeMeta(): HTMLMetaElement | null {
-  return document.querySelector('meta[name="theme-color"]');
-}
-
 function applyColor(hex: string) {
-  // 1. Fixed safe-area fill — what Safari actually reads
+  // 1. Fixed safe-area fill div — covers the env(safe-area-inset-top) zone.
+  //    Safari samples pixels at y=0 behind the status bar; this element ensures
+  //    the right colour is there regardless of what content is below.
   if (fillEl) fillEl.style.backgroundColor = hex;
 
-  // 2. <html> background — Safari derives bar color from the root element
-  document.documentElement.style.backgroundColor = hex;
-
-  // 3. theme-color meta — what Chrome iOS reads
-  const meta = getThemeMeta();
-  if (meta && meta.content !== hex) meta.content = hex;
-
-  // 4. body bg — belt-and-suspenders
-  document.body.style.backgroundColor = hex;
-
-  // 5. main content wrapper — prevents gaps during ScrollTrigger pin animations
-  const main = document.querySelector('main') as HTMLElement;
-  if (main) main.style.backgroundColor = hex;
-  
-  const contentWrapper = document.querySelector('main > div') as HTMLElement;
-  if (contentWrapper) (contentWrapper as HTMLElement).style.backgroundColor = hex;
-  
-  // 6. smooth-wrapper background — fills any gaps in ScrollSmoother
+  // 2. smooth-wrapper is the actual visual background layer (position:fixed, top:0).
+  //    Changing it keeps the rendered pixels behind the address bar in sync.
+  //    html/body are intentionally kept transparent so Safari uses its native
+  //    glass/blur effect on the address bar instead of a forced opaque tint.
   const smoothWrapper = document.getElementById('smooth-wrapper');
   if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
