@@ -395,7 +395,8 @@
   }
 
   .hero-section-container {
-    padding: 12vh 5vw 6vh !important;
+    padding: calc(12vh + env(safe-area-inset-top)) 5vw
+      calc(6vh + env(safe-area-inset-bottom)) !important;
     min-height: 100vh; /* Fallback */
     min-height: 100svh; /* Stable Mobile Height (prevents address bar glitch) */
     /* will-change removed to avoid stacking context issues with pinning */
