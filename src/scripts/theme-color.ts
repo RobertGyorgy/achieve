@@ -45,11 +45,11 @@ function applyColor(hex: string) {
   document.body.style.backgroundColor = hex;
 
   // 5. main content wrapper — prevents gaps during ScrollTrigger pin animations
-  const main = document.querySelector('main');
+  const main = document.querySelector('main') as HTMLElement;
   if (main) main.style.backgroundColor = hex;
   
-  const contentWrapper = document.querySelector('main > div');
-  if (contentWrapper) contentWrapper.style.backgroundColor = hex;
+  const contentWrapper = document.querySelector('main > div') as HTMLElement;
+  if (contentWrapper) (contentWrapper as HTMLElement).style.backgroundColor = hex;
   
   // 6. smooth-wrapper background — fills any gaps in ScrollSmoother
   const smoothWrapper = document.getElementById('smooth-wrapper');
@@ -103,13 +103,22 @@ export function initThemeColor() {
   if (!sections.length) return;
 
   // Apply correct colour immediately (handles page refresh mid-scroll)
-  applyColor(colorFromSections(sections));
+  const initialColor = colorFromSections(sections);
+  applyColor(initialColor);
+  
+  if (import.meta.env.DEV) {
+    console.log(`🎨 theme-color: initial color ${initialColor}, tracking ${sections.length} sections`);
+  }
 
   // ── 2. Native scroll listener (mobile / no ScrollSmoother) ───────────────
   // On mobile, ScrollSmoother is disabled and the page scrolls natively.
   // window scroll events fire reliably here.
   scrollHandler = () => {
-    applyColor(colorFromSections(sections));
+    const newColor = colorFromSections(sections);
+    if (import.meta.env.DEV) {
+      console.log(`📱 scroll event: applying color ${newColor}`);
+    }
+    applyColor(newColor);
   };
   window.addEventListener('scroll', scrollHandler, { passive: true });
 
@@ -128,7 +137,11 @@ export function initThemeColor() {
       if (!sm) return; // Mobile / no smoother — native scroll listener handles it
 
       const tick = () => {
-        rafId = requestAnimationFrame(tick);
+        raconst newColor = colorFromSections(sections);
+          if (import.meta.env.DEV) {
+            console.log(`🖥️ smoother progress ${p.toFixed(3)}: applying color ${newColor}`);
+          }
+          applyColor(newColor
         const p = sm.progress;
         if (p !== lastProgress) {
           lastProgress = p;
