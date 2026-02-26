@@ -27,12 +27,9 @@ let smootherCleanup: (() => void) | null = null;
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function applyColor(hex: string) {
-  // <html> background — the single property Safari reads to tint the address bar
-  // and status bar. Works on both mobile (native scroll) and desktop (ScrollSmoother).
-  document.documentElement.style.backgroundColor = hex;
-
-  // smooth-wrapper — visual background on desktop (position:fixed, full-screen).
-  // Prevents gap colour showing through during ScrollTrigger pin animations.
+  // Only update #smooth-wrapper (the actual painted background layer).
+  // html/body MUST stay transparent — if html has any background color,
+  // Safari reads it and tints the address bar. transparent = native glass bar.
   const smoothWrapper = document.getElementById('smooth-wrapper');
   if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
