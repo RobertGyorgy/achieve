@@ -137,9 +137,10 @@ const {
     left: 0;
     right: 0;
     bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #F2F2F2;
+    /* No explicit width/height — inset:0 on a fixed element fills the
+       actual visible viewport, which adapts to address-bar state on iOS.
+       100vh on iOS equals the large viewport and can leave a gap. */
+    background-color: transparent;
   }
 
   /* Preloader letters - staggered entrance */
