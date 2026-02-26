@@ -94,11 +94,25 @@ const featuredProjects = [
             <!-- Glassmorphism "View Work" Button (Mobile only) -->
             <div 
               class="mobile-view-work-btn featured-card-element lg:hidden opacity-0 translate-y-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 relative mx-auto text-center"
-              style="padding: 14px 32px; clip-path: inset(0 round 9999px); -webkit-clip-path: inset(0 round 9999px);"
+              style="padding: 14px 32px; overflow: hidden; clip-path: inset(0 round 9999px); -webkit-clip-path: inset(0 round 9999px);"
               data-index={index}
             >
-              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
-              <span class="relative z-10 text-white text-sm font-bold uppercase tracking-[0.1em] mix-blend-difference">View Work</span>
+              <!-- Bottom Layer (Static White Text) -->
+              <span class="relative z-10 text-white text-sm font-bold uppercase tracking-[0.1em]">View Work</span>
+              
+              <!-- Progress Fill Layer (Expanding Black Text) -->
+              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0 overflow-hidden pointer-events-none">
+                <span class="absolute inset-0 flex items-center justify-center text-black text-sm font-bold uppercase tracking-[0.1em] whitespace-nowrap">View Work</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Slices Container -->
+          <div class="absolute inset-0 z-0 pointer-events-none">
+            <div class="js-transition-mask absolute inset-0 grid grid-cols-1 md:grid-cols-3">
+              <div class="mask-slice bg-black/95 origin-left scale-x-0"></div>
+              <div class="mask-slice bg-black/95 origin-left scale-x-0"></div>
+              <div class="mask-slice bg-black/95 origin-left scale-x-0"></div>
             </div>
           </div>
 
@@ -108,50 +122,54 @@ const featuredProjects = [
         </article>
       ))}
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Consolidated Inverting Tooltip -->
-<div id="view-project-tooltip" class="drag-tooltip">
-  <div class="tooltip-bg absolute inset-0 bg-white origin-left scale-x-0"></div>
-  <span class="relative z-10 mix-blend-difference">View Project</span>
+  <!-- Cursor Tooltip Wrapper (Appended to body via script) -->
+  <div id="view-project-tooltip" class="drag-tooltip">
+    <!-- Bottom Layer (Static White Text) -->
+    <span class="relative z-10">View Work</span>
+    
+    <!-- Progress Fill Layer (Expanding Black Text) -->
+    <div class="tooltip-bg absolute inset-0 bg-white origin-left scale-x-0 overflow-hidden">
+      <span class="absolute inset-0 flex items-center justify-center text-black">View Work</span>
+    </div>
+  </div>
 </div>
 
 <style>
-  /* Local overrides for the wrapper */
-  #featured-work-container {
-    box-shadow: 0 -20px 50px rgba(0,0,0,0.1);
-  }
-
   .drag-tooltip {
     position: fixed;
+    z-index: 9999;
     pointer-events: none;
-    z-index: 100000;
     opacity: 0;
-    transform: scale(0.8) translate(0, 0);
-    transition:
-      opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1),
-      transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-    padding: 14px 32px;
+    scale: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
     border-radius: 9999px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: 'HK Grotesk', sans-serif;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
     clip-path: inset(0 round 9999px);
     -webkit-clip-path: inset(0 round 9999px);
+    
+    /* Typography matching Hero and UI */
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+    transition: opacity 0.3s ease, scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .drag-tooltip.visible {
     opacity: 1;
-    transform: scale(1) translate(0, 0);
+    scale: 1;
   }
 </style>
 
