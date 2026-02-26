@@ -136,19 +136,12 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
-  isolation: auto;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  min-height: 100%;
-  min-height: -webkit-fill-available;
+  overflow-anchor: none;
   background-color: transparent;
-}
-
-/* Smooth scrolling for main document */
-body {
-  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -157,12 +150,13 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  isolation: auto;
   overflow-x: hidden;
   min-height: 100vh;
   min-height: -webkit-fill-available;
   background-color: transparent;
   scrollbar-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 /* Hide scrollbar but keep scrolling functionality */
@@ -361,55 +355,8 @@ button {
   }
 }
 
-/* ScrollSmoother Styles */
-/* Default is relative; ScrollSmoother JS sets position:fixed on desktop at runtime */
-#smooth-wrapper {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-}
-
-#smooth-content {
-  overflow: visible;
-  width: 100%;
-  will-change: transform;
-  background-color: transparent;
-}
-
-/* Ensure body doesn't scroll when ScrollSmoother is active */
-body.scroll-smoother-active {
-  overflow: hidden;
-  height: 100%;
-}
-
-/* Mobile: disable ScrollSmoother wrapper styles (undo anything ScrollSmoother may have set) */
-@media (max-width: 1023px) {
-  #smooth-wrapper {
-    position: static !important;
-    height: auto !important;
-    overflow: visible !important;
-    width: auto !important;
-  }
-
-  #smooth-content {
-    overflow: visible !important;
-    width: auto !important;
-    height: auto !important;
-    will-change: auto !important;
-    transform: none !important;
-  }
-
-  body.scroll-smoother-active {
-    overflow: auto !important;
-    height: auto !important;
-  }
-
-  html, body {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: auto !important;
-    position: static !important;
-    touch-action: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-}
+/* ScrollSmoother Structure — no CSS rules needed.
+   smooth-wrapper gets position:relative + z-index:10 via inline style in Layout.astro.
+   ScrollSmoother JS sets position:fixed on desktop at runtime.
+   On mobile, JS skips ScrollSmoother entirely, so the wrapper stays position:relative.
+   Reference working site has NO CSS overrides here and NO mobile media query. */
