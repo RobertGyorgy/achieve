@@ -93,11 +93,11 @@ const featuredProjects = [
 
             <!-- Glassmorphism "View Work" Button (Mobile only) -->
             <div 
-              class="mobile-view-work-btn featured-card-element lg:hidden opacity-0 translate-y-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 overflow-hidden relative mx-auto text-center"
-              style="padding: 14px 32px; isolation: isolate; transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; backface-visibility: hidden;"
+              class="mobile-view-work-btn featured-card-element lg:hidden opacity-0 translate-y-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 relative mx-auto text-center"
+              style="padding: 14px 32px; clip-path: inset(0 round 9999px); -webkit-clip-path: inset(0 round 9999px);"
               data-index={index}
             >
-              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0" style="transform: translate3d(0, 0, 0);"></div>
+              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
               <span class="relative z-10 text-white text-sm font-bold uppercase tracking-[0.1em] mix-blend-difference">View Work</span>
             </div>
           </div>
@@ -145,11 +145,8 @@ const featuredProjects = [
     border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    overflow: hidden;
-    isolation: isolate;
-    transform: translate3d(0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    clip-path: inset(0 round 9999px);
+    -webkit-clip-path: inset(0 round 9999px);
   }
 
   .drag-tooltip.visible {
