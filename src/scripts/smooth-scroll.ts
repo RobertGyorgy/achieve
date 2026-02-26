@@ -50,12 +50,6 @@ export const initSmoothScroll = async () => {
 
   const isMobileDevice = isMobile();
 
-  // Configure ScrollTrigger first (must be before ScrollSmoother)
-  ScrollTrigger.config({
-    autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
-    ignoreMobileResize: true, // Always ignore mobile resize to prevent layout thrashing
-  });
-
   // Try to load ScrollSmoother plugin
   const ScrollSmoother = await loadScrollSmoother();
 

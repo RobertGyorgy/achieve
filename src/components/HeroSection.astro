@@ -158,6 +158,10 @@
 
     // If preloader exists (initial load), wait for it to finish
     if (preloader && preloaderLetters.length) {
+      // Lock scroll while preloader is visible — prevents scrolling into dark
+      // sections behind it, which causes Safari iOS to show wrong colors
+      // in the address bar area.
+      document.body.style.overflow = 'hidden';
       initPreloader(preloader, preloaderLetters);
     } else {
       // If no preloader (client-side navigation), reveal immediately
@@ -202,6 +206,8 @@
       display: 'none',
       zIndex: -1,
       onComplete: () => {
+        // Unlock scroll now that preloader is gone
+        document.body.style.overflow = '';
         revealHeroContent();
       },
     });
