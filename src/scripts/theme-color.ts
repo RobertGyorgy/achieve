@@ -27,15 +27,17 @@ let smootherCleanup: (() => void) | null = null;
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function applyColor(hex: string) {
-  // 1. Fixed safe-area fill div — covers the env(safe-area-inset-top) zone.
-  //    Safari samples pixels at y=0 behind the status bar; this element ensures
-  //    the right colour is there regardless of what content is below.
+  // 1. <html> background — the single reliable signal Safari reads to tint the
+  //    address bar and status bar. Works on both mobile (native scroll, smooth-wrapper
+  //    is static) and desktop (smooth-wrapper is fixed). Must always be set.
+  document.documentElement.style.backgroundColor = hex;
+
+  // 2. Fixed safe-area fill div — covers env(safe-area-inset-top) at y=0.
+  //    Ensures the notch/status bar area also shows the correct colour.
   if (fillEl) fillEl.style.backgroundColor = hex;
 
-  // 2. smooth-wrapper is the actual visual background layer (position:fixed, top:0).
-  //    Changing it keeps the rendered pixels behind the address bar in sync.
-  //    html/body are intentionally kept transparent so Safari uses its native
-  //    glass/blur effect on the address bar instead of a forced opaque tint.
+  // 3. smooth-wrapper — visual background layer on desktop (position:fixed, full-screen).
+  //    Prevents any gap colour showing through during ScrollTrigger pin animations.
   const smoothWrapper = document.getElementById('smooth-wrapper');
   if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
@@ -122,12 +124,12 @@ export function initThemeColor() {
 
       const tick = () => {
         rafId = requestAnimationFrame(tick);
-        const p = sm.progress;
+        const p = sm.scrollTop();
         if (p !== lastProgress) {
           lastProgress = p;
           const newColor = colorFromSections(sections);
           if (import.meta.env.DEV) {
-            console.log(`🖥️ smoother progress ${p.toFixed(3)}: applying color ${newColor}`);
+            console.log(`🖥️ smoother scrollTop ${p}px: applying color ${newColor}`);
           }
           applyColor(newColor);
         }
