@@ -135,18 +135,23 @@
   box-sizing: border-box;
 }
 
+/* ============================================ */
+/* KEY: Root & Body - Transparent Background  */
+/* Making address bar invisible               */
+/* ============================================ */
 html {
   scroll-behavior: smooth;
   font-size: 16px;
   isolation: auto;
-  /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  background-color: transparent !important;
+  background-color: transparent !important; /* NO COLOR behind address bar */
+  margin: 0;
+  padding: 0;
 }
 
-html::-webkit-scrollbar, body::-webkit-scrollbar {
+html::-webkit-scrollbar {
   display: none;
 }
 
@@ -157,19 +162,24 @@ body {
 
 body {
   font-family: 'HKGrotesk', sans-serif;
-  background-color: transparent !important;
+  background-color: transparent !important; /* NO COLOR behind address bar */
   color: #222831;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   isolation: auto;
   overflow-x: hidden;
-  /* Fill the full screen including safe areas */
+  /* Fill entire viewport including safe areas */
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: -webkit-fill-available; /* iOS safe area */
   scrollbar-width: none;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* Hide scrollbar but keep scrolling functionality */
