@@ -28,7 +28,7 @@ const {
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="rgba(0,0,0,0)" />
+    <meta name="theme-color" content="#222831" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
@@ -97,12 +97,6 @@ const {
     <meta name="astro-view-transitions-enabled" content="true" />
   </head>
   <body class="text-white">
-    <!-- Transparency Hook: 1px transparent spacer at the absolute top for mobile address bar -->
-    <div
-      style="height: 1px; width: 100%; background: transparent; position: absolute; top: 0; left: 0; z-index: 10000; pointer-events: none;"
-    >
-    </div>
-
     <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
     <div
       id="preloader"
