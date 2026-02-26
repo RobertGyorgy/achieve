@@ -13,10 +13,10 @@ export const initFeaturedWorkScroll = () => {
   if (cards.length < 2) return;
 
   const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
-  const tooltipFills = gsap.utils.toArray('.tooltip-progress-fill') as HTMLElement[];
   const mobileFills = gsap.utils.toArray('.mobile-btn-progress-fill') as HTMLElement[];
   const mobileBtns = gsap.utils.toArray('.mobile-view-work-btn') as HTMLElement[];
-  const tooltip = document.getElementById('cursor-tooltip');
+  const tooltip = document.getElementById('view-project-tooltip');
+  const tooltipBg = tooltip?.querySelector('.tooltip-bg');
   
   // State
   let currentIndex = 0;
@@ -42,34 +42,7 @@ export const initFeaturedWorkScroll = () => {
       }
       if (mobileBtn) gsap.set(mobileBtn, { display: 'inline-flex', opacity: 1, y: 0 });
     }
-    
-    // Ensure nested tooltip fills are reset
-    if (tooltipFills[i]) gsap.set(tooltipFills[i], { width: '0%' });
-    if (mobileFills[i]) gsap.set(mobileFills[i], { scaleX: 0 });
   });
-
-  // Cursor Tooltip Movement
-  if (tooltip) {
-    const moveTooltip = (e: MouseEvent) => {
-      gsap.to(tooltip, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1, // Faster follow
-        ease: 'none',
-        overwrite: 'auto'
-      });
-    };
-
-    container.addEventListener('mousemove', moveTooltip);
-
-    container.addEventListener('mouseenter', () => {
-      gsap.to(tooltip, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
-    });
-
-    container.addEventListener('mouseleave', () => {
-      gsap.to(tooltip, { opacity: 0, scale: 0, duration: 0.3, ease: 'power2.in' });
-    });
-  }
 
   const gotoSlide = (index: number, direction: 'next' | 'prev') => {
     if (index < 0 || index >= cards.length || isAnimating || index === currentIndex) return;
@@ -148,7 +121,7 @@ export const initFeaturedWorkScroll = () => {
     scrollTrigger: {
       trigger: container,
       start: 'top top',
-      end: `+=${cards.length * 200}%`, // Increase distance a bit for smoother bar filling
+      end: `+=${cards.length * 150}%`,
       pin: true,
       scrub: true,
       id: 'featured-work-scroll'
@@ -157,10 +130,9 @@ export const initFeaturedWorkScroll = () => {
 
   // Build the progress timeline
   cards.forEach((_, i) => {
-    const tooltipFill = tooltipFills[i];
     const mobileFill = mobileFills[i];
 
-    // Create a sub-timeline for this specific project's segment
+    // Each project has its own progress segment
     const segmentTl = gsap.timeline({
       onStart: () => {
         if (currentIndex !== i) {
@@ -174,8 +146,13 @@ export const initFeaturedWorkScroll = () => {
       }
     });
 
-    if (tooltipFill) {
-      segmentTl.to(tooltipFill, { width: '100%', ease: 'none', duration: 1 }, 0);
+    // RESET: Ensure the single tooltip fill resets when a new segment starts
+    if (tooltipBg) segmentTl.set(tooltipBg, { scaleX: 0 }, 0);
+    if (mobileFill) segmentTl.set(mobileFill, { scaleX: 0 }, 0);
+
+    // FILL: Animate the same tooltip bg for every project
+    if (tooltipBg) {
+      segmentTl.to(tooltipBg, { scaleX: 1, ease: 'none', duration: 1 }, 0);
     }
     if (mobileFill) {
       segmentTl.to(mobileFill, { scaleX: 1, ease: 'none', duration: 1 }, 0);
@@ -183,7 +160,7 @@ export const initFeaturedWorkScroll = () => {
 
     progressTl.add(segmentTl);
     
-    // Add a small spacer after each project except the last
+    // Add spacer
     if (i < cards.length - 1) {
       progressTl.to({}, { duration: 0.1 });
     }
