@@ -59,7 +59,6 @@ const initServicesSectionAnimation = () => {
         pin: true,
         anticipatePin: isMobileDevice ? 0.5 : 1,
         id: `services-card-${index}`,
-        anticipatePin: isMobileDevice ? 0.5 : 1,
         fastScrollEnd: true,
         invalidateOnRefresh: true,
       },
