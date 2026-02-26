@@ -9,7 +9,8 @@ import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
 import { initHeroParallax } from './hero-parallax';
-import { initThemeColor, cleanupThemeColor, resetThemeColor } from './theme-color';
+// theme-color.ts removed — Safari address bar uses native glass when
+// html/body are transparent and no <meta name="theme-color"> exists.
 
 if (typeof history !== 'undefined' && history.scrollRestoration) {
   history.scrollRestoration = 'manual';
@@ -27,8 +28,7 @@ function forceScrollToTop() {
   if (sm) {
     sm.scrollTo(0, false); // instant, no animation
   }
-  // Reset bar colour to hero colour
-  resetThemeColor();
+
 }
 
 /**
@@ -62,9 +62,7 @@ async function initializeApp() {
       
       ScrollTrigger.refresh();
 
-      // Theme-color ScrollTriggers MUST be created AFTER refresh
-      // so that element positions are accurate.
-      initThemeColor();
+
 
       document.dispatchEvent(new Event('scroll-smoother-ready'));
       
@@ -87,7 +85,6 @@ document.addEventListener('astro:before-swap', () => {
   gsap.killTweensOf('*');
   // Cleanup ScrollTrigger
   ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
-  cleanupThemeColor();
   cleanupSmoothScroll();
 });
 

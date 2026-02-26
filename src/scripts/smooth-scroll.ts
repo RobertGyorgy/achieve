@@ -59,26 +59,10 @@ export const initSmoothScroll = async () => {
   // Try to load ScrollSmoother plugin
   const ScrollSmoother = await loadScrollSmoother();
 
-  // If ScrollSmoother is not available OR if on mobile, use CSS smooth scroll fallback
+  // If ScrollSmoother is not available OR if on mobile, skip — let CSS media query handle it
   if (!ScrollSmoother || isMobileDevice) {
-    if (!isMobileDevice) {
-      console.warn('ScrollSmoother plugin not available - using CSS smooth scroll fallback');
-    } else {
-      console.log('Mobile device detected - disabling ScrollSmoother for native scrolling');
-    }
-    
-    document.documentElement.style.scrollBehavior = 'smooth';
-    // Remove ScrollSmoother wrapper styles for fallback
-    smoothWrapper.style.position = 'static';
-    smoothWrapper.style.height = 'auto';
-    smoothWrapper.style.overflow = 'visible';
-    
-    // CRITICAL: Strip any leftover transform or will-change properties
-    // that create a new containing block, which fatally breaks GSAP pin (position: fixed)
-    smoothContent.style.overflow = 'visible';
-    smoothContent.style.willChange = 'auto';
-    smoothContent.style.transform = 'none';
-    
+    // Just refresh ScrollTrigger so pins/triggers work with native scroll
+    ScrollTrigger.refresh();
     return null;
   }
 
@@ -108,12 +92,8 @@ export const initSmoothScroll = async () => {
     return smoother;
   } catch (error) {
     console.error('Failed to initialize ScrollSmoother:', error);
-    // Fallback to CSS smooth scroll
-    document.documentElement.style.scrollBehavior = 'smooth';
-    smoothWrapper.style.position = 'static';
-    smoothWrapper.style.height = 'auto';
-    smoothWrapper.style.overflow = 'visible';
-    smoothContent.style.overflow = 'visible';
+    // Fallback: CSS media query in global.css handles mobile layout
+    ScrollTrigger.refresh();
     return null;
   }
 };

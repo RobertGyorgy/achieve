@@ -96,8 +96,8 @@ const {
     <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
     <div
       id="preloader"
-      class="fixed inset-0 bg-[#F2F2F2] z-[9999] flex items-center justify-center placeholder-preloader"
-      style="position: fixed; z-index: 9999; pointer-events: all; perspective: 1000px;"
+      class="fixed inset-0 z-[9999] flex items-center justify-center placeholder-preloader"
+      style="position: fixed; z-index: 9999; pointer-events: all; perspective: 1000px; background-color: transparent;"
     >
       <div id="preloader-text" class="flex">
         {
@@ -129,7 +129,7 @@ const {
 <style is:global>
   @import url('/src/styles/global.css');
 
-  /* Preloader styles - ensure it's visible */
+  /* Preloader styles - transparent so Safari address bar stays glass */
   #preloader {
     position: fixed;
     z-index: 9999;
@@ -140,7 +140,7 @@ const {
     bottom: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #F2F2F2;
+    background-color: transparent;
   }
 
   /* Preloader letters - staggered entrance */

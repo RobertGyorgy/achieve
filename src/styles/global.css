@@ -362,12 +362,11 @@ button {
 }
 
 /* ScrollSmoother Styles */
-/* position set to fixed by ScrollSmoother JS on desktop; default is relative so mobile/no-JS doesn't get a fixed covering container */
+/* Default is relative; ScrollSmoother JS sets position:fixed on desktop at runtime */
 #smooth-wrapper {
   overflow: hidden;
   position: relative;
   width: 100%;
-  /* background set dynamically by theme-color.ts */
 }
 
 #smooth-content {
