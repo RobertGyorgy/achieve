@@ -1,12 +1,16 @@
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
 /**
- * Dynamically updates <meta name="theme-color"> based on the currently
- * visible section.  Works with GSAP ScrollSmoother because it relies on
- * ScrollTrigger (which hooks into ScrollSmoother's proxy scroll), NOT
- * the native `window.scroll` event.
+ * Dynamically updates <meta name="theme-color"> AND document.body
+ * background-color based on the currently visible section.
  *
- * Every section that should influence the Safari bar colour must carry a
+ * Chrome iOS uses the <meta> tag for bar tinting.
+ * Safari iOS ignores theme-color when viewport-fit=cover is set and
+ * instead samples the actual pixels behind the status bar.  Because
+ * sections use env(safe-area-inset-top) padding, the body background
+ * is what Safari sees in that gap — so we keep it in sync too.
+ *
+ * Every section that should influence the bar colour must carry a
  * `data-theme-color="#hex"` attribute.
  */
 
@@ -17,10 +21,15 @@ function getThemeMeta(): HTMLMetaElement | null {
 }
 
 function setThemeColor(hex: string) {
+  // Chrome iOS: reads the meta tag
   const meta = getThemeMeta();
   if (meta && meta.content !== hex) {
     meta.content = hex;
   }
+
+  // Safari iOS: reads actual pixel content behind the status bar,
+  // which is the body background visible through safe-area padding.
+  document.body.style.backgroundColor = hex;
 }
 
 /**
@@ -39,8 +48,8 @@ export function initThemeColor() {
 
     const trigger = ScrollTrigger.create({
       trigger: section,
-      start: 'top 50%',   // when section's top crosses the middle of the viewport
-      end: 'bottom 50%',  // when section's bottom crosses the middle
+      start: 'top 80%',   // fire early so the bar changes before section is fully in view
+      end: 'bottom 20%',
       onEnter: () => setThemeColor(color),
       onEnterBack: () => setThemeColor(color),
     });

@@ -27,9 +27,10 @@ function forceScrollToTop() {
   if (sm) {
     sm.scrollTo(0, false); // instant, no animation
   }
-  // Reset Safari bar colour to match hero/preloader
+  // Reset bar colour to match hero/preloader
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', '#F2F2F2');
+  document.body.style.backgroundColor = '#F2F2F2';
 }
 
 /**
