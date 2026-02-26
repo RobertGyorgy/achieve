@@ -96,6 +96,15 @@ const {
       // Apply hero color immediately to prevent gray flashes
       document.documentElement.style.backgroundColor = '#F2F2F2';
       document.body.style.backgroundColor = '#F2F2F2';
+      // Also apply to main content areas
+      setTimeout(() => {
+        const main = document.querySelector('main');
+        if (main) main.style.backgroundColor = '#F2F2F2';
+        const contentWrapper = document.querySelector('main > div');
+        if (contentWrapper) contentWrapper.style.backgroundColor = '#F2F2F2';
+        const smoothWrapper = document.getElementById('smooth-wrapper');
+        if (smoothWrapper) smoothWrapper.style.backgroundColor = '#F2F2F2';
+      }, 0);
     </script>
   </head>
   <body class="text-white">

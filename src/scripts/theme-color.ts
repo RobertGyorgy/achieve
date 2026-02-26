@@ -43,6 +43,17 @@ function applyColor(hex: string) {
 
   // 4. body bg — belt-and-suspenders
   document.body.style.backgroundColor = hex;
+
+  // 5. main content wrapper — prevents gaps during ScrollTrigger pin animations
+  const main = document.querySelector('main');
+  if (main) main.style.backgroundColor = hex;
+  
+  const contentWrapper = document.querySelector('main > div');
+  if (contentWrapper) contentWrapper.style.backgroundColor = hex;
+  
+  // 6. smooth-wrapper background — fills any gaps in ScrollSmoother
+  const smoothWrapper = document.getElementById('smooth-wrapper');
+  if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
 
 /** Return the data-theme-color of the section whose top edge is closest

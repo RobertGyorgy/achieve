@@ -373,12 +373,14 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: #F2F2F2;
 }
 
 #smooth-content {
   overflow: visible;
   width: 100%;
   will-change: transform;
+  background-color: transparent;
 }
 
 /* Ensure body doesn't scroll when ScrollSmoother is active */
