@@ -23,8 +23,11 @@ async function initializeApp() {
   // Initialize GSAP
   initializeGsap();
 
-  // Initialize Smooth Scroll first
-  await initSmoothScroll();
+  // Initialize Smooth Scroll WITHOUT awaiting it (non-blocking)
+  // This allows the rest of the UI logic to proceed immediately
+  initSmoothScroll().then(() => {
+    if (import.meta.env.DEV) console.log('✓ SmoothScroll ready');
+  });
 
   // Defer heavy lifting to next frame to allow DOM to settle
   requestAnimationFrame(() => {
@@ -39,7 +42,7 @@ async function initializeApp() {
 
     // Critical: refreshing ScrollTrigger too early on reload can cause jumps.
     // We wait longer on mobile for full paint.
-    const refreshDelay = window.innerWidth < 1024 ? 400 : 200;
+    const refreshDelay = window.innerWidth < 1024 ? 300 : 150;
     
     setTimeout(() => {
       // One final pull to the top before we release the page
