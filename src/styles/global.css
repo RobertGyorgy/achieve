@@ -139,15 +139,12 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   isolation: auto;
-  /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Ensure full height on mobile including safe areas */
   min-height: 100%;
   min-height: -webkit-fill-available;
-  min-height: 100dvh;
-  /* Starts dark to match preloader; updated dynamically to match each section */
-  background-color: #222831;
+  /* Transparent so Safari bars have nothing to tint */
+  background-color: transparent;
 }
 
 /* Smooth scrolling for main document */
@@ -157,18 +154,16 @@ body {
 
 body {
   font-family: 'HKGrotesk', sans-serif;
-  background-color: #F2F2F2;
   color: #222831;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   isolation: auto;
   overflow-x: hidden;
-  /* Fill the full screen including safe areas */
-  min-height: 100svh;
-  min-height: 100dvh;
+  min-height: 100vh;
   min-height: -webkit-fill-available;
-  background-color: #F2F2F2;
+  /* Transparent so Safari bars have nothing to tint */
+  background-color: transparent;
   scrollbar-width: none;
 }
 
