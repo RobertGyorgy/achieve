@@ -142,9 +142,10 @@ html {
   /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Ensure full height on mobile including safe areas */
+  /* Ensure full height and transparency on mobile for address bar fix */
   min-height: 100%;
   min-height: -webkit-fill-available;
+  background-color: #222831;
 }
 
 /* Smooth scrolling for main document */
@@ -154,7 +155,7 @@ body {
 
 body {
   font-family: 'HKGrotesk', sans-serif;
-  background-color: #0d0d0d;
+  background-color: #222831;
   color: #222831;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -164,10 +165,11 @@ body {
   /* Fill the full screen including safe areas */
   min-height: 100svh;
   min-height: -webkit-fill-available;
-  /* Extend content into safe area (notch / home indicator) */
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  /* Content flows UNDER safe areas (notch / home indicator) */
+  /* padding-top: env(safe-area-inset-top); */
+  /* padding-bottom: env(safe-area-inset-bottom); */
+  padding-left: 0;
+  padding-right: 0;
   scrollbar-width: none;
 }
 
