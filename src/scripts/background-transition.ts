@@ -1,11 +1,37 @@
 /**
- * Background transition stub.
+ * Body-background transition (Safari iOS address-bar fix).
  *
- * Previously animated section backgrounds to #ffffff which caused
- * Safari iOS to tint the address bar white. All section backgrounds
- * are now handled via Tailwind classes directly on each <section>.
+ * Safari samples `<body>` background-color for the address bar tint.
+ * When body is transparent it defaults to white, which doesn't match
+ * dark sections.  This module creates a ScrollTrigger per section that
+ * has a `data-theme-color` attribute and smoothly transitions body's
+ * background-color to keep Safari's bar in sync with the visible content.
  *
- * This file exports a no-op so main.ts imports don't break.
+ * Inspired by the reference site's theme-transition.ts approach.
  */
-export function initBackgroundTransition() {}
+import { gsap } from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export function initBackgroundTransition() {
+  if (typeof window === 'undefined') return;
+
+  // Collect every section that declares a theme colour
+  const sections = document.querySelectorAll<HTMLElement>('[data-theme-color]');
+  if (!sections.length) return;
+
+  sections.forEach((section) => {
+    const color = section.dataset.themeColor;
+    if (!color) return;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 50%',   // when top-half of section reaches viewport centre
+      end: 'bottom 50%',  // until bottom-half leaves viewport centre
+      onEnter: () => gsap.to('body', { backgroundColor: color, duration: 0.4, ease: 'power2.inOut', overwrite: true }),
+      onEnterBack: () => gsap.to('body', { backgroundColor: color, duration: 0.4, ease: 'power2.inOut', overwrite: true }),
+    });
+  });
+}
 
