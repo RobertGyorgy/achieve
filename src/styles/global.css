@@ -371,7 +371,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #F2F2F2;
+  /* background set dynamically by theme-color.ts */
 }
 
 #smooth-content {
