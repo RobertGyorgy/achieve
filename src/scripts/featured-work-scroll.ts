@@ -40,9 +40,36 @@ export const initFeaturedWorkScroll = () => {
         video.currentTime = 0;
         video.play().catch(() => {});
       }
-      if (mobileBtn) gsap.set(mobileBtn, { display: 'inline-flex', opacity: 1, y: 0 });
+      if (mobileBtn) gsap.set(mobileBtn, { display: 'flex', opacity: 1, y: 0 });
     }
   });
+
+  // Cursor Tooltip Movement
+  if (tooltip) {
+    // Ensure it's in body for stacking context
+    document.body.appendChild(tooltip);
+
+    const moveTooltip = (e: MouseEvent) => {
+      gsap.to(tooltip, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.1, // Near-instant follow
+        ease: 'none',
+        overwrite: 'auto'
+      });
+    };
+
+    container.addEventListener('mousemove', moveTooltip);
+
+    container.addEventListener('mouseenter', () => {
+      gsap.to(tooltip, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
+    });
+
+    container.addEventListener('mouseleave', () => {
+      gsap.to(tooltip, { opacity: 0, scale: 0, duration: 0.3, ease: 'power2.in' });
+    });
+  }
+
 
   const gotoSlide = (index: number, direction: 'next' | 'prev') => {
     if (index < 0 || index >= cards.length || isAnimating || index === currentIndex) return;
@@ -80,7 +107,7 @@ export const initFeaturedWorkScroll = () => {
       gsap.set(nextCard, { opacity: 1, pointerEvents: 'auto' });
       
       if (currentMobileBtn) gsap.set(currentMobileBtn, { display: 'none', opacity: 0 });
-      if (nextMobileBtn) gsap.set(nextMobileBtn, { display: 'inline-flex', opacity: 1, y: 0 });
+      if (nextMobileBtn) gsap.set(nextMobileBtn, { display: 'flex', opacity: 1, y: 0 });
 
       if (currentVideo) currentVideo.pause();
       if (nextVideo) {

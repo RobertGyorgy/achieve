@@ -98,25 +98,25 @@ const featuredProjects = [
         </article>
       ))}
       <!-- Glassmorphism "View Work" Button (Mobile only) -->
-      <div class="lg:hidden mt-8 flex justify-center">
+      <div class="lg:hidden mt-12 flex justify-center w-full px-8 relative z-50">
         {featuredProjects.map((_, i) => (
           <div 
-            class="mobile-view-work-btn featured-card-element hidden opacity-0 translate-y-4 px-6 py-3 rounded-full border border-white/10 backdrop-blur-md bg-white/5 overflow-hidden relative"
+            class="mobile-view-work-btn featured-card-element hidden opacity-0 translate-y-4 px-8 py-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 overflow-hidden relative min-w-[160px] text-center"
             data-index={i}
           >
-            <div class="mobile-btn-progress-fill absolute inset-0 bg-white/20 origin-left scale-x-0" data-index={i}></div>
-            <span class="relative z-10 text-white text-sm font-medium tracking-wide uppercase">View Work</span>
+            <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
+            <span class="relative z-10 text-white text-sm font-bold uppercase tracking-widest mix-blend-difference">View Work</span>
           </div>
         ))}
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 
-<!-- Consolidated Glassmorphism Tooltip -->
+<!-- Consolidated Inverting Tooltip -->
 <div id="view-project-tooltip" class="drag-tooltip">
-  <div class="tooltip-bg absolute inset-0 bg-white/10 origin-left scale-x-0"></div>
-  <span class="relative z-10">View Project</span>
+  <div class="tooltip-bg absolute inset-0 bg-white origin-left scale-x-0"></div>
+  <span class="relative z-10 mix-blend-difference">View Project</span>
 </div>
 
 <style>
@@ -136,15 +136,17 @@ const featuredProjects = [
       transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     background: rgba(255, 255, 255, 0.05);
     color: #ffffff;
-    padding: 12px 28px;
+    padding: 14px 32px;
     border-radius: 9999px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     font-family: 'HK Grotesk', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     white-space: nowrap;
-    border: 1px border-white/10;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     overflow: hidden;
   }
 
@@ -154,65 +156,4 @@ const featuredProjects = [
   }
 </style>
 
-<script>
-  function initViewProjectTooltip() {
-    console.log('INIT VIEW PROJECT TOOLTIP CALLED');
-    if (window.innerWidth < 1024) return; // Desktop only
 
-    const tooltip = document.getElementById('view-project-tooltip');
-    if (!tooltip) {
-      console.warn('Tooltip element not found!');
-      return;
-    }
-
-    // CRITICAL FIX: Move tooltip to document.body to break out of all GSAP/Parent stacking contexts!
-    document.body.appendChild(tooltip);
-
-    // Use the container as the trigger for the tooltip
-    const container = document.getElementById('featured-work-container');
-    if (!container) return;
-
-    const updateTooltipPosition = (e: MouseEvent) => {
-      const rect = tooltip.getBoundingClientRect();
-      tooltip.style.left = e.clientX + 'px';
-      tooltip.style.top = e.clientY + 'px';
-      const tooltipWidth = rect.width || 120;
-      const tooltipHeight = rect.height || 40;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
-        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
-      }
-      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
-        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
-      }
-    };
-
-    container.addEventListener('mouseenter', (e: MouseEvent) => {
-      tooltip.classList.add('visible');
-      updateTooltipPosition(e);
-    });
-
-    container.addEventListener('mousemove', (e: MouseEvent) => {
-      updateTooltipPosition(e);
-    });
-
-    container.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('visible');
-    });
-
-    container.addEventListener('mousedown', () => {
-      tooltip.classList.remove('visible');
-    });
-
-    container.addEventListener('mouseup', () => {
-      tooltip.classList.add('visible');
-    });
-  }
-
-  // Run on load and ViewTransitions
-  // Because Astro bundles scripts as type="module", DOM is already parsed upon execution.
-  initViewProjectTooltip();
-  document.addEventListener('astro:page-load', initViewProjectTooltip);
-</script>
