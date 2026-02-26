@@ -9,6 +9,7 @@ import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
 import { initHeroParallax } from './hero-parallax';
+import { initThemeColor, cleanupThemeColor } from './theme-color';
 
 if (typeof history !== 'undefined' && history.scrollRestoration) {
   history.scrollRestoration = 'manual';
@@ -48,6 +49,7 @@ async function initializeApp() {
     initFAQAccordion();
     initFAQAnimations();
     initHeroParallax();
+    initThemeColor();
 
     // Critical: refreshing ScrollTrigger too early on reload can cause jumps.
     // We wait longer on mobile for full paint.
@@ -79,6 +81,7 @@ document.addEventListener('astro:before-swap', () => {
   gsap.killTweensOf('*');
   // Cleanup ScrollTrigger
   ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
+  cleanupThemeColor();
   cleanupSmoothScroll();
 });
 
