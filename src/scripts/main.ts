@@ -27,6 +27,9 @@ function forceScrollToTop() {
   if (sm) {
     sm.scrollTo(0, false); // instant, no animation
   }
+  // Reset Safari bar colour to match hero/preloader
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', '#F2F2F2');
 }
 
 /**
@@ -49,7 +52,6 @@ async function initializeApp() {
     initFAQAccordion();
     initFAQAnimations();
     initHeroParallax();
-    initThemeColor();
 
     // Critical: refreshing ScrollTrigger too early on reload can cause jumps.
     // We wait longer on mobile for full paint.
@@ -60,6 +62,11 @@ async function initializeApp() {
       forceScrollToTop();
       
       ScrollTrigger.refresh();
+
+      // Theme-color ScrollTriggers MUST be created AFTER refresh
+      // so that element positions are accurate.
+      initThemeColor();
+
       document.dispatchEvent(new Event('scroll-smoother-ready'));
       
       if (import.meta.env.DEV) {
