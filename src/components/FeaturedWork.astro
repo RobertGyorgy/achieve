@@ -94,10 +94,10 @@ const featuredProjects = [
             <!-- Glassmorphism "View Work" Button (Mobile only) -->
             <div 
               class="mobile-view-work-btn featured-card-element lg:hidden opacity-0 translate-y-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 overflow-hidden relative mx-auto text-center"
-              style="padding: 14px 32px;"
+              style="padding: 14px 32px; isolation: isolate; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black);"
               data-index={index}
             >
-              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
+              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0" style="border-radius: inherit;"></div>
               <span class="relative z-10 text-white text-sm font-bold uppercase tracking-[0.1em] mix-blend-difference">View Work</span>
             </div>
           </div>
@@ -146,6 +146,9 @@ const featuredProjects = [
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     overflow: hidden;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
   }
 
   .drag-tooltip.visible {
