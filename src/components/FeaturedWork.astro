@@ -90,6 +90,15 @@ const featuredProjects = [
                 </h3>
               </div>
             </a>
+
+            <!-- Glassmorphism "View Work" Button (Mobile only) -->
+            <div 
+              class="mobile-view-work-btn featured-card-element lg:hidden opacity-0 translate-y-4 px-10 py-5 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 overflow-hidden relative max-w-max text-center"
+              data-index={index}
+            >
+              <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
+              <span class="relative z-10 text-white text-[15px] font-bold uppercase tracking-[0.12em] mix-blend-difference">View Work</span>
+            </div>
           </div>
 
           <!-- Full Card Clickable Overlay -->
@@ -97,18 +106,6 @@ const featuredProjects = [
 
         </article>
       ))}
-      <!-- Glassmorphism "View Work" Button (Mobile only) -->
-      <div class="lg:hidden mt-12 flex justify-center w-full px-8 relative z-50">
-        {featuredProjects.map((_, i) => (
-          <div 
-            class="mobile-view-work-btn featured-card-element hidden opacity-0 translate-y-4 px-8 py-4 rounded-full border border-white/20 backdrop-blur-xl bg-white/5 overflow-hidden relative min-w-[160px] text-center"
-            data-index={i}
-          >
-            <div class="mobile-btn-progress-fill absolute inset-0 bg-white origin-left scale-x-0"></div>
-            <span class="relative z-10 text-white text-sm font-bold uppercase tracking-widest mix-blend-difference">View Work</span>
-          </div>
-        ))}
-      </div>
     </div>
   </div>
 </section>
