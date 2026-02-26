@@ -93,6 +93,9 @@ const {
     <script is:inline>
       if (history.scrollRestoration) history.scrollRestoration = 'manual';
       window.scrollTo(0, 0);
+      // Apply hero color immediately to prevent gray flashes
+      document.documentElement.style.backgroundColor = '#F2F2F2';
+      document.body.style.backgroundColor = '#F2F2F2';
     </script>
   </head>
   <body class="text-white">

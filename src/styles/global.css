@@ -143,8 +143,8 @@ html {
   scrollbar-width: none;
   min-height: 100%;
   min-height: -webkit-fill-available;
-  /* Match hero/preloader; JS updates body bg on scroll */
-  background-color: #F2F2F2;
+  /* Transparent - theme-color system handles all backgrounds dynamically */
+  background-color: transparent;
 }
 
 /* Smooth scrolling for main document */
@@ -162,8 +162,8 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  /* Match hero/preloader on first paint; JS takes over on scroll */
-  background-color: #F2F2F2;
+  /* Transparent - theme-color system handles all backgrounds dynamically */
+  background-color: transparent;
   scrollbar-width: none;
 }
 
