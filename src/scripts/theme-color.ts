@@ -34,11 +34,14 @@ function applyColor(hex: string) {
   // 1. Fixed safe-area fill — what Safari actually reads
   if (fillEl) fillEl.style.backgroundColor = hex;
 
-  // 2. theme-color meta — what Chrome iOS reads
+  // 2. <html> background — Safari derives bar color from the root element
+  document.documentElement.style.backgroundColor = hex;
+
+  // 3. theme-color meta — what Chrome iOS reads
   const meta = getThemeMeta();
   if (meta && meta.content !== hex) meta.content = hex;
 
-  // 3. body bg — belt-and-suspenders for any other sampling
+  // 4. body bg — belt-and-suspenders
   document.body.style.backgroundColor = hex;
 }
 

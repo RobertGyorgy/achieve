@@ -150,6 +150,7 @@ export const initFeaturedWorkScroll = () => {
       start: 'top top',
       end: `+=${cards.length * 150}%`,
       pin: true,
+      anticipatePin: 1,
       scrub: true,
       id: 'featured-work-scroll'
     }
