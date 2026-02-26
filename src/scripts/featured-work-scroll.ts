@@ -32,7 +32,7 @@ export const initFeaturedWorkScroll = () => {
       gsap.set(card, { opacity: 0, pointerEvents: 'none' });
       if (content) gsap.set(content, { opacity: 0, y: 30 });
       if (video) video.pause();
-      if (mobileBtn) gsap.set(mobileBtn, { display: 'none', opacity: 0, y: 20 });
+      if (mobileBtn) gsap.set(mobileBtn, { opacity: 0, y: 20 });
     } else {
       gsap.set(card, { opacity: 1, pointerEvents: 'auto' });
       if (content) gsap.set(content, { opacity: 1, y: 0 });
@@ -40,7 +40,7 @@ export const initFeaturedWorkScroll = () => {
         video.currentTime = 0;
         video.play().catch(() => {});
       }
-      if (mobileBtn) gsap.set(mobileBtn, { display: 'flex', opacity: 1, y: 0 });
+      if (mobileBtn) gsap.set(mobileBtn, { opacity: 1, y: 0 });
     }
   });
 
@@ -106,8 +106,8 @@ export const initFeaturedWorkScroll = () => {
       gsap.set(currentCard, { opacity: 0, pointerEvents: 'none' });
       gsap.set(nextCard, { opacity: 1, pointerEvents: 'auto' });
       
-      if (currentMobileBtn) gsap.set(currentMobileBtn, { display: 'none', opacity: 0 });
-      if (nextMobileBtn) gsap.set(nextMobileBtn, { display: 'flex', opacity: 1, y: 0 });
+      if (currentMobileBtn) gsap.to(currentMobileBtn, { opacity: 0, duration: 0.3 });
+      if (nextMobileBtn) gsap.to(nextMobileBtn, { opacity: 1, y: 0, duration: 0.3 });
 
       if (currentVideo) currentVideo.pause();
       if (nextVideo) {
