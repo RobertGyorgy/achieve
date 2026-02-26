@@ -137,15 +137,15 @@ export function initThemeColor() {
       if (!sm) return; // Mobile / no smoother — native scroll listener handles it
 
       const tick = () => {
-        raconst newColor = colorFromSections(sections);
-          if (import.meta.env.DEV) {
-            console.log(`🖥️ smoother progress ${p.toFixed(3)}: applying color ${newColor}`);
-          }
-          applyColor(newColor
+        rafId = requestAnimationFrame(tick);
         const p = sm.progress;
         if (p !== lastProgress) {
           lastProgress = p;
-          applyColor(colorFromSections(sections));
+          const newColor = colorFromSections(sections);
+          if (import.meta.env.DEV) {
+            console.log(`🖥️ smoother progress ${p.toFixed(3)}: applying color ${newColor}`);
+          }
+          applyColor(newColor);
         }
       };
       rafId = requestAnimationFrame(tick);
