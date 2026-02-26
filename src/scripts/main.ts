@@ -9,7 +9,7 @@ import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
 import { initHeroParallax } from './hero-parallax';
-import { initThemeColor, cleanupThemeColor } from './theme-color';
+import { initThemeColor, cleanupThemeColor, resetThemeColor } from './theme-color';
 
 if (typeof history !== 'undefined' && history.scrollRestoration) {
   history.scrollRestoration = 'manual';
@@ -27,10 +27,8 @@ function forceScrollToTop() {
   if (sm) {
     sm.scrollTo(0, false); // instant, no animation
   }
-  // Reset bar colour to match hero/preloader
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', '#F2F2F2');
-  document.body.style.backgroundColor = '#F2F2F2';
+  // Reset bar colour to hero colour
+  resetThemeColor();
 }
 
 /**
