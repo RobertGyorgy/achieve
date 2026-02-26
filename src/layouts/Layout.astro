@@ -28,7 +28,8 @@ const {
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#f2f2f2" id="theme-color-meta" />
+    <!-- Initial theme-color matches preloader background so Safari bezels blend in -->
+    <meta name="theme-color" content="#222831" id="theme-color-meta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
@@ -37,35 +38,64 @@ const {
     <meta name="mobile-web-app-capable" content="yes" />
 
     <script is:inline>
-      // Dynamically update theme-color based on section background
+      // Convert rgb(r, g, b) string to #rrggbb hex
+      function rgbToHex(rgb) {
+        if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return null;
+        // Already hex
+        if (rgb.startsWith('#')) return rgb;
+        var match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (!match) return null;
+        return '#' + ((1 << 24) + (parseInt(match[1]) << 16) + (parseInt(match[2]) << 8) + parseInt(match[3])).toString(16).slice(1);
+      }
+
+      // Dynamically update theme-color to match visible section backgrounds
+      // This makes Safari's address bar and tab bar blend seamlessly with content
+      var _lastThemeColor = '#222831';
       function updateThemeColor() {
-        const sections = document.querySelectorAll('section, footer');
-        const meta = document.getElementById('theme-color-meta');
+        var preloader = document.getElementById('preloader');
+        var meta = document.getElementById('theme-color-meta');
         if (!meta) return;
 
-        let currentColor = '#f2f2f2'; // Default
+        // While preloader is visible, keep dark color
+        if (preloader && preloader.style.display !== 'none' && preloader.style.visibility !== 'hidden' && parseFloat(getComputedStyle(preloader).opacity) > 0.01) {
+          if (_lastThemeColor !== '#222831') {
+            meta.setAttribute('content', '#222831');
+            document.documentElement.style.backgroundColor = '#222831';
+            _lastThemeColor = '#222831';
+          }
+          return;
+        }
 
-        sections.forEach((section) => {
-          const rect = section.getBoundingClientRect();
-          // If section is at the top of the viewport
+        // Find the section visible at the top of the viewport
+        var sections = document.querySelectorAll('section, footer');
+        var currentColor = '#f2f2f2'; // fallback = hero background
+
+        for (var i = 0; i < sections.length; i++) {
+          var rect = sections[i].getBoundingClientRect();
+          // Section occupies the top edge of the viewport
           if (rect.top <= 50 && rect.bottom >= 50) {
-            const style = window.getComputedStyle(section);
-            const bgColor = style.backgroundColor;
-            if (
-              bgColor &&
-              bgColor !== 'rgba(0, 0, 0, 0)' &&
-              bgColor !== 'transparent'
-            ) {
-              currentColor = bgColor;
+            var bg = getComputedStyle(sections[i]).backgroundColor;
+            var hex = rgbToHex(bg);
+            if (hex) {
+              currentColor = hex;
             }
           }
-        });
+        }
 
-        meta.setAttribute('content', currentColor);
+        // Only update DOM if color actually changed (avoid layout thrashing)
+        if (currentColor !== _lastThemeColor) {
+          meta.setAttribute('content', currentColor);
+          // Also update html background so Safari's bottom bar matches too
+          document.documentElement.style.backgroundColor = currentColor;
+          _lastThemeColor = currentColor;
+        }
       }
 
       window.addEventListener('scroll', updateThemeColor, { passive: true });
-      document.addEventListener('astro:page-load', updateThemeColor);
+      document.addEventListener('astro:page-load', function() {
+        _lastThemeColor = ''; // force re-evaluation on navigation
+        updateThemeColor();
+      });
       updateThemeColor();
     </script>
 
@@ -95,9 +125,6 @@ const {
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Web App Manifest for standalone/fullscreen mode -->
-    <link rel="manifest" href="/manifest.json" />
 
     <!-- Font Preload -->
     <link
@@ -131,10 +158,6 @@ const {
 
     <!-- Astro View Transitions -->
     <meta name="astro-view-transitions-enabled" content="true" />
-
-    <!-- Fullscreen configuration for Safari -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Achieve" />
   </head>
   <body class="bg-dark-bg text-white">
     <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
@@ -166,9 +189,6 @@ const {
       </div>
     </div>
 
-    <!-- Fullscreen and safe area handlers -->
-    <script src="../scripts/fullscreen-handler.ts"></script>
-    <script src="../scripts/safe-area-handler.ts"></script>
     <script src="../scripts/main.ts"></script>
   </body>
 </html>
