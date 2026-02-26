@@ -3,7 +3,7 @@
 ---
 
 <section
-  class="relative h-[100svh] w-full bg-[#F2F2F2] overflow-hidden"
+  class="relative h-[100lvh] w-full bg-[#F2F2F2] overflow-hidden"
   id="hero-section"
   data-theme-color="#F2F2F2"
   style="z-index: 1;"
@@ -399,7 +399,7 @@
     padding: calc(12vh + env(safe-area-inset-top)) 5vw
       calc(6vh + env(safe-area-inset-bottom)) !important;
     min-height: 100vh; /* Fallback */
-    min-height: 100svh; /* Stable Mobile Height (prevents address bar glitch) */
+    min-height: 100lvh; /* Fill full display height regardless of browser chrome */
     /* will-change removed to avoid stacking context issues with pinning */
   }
 
