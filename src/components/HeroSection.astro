@@ -152,30 +152,14 @@
   }
 
   function initHeroContent() {
-    console.log('🎬 initHeroContent called');
     const preloader = document.getElementById('preloader');
     const preloaderLetters = document.querySelectorAll('.preloader-letter');
 
-    // Failsafe: Hide preloader after 3.5 seconds no matter what
-    if (preloader) {
-      setTimeout(() => {
-        if (preloader.style.display !== 'none') {
-          console.warn('⚠️ Preloader failsafe triggered!');
-          preloader.style.display = 'none';
-          preloader.style.zIndex = '-1';
-          revealHeroContent();
-        }
-      }, 3500);
-    }
-
     // If preloader exists (initial load), wait for it to finish
-    if (preloader && preloaderLetters.length > 0) {
-      console.log('✓ Found preloader and letters, starting initPreloader');
+    if (preloader && preloaderLetters.length) {
       initPreloader(preloader, preloaderLetters);
     } else {
-      console.log(
-        'ℹ️ No preloader or letters found, revealing hero immediately'
-      );
+      // If no preloader (client-side navigation), reveal immediately
       revealHeroContent();
     }
 
