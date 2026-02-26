@@ -146,7 +146,7 @@ html {
   min-height: 100%;
   min-height: -webkit-fill-available;
   min-height: 100dvh;
-  /* Start with preloader color so Safari bezels match the dark preloader */
+  /* Starts dark to match preloader; updated dynamically to match each section */
   background-color: #222831;
 }
 

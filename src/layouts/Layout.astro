@@ -28,7 +28,7 @@ const {
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <!-- Initial theme-color matches preloader background so Safari bezels blend in -->
+    <!-- Theme color starts dark to match the preloader, transitions to page color as preloader fades -->
     <meta name="theme-color" content="#222831" id="theme-color-meta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -40,8 +40,8 @@ const {
     <script is:inline>
       var _lastThemeColor = '';
       var _themeElements = null;
+      var _rafStarted = false;
 
-      // Apply color to the meta tag (Safari address bar) AND html background (Safari tab bar area).
       function applyThemeColor(color) {
         if (!color || color === _lastThemeColor) return;
         _lastThemeColor = color;
@@ -50,7 +50,6 @@ const {
         document.documentElement.style.backgroundColor = color;
       }
 
-      // Cache elements so we don't querySelectorAll on every frame
       function getThemeElements() {
         if (!_themeElements || !_themeElements.length) {
           _themeElements = document.querySelectorAll('[data-theme-color]');
@@ -58,72 +57,65 @@ const {
         return _themeElements;
       }
 
-      // Find the section whose top edge has entered/passed the viewport top.
-      // getBoundingClientRect() correctly reflects GSAP transform positions.
+      // Find the section currently at the top of the viewport.
+      // getBoundingClientRect() correctly reflects GSAP ScrollSmoother transform positions.
       function updateThemeColor() {
         var els = getThemeElements();
         var active = null;
         for (var i = 0; i < els.length; i++) {
           var rect = els[i].getBoundingClientRect();
           if (rect.top <= 1 && rect.bottom > 0) {
-            active = els[i]; // last match = deepest section at the top
+            active = els[i];
           }
         }
         if (active) applyThemeColor(active.getAttribute('data-theme-color'));
       }
 
-      // rAF loop — runs every frame, works with both native scroll AND
-      // GSAP ScrollSmoother (which moves content via CSS transform, not window.scrollY)
       function startRafLoop() {
+        if (_rafStarted) return;
+        _rafStarted = true;
         function tick() {
-          // While preloader is still in the DOM and visible, keep dark color.
-          // GSAP hides the preloader via display:'none' (not opacity), so we
-          // check computed display rather than opacity on the container.
-          var preloader = document.getElementById('preloader');
-          if (preloader && window.getComputedStyle(preloader).display !== 'none') {
-            requestAnimationFrame(tick);
-            return;
-          }
           updateThemeColor();
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
       }
 
-      // Watch preloader style — GSAP animates opacity inline.
-      // Once opacity < 0.05, preloader is gone and hero is the active section.
-      function watchPreloader() {
-        var preloader = document.getElementById('preloader');
-        if (!preloader) return;
-        var obs = new MutationObserver(function() {
-          var op = parseFloat(window.getComputedStyle(preloader).opacity);
-          if (op < 0.05) {
-            obs.disconnect();
-          }
-          // updateThemeColor runs every rAF frame so nothing extra needed here
-        });
-        obs.observe(preloader, { attributes: true, attributeFilter: ['style'] });
-      }
-
-      // Initial dark state matches preloader (#222831)
+      // Phase 1: bars are dark (#222831), matching the dark preloader
       applyThemeColor('#222831');
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-          watchPreloader();
-          startRafLoop();
-        });
-      } else {
-        watchPreloader();
+      // Phase 2: when preloader letters START fading, switch bars to match the
+      // hero underneath. iOS Safari natively animates theme-color transitions
+      // so this creates a smooth fade-with-the-preloader effect.
+      document.addEventListener('preloader-fading', function() {
+        // Switch to hero color as the dark overlay begins to fade
+        applyThemeColor('#F2F2F2');
+        // Start the rAF loop so bars track sections as user scrolls
         startRafLoop();
-      }
+      }, { once: true });
 
-      // On view transitions: reset cache so new page elements are picked up
+      // Fallback: if no preloader (client-side navigation or slow load),
+      // start the rAF loop immediately after DOM is ready
       document.addEventListener('astro:page-load', function() {
         _lastThemeColor = '';
         _themeElements = null;
-        watchPreloader();
+        _rafStarted = false;
+        // Give one frame for sections to settle, then start tracking
+        requestAnimationFrame(function() {
+          startRafLoop();
+        });
       });
+
+      // If no preloader exists (navigating to a non-hero page), start rAF directly
+      if (document.readyState !== 'loading') {
+        var preloaderCheck = document.getElementById('preloader');
+        if (!preloaderCheck) startRafLoop();
+      } else {
+        document.addEventListener('DOMContentLoaded', function() {
+          var preloaderCheck = document.getElementById('preloader');
+          if (!preloaderCheck) startRafLoop();
+        });
+      }
     </script>
 
     <!-- Primary Meta Tags -->

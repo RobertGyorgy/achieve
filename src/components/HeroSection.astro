@@ -195,6 +195,11 @@
       duration: 0.5,
       stagger: 0.04,
       ease: 'back.in(1.7)',
+      onStart: () => {
+        // Signal Layout to transition Safari bars to hero color
+        // as the preloader fades — iOS Safari animates theme-color changes smoothly
+        document.dispatchEvent(new CustomEvent('preloader-fading'));
+      },
     });
 
     // PHASE 3: Hide Preloader & Reveal Hero
