@@ -1,8 +1,7 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { Observer } from 'gsap/all';
 
-gsap.registerPlugin(ScrollTrigger, Observer);
+gsap.registerPlugin(ScrollTrigger);
 
 export const initFeaturedWorkScroll = () => {
   if (typeof window === 'undefined') return;
@@ -14,6 +13,7 @@ export const initFeaturedWorkScroll = () => {
   if (cards.length < 2) return;
 
   const masks = gsap.utils.toArray('.js-transition-mask .mask-slice') as HTMLElement[];
+  const progressFills = gsap.utils.toArray('.progress-bar-fill') as HTMLElement[];
   
   // State
   let currentIndex = 0;
@@ -36,37 +36,12 @@ export const initFeaturedWorkScroll = () => {
         video.play().catch(() => {});
       }
     }
-  });
-
-  // Pin the section with ScrollTrigger
-  const st = ScrollTrigger.create({
-    trigger: container,
-    start: 'top top',
-    end: `+=${cards.length * 100}%`,
-    pin: true,
-    id: 'featured-work-pin',
-    onEnter: () => observer.enable(),
-    onEnterBack: () => {
-      observer.enable();
-      currentIndex = cards.length - 1;
-      // Update visual state instantly
-      cards.forEach((card, i) => {
-        gsap.set(card, { 
-          opacity: i === currentIndex ? 1 : 0, 
-          pointerEvents: i === currentIndex ? 'auto' : 'none' 
-        });
-        const video = card.querySelector('video') as HTMLVideoElement;
-        const content = card.querySelector('.card-content');
-        if (video) i === currentIndex ? video.play() : video.pause();
-        if (content) gsap.set(content, { opacity: i === currentIndex ? 1 : 0, y: 0 });
-      });
-    },
-    onLeave: () => observer.disable(),
-    onLeaveBack: () => observer.disable()
+    // Set all progress bars to 0 initially
+    if (progressFills[i]) gsap.set(progressFills[i], { width: '0%' });
   });
 
   const gotoSlide = (index: number, direction: 'next' | 'prev') => {
-    if (index < 0 || index >= cards.length || isAnimating) return;
+    if (index < 0 || index >= cards.length || isAnimating || index === currentIndex) return;
     isAnimating = true;
 
     const currentCard = cards[currentIndex];
@@ -83,27 +58,15 @@ export const initFeaturedWorkScroll = () => {
       }
     });
 
-    // SCROLLBAR SYNC:
-    // Move the native scrollbar to match the slide progress.
-    // This ensures that when we reach the last slide, we are at st.end.
-    const scrollProgress = index / (cards.length - 1);
-    const targetScroll = st.start + scrollProgress * (st.end - st.start);
-    
-    tl.to(window, {
-      scrollTo: targetScroll,
-      duration: 0.8,
-      ease: 'power2.inOut'
-    }, 0);
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' });
 
-    tl.set(masks, { transformOrigin: direction === 'next' ? 'left' : 'right' }, 0);
-
-    // Wipe IN (White) - Faster (0.4s)
+    // Wipe IN (White)
     tl.to(masks, {
       scaleX: 1,
-      duration: 0.4,
-      stagger: 0.08,
+      duration: 0.6,
+      stagger: 0.1,
       ease: 'power2.inOut'
-    }, 0);
+    });
 
     // SWAP DATA
     tl.add(() => {
@@ -114,61 +77,76 @@ export const initFeaturedWorkScroll = () => {
         nextVideo.currentTime = 0;
         nextVideo.play().catch(() => {});
       }
-    }, 0.4);
+    });
 
     if (currentContent) {
       tl.to(currentContent, { 
         opacity: 0, 
-        y: direction === 'next' ? -20 : 20, 
-        duration: 0.2 
+        y: direction === 'next' ? -30 : 30, 
+        duration: 0.3 
       }, 0);
     }
 
-    tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' }, 0.4);
+    tl.set(masks, { transformOrigin: direction === 'next' ? 'right' : 'left' });
 
     // Wipe OUT (Video appears)
     tl.to(masks, {
       scaleX: 0,
-      duration: 0.4,
-      stagger: 0.08,
+      duration: 0.6,
+      stagger: 0.1,
       ease: 'power2.inOut'
-    }, 0.4);
+    });
 
     if (nextContent) {
       tl.fromTo(nextContent, 
-        { opacity: 0, y: direction === 'next' ? 20 : -20 }, 
-        { opacity: 1, y: 0, duration: 0.2 }, 
-        0.5
+        { opacity: 0, y: direction === 'next' ? 30 : -30 }, 
+        { opacity: 1, y: 0, duration: 0.3 }, 
+        "-=0.4"
       );
     }
   };
 
-  const observer = Observer.create({
-    target: window,
-    type: "wheel,touch,pointer",
-    wheelSpeed: -1,
-    onUp: () => {
+  // Main ScrollTrigger to drive progress bars and handle unpinning
+  ScrollTrigger.create({
+    trigger: container,
+    start: 'top top',
+    end: `+=${cards.length * 150}%`, // Longer distance for comfortable scrolling
+    pin: true,
+    scrub: true,
+    id: 'featured-work-progress',
+    onUpdate: (self) => {
       if (isAnimating) return;
-      if (currentIndex < cards.length - 1) {
-        gotoSlide(currentIndex + 1, 'next');
-      } else {
-        // SCROLLBAR IS ALREADY AT st.end 
-        // We disable observer so the NEXT scroll is 100% native.
-        observer.disable();
+
+      const totalProgress = self.progress;
+      const sectionProgress = 1 / cards.length;
+      
+      // Calculate which card we *should* be on based on scroll
+      const idealIndex = Math.min(
+        cards.length - 1,
+        Math.floor(totalProgress / sectionProgress)
+      );
+
+      // Handle transition Trigger
+      if (idealIndex !== currentIndex) {
+        gotoSlide(idealIndex, idealIndex > currentIndex ? 'next' : 'prev');
       }
-    },
-    onDown: () => {
-      if (isAnimating) return;
-      if (currentIndex > 0) {
-        gotoSlide(currentIndex - 1, 'prev');
-      } else {
-        observer.disable();
-      }
-    },
-    tolerance: 5,
-    preventDefault: true
+
+      // Update Progress Bars
+      progressFills.forEach((fill, i) => {
+        const barStart = i * sectionProgress;
+        const barEnd = (i + 1) * sectionProgress;
+        
+        let barProgress = 0;
+        if (totalProgress >= barEnd) {
+          barProgress = 100;
+        } else if (totalProgress <= barStart) {
+          barProgress = 0;
+        } else {
+          barProgress = ((totalProgress - barStart) / sectionProgress) * 100;
+        }
+        
+        gsap.to(fill, { width: `${barProgress}%`, duration: 0.1, ease: 'none', overwrite: true });
+      });
+    }
   });
-
-  observer.disable();
 };
-
