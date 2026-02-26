@@ -143,8 +143,7 @@ html {
   scrollbar-width: none;
   min-height: 100%;
   min-height: -webkit-fill-available;
-  /* Transparent - theme-color system handles all backgrounds dynamically */
-  background-color: transparent;
+  background-color: #F2F2F2;
 }
 
 /* Smooth scrolling for main document */
@@ -162,8 +161,7 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  /* Transparent - theme-color system handles all backgrounds dynamically */
-  background-color: transparent;
+  background-color: #F2F2F2;
   scrollbar-width: none;
 }
 
