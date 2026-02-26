@@ -106,47 +106,44 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // Main ScrollTrigger to drive progress bars and handle unpinning
-  ScrollTrigger.create({
-    trigger: container,
-    start: 'top top',
-    end: `+=${cards.length * 150}%`, // Longer distance for comfortable scrolling
-    pin: true,
-    scrub: true,
-    id: 'featured-work-progress',
-    onUpdate: (self) => {
-      if (isAnimating) return;
+  // Create a master scrubbed timeline for the progress bars
+  const progressTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: container,
+      start: 'top top',
+      end: `+=${cards.length * 150}%`,
+      pin: true,
+      scrub: true, // 1:1 synchronization for instant visual feedback
+      id: 'featured-work-scroll'
+    }
+  });
 
-      const totalProgress = self.progress;
-      const sectionProgress = 1 / cards.length;
-      
-      // Calculate which card we *should* be on based on scroll
-      const idealIndex = Math.min(
-        cards.length - 1,
-        Math.floor(totalProgress / sectionProgress)
-      );
-
-      // Handle transition Trigger
-      if (idealIndex !== currentIndex) {
-        gotoSlide(idealIndex, idealIndex > currentIndex ? 'next' : 'prev');
-      }
-
-      // Update Progress Bars
-      progressFills.forEach((fill, i) => {
-        const barStart = i * sectionProgress;
-        const barEnd = (i + 1) * sectionProgress;
-        
-        let barProgress = 0;
-        if (totalProgress >= barEnd) {
-          barProgress = 100;
-        } else if (totalProgress <= barStart) {
-          barProgress = 0;
-        } else {
-          barProgress = ((totalProgress - barStart) / sectionProgress) * 100;
+  // Build the progress timeline
+  cards.forEach((_, i) => {
+    if (progressFills[i]) {
+      // Each bar fills over its dedicated section of the scroll
+      progressTl.to(progressFills[i], {
+        width: '100%',
+        ease: 'none',
+        duration: 1,
+        onStart: () => {
+          // When we start filling a bar, we ensure we are on that slide
+          if (currentIndex !== i) {
+            gotoSlide(i, i > currentIndex ? 'next' : 'prev');
+          }
+        },
+        // We also check on reverse
+        onReverseComplete: () => {
+          if (i > 0 && currentIndex !== i - 1) {
+            gotoSlide(i - 1, 'prev');
+          }
         }
-        
-        gsap.to(fill, { width: `${barProgress}%`, duration: 0.1, ease: 'none', overwrite: true });
       });
+      
+      // Add a small spacer after each project except the last
+      if (i < cards.length - 1) {
+        progressTl.to({}, { duration: 0.1 });
+      }
     }
   });
 };
