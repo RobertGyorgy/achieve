@@ -142,9 +142,6 @@ html {
   /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Ensure full height on mobile including safe areas */
-  min-height: 100%;
-  min-height: -webkit-fill-available;
 }
 
 /* Smooth scrolling for main document */
@@ -161,14 +158,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   isolation: auto;
   overflow-x: hidden;
-  /* Fill the full screen including safe areas */
-  min-height: 100svh;
-  min-height: -webkit-fill-available;
-  /* Extend content into safe area (notch / home indicator) */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
   scrollbar-width: none;
 }
 
