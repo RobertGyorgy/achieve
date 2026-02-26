@@ -153,7 +153,7 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  background-color: #F2F2F2; /* Match hero section — Safari iOS samples body bg for address bar tint */
+  background-color: transparent;
   scrollbar-width: none;
   margin: 0;
   padding: 0;
