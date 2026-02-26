@@ -76,16 +76,13 @@ const {
       // GSAP ScrollSmoother (which moves content via CSS transform, not window.scrollY)
       function startRafLoop() {
         function tick() {
-          // While preloader is still visible, keep dark and skip section detection.
-          // The hero sits at top:0 beneath the preloader, so without this guard
-          // it would immediately flip to #F2F2F2 before the preloader fades.
+          // While preloader is still in the DOM and visible, keep dark color.
+          // GSAP hides the preloader via display:'none' (not opacity), so we
+          // check computed display rather than opacity on the container.
           var preloader = document.getElementById('preloader');
-          if (preloader) {
-            var op = parseFloat(window.getComputedStyle(preloader).opacity);
-            if (op > 0.05) {
-              requestAnimationFrame(tick);
-              return;
-            }
+          if (preloader && window.getComputedStyle(preloader).display !== 'none') {
+            requestAnimationFrame(tick);
+            return;
           }
           updateThemeColor();
           requestAnimationFrame(tick);
