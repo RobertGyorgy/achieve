@@ -27,17 +27,12 @@ let smootherCleanup: (() => void) | null = null;
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function applyColor(hex: string) {
-  // 1. <html> background — the single reliable signal Safari reads to tint the
-  //    address bar and status bar. Works on both mobile (native scroll, smooth-wrapper
-  //    is static) and desktop (smooth-wrapper is fixed). Must always be set.
+  // <html> background — the single property Safari reads to tint the address bar
+  // and status bar. Works on both mobile (native scroll) and desktop (ScrollSmoother).
   document.documentElement.style.backgroundColor = hex;
 
-  // 2. Fixed safe-area fill div — covers env(safe-area-inset-top) at y=0.
-  //    Ensures the notch/status bar area also shows the correct colour.
-  if (fillEl) fillEl.style.backgroundColor = hex;
-
-  // 3. smooth-wrapper — visual background layer on desktop (position:fixed, full-screen).
-  //    Prevents any gap colour showing through during ScrollTrigger pin animations.
+  // smooth-wrapper — visual background on desktop (position:fixed, full-screen).
+  // Prevents gap colour showing through during ScrollTrigger pin animations.
   const smoothWrapper = document.getElementById('smooth-wrapper');
   if (smoothWrapper) smoothWrapper.style.backgroundColor = hex;
 }
@@ -49,8 +44,10 @@ function colorFromSections(sections: HTMLElement[]): string {
   let bestTop = -Infinity;
   for (const section of sections) {
     const top = section.getBoundingClientRect().top;
-    // section must have its top at or above the viewport midpoint
-    if (top <= window.innerHeight * 0.5 && top > bestTop) {
+    // Section is "at the top" when its top edge has reached or passed y=0.
+    // Using <= 1px so we trigger exactly when the section reaches the top edge,
+    // not 50% through — that was causing the bar to change color too early.
+    if (top <= 1 && top > bestTop) {
       bestTop = top;
       best = section.dataset.themeColor ?? best;
     }
@@ -72,13 +69,12 @@ export function initThemeColor() {
       top: '0',
       left: '0',
       right: '0',
-      // Fill exactly the safe-area zone; 0px on devices with no notch
+      // Fill the safe-area-inset-top (notch) zone
       height: 'env(safe-area-inset-top, 0px)',
       zIndex: '9997',
       pointerEvents: 'none',
-      backgroundColor: HERO_COLOR,
-      // Short transition so colour changes aren't jarring
-      transition: 'background-color 0.25s ease',
+      // Transparent — black-translucent status bar meta makes content show through
+      backgroundColor: 'transparent',
     });
     document.body.appendChild(fillEl);
   }
