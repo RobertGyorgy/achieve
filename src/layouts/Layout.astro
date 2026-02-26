@@ -96,6 +96,9 @@ const {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Web App Manifest for standalone/fullscreen mode -->
+    <link rel="manifest" href="/manifest.json" />
+
     <!-- Font Preload -->
     <link
       rel="preload"
@@ -128,6 +131,10 @@ const {
 
     <!-- Astro View Transitions -->
     <meta name="astro-view-transitions-enabled" content="true" />
+
+    <!-- Fullscreen configuration for Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Achieve" />
   </head>
   <body class="bg-dark-bg text-white">
     <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
@@ -159,6 +166,9 @@ const {
       </div>
     </div>
 
+    <!-- Fullscreen and safe area handlers -->
+    <script src="../scripts/fullscreen-handler.ts"></script>
+    <script src="../scripts/safe-area-handler.ts"></script>
     <script src="../scripts/main.ts"></script>
   </body>
 </html>

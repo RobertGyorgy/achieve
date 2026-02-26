@@ -145,7 +145,13 @@ html {
   /* Ensure full height on mobile including safe areas */
   min-height: 100%;
   min-height: -webkit-fill-available;
+  min-height: 100dvh;
   background-color: #f2f2f2;
+  /* Safe area variables - set by safe-area-handler.ts */
+  --safe-area-top: max(0px, env(safe-area-inset-top));
+  --safe-area-bottom: max(0px, env(safe-area-inset-bottom));
+  --safe-area-left: max(0px, env(safe-area-inset-left));
+  --safe-area-right: max(0px, env(safe-area-inset-right));
 }
 
 /* Smooth scrolling for main document */
@@ -164,10 +170,15 @@ body {
   overflow-x: hidden;
   /* Fill the full screen including safe areas */
   min-height: 100svh;
+  min-height: 100dvh;
   min-height: -webkit-fill-available;
   /* Base color matching Hero to ensure no bezels on start */
   background-color: #f2f2f2;
   scrollbar-width: none;
+  /* Ensure fullscreen covers everything */
+  position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Hide scrollbar but keep scrolling functionality */
@@ -366,11 +377,41 @@ button {
   }
 }
 
-/* ScrollSmoother Styles */
-#smooth-wrapper {
-  overflow: hidden;
-  position: fixed;
+/* Fullscreen Mode Styles */
+/* Hide browser UI when in fullscreen */
+*:fullscreen {
+  width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+html:fullscreen,
+html:fullscreen body {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body:fullscreen,
+#smooth-wrapper:fullscreen,
+#smooth-content:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/*height: 100dvh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100%;
   width: 100%;
   top: 0;
   left: 0;
