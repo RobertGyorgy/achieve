@@ -38,65 +38,70 @@ const {
     <meta name="mobile-web-app-capable" content="yes" />
 
     <script is:inline>
-      // Convert rgb(r, g, b) string to #rrggbb hex
-      function rgbToHex(rgb) {
-        if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return null;
-        // Already hex
-        if (rgb.startsWith('#')) return rgb;
-        var match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (!match) return null;
-        return '#' + ((1 << 24) + (parseInt(match[1]) << 16) + (parseInt(match[2]) << 8) + parseInt(match[3])).toString(16).slice(1);
-      }
+      var _lastThemeColor = '';
 
-      // Dynamically update theme-color to match visible section backgrounds
-      // This makes Safari's address bar and tab bar blend seamlessly with content
-      var _lastThemeColor = '#222831';
-      function updateThemeColor() {
-        var preloader = document.getElementById('preloader');
+      // Apply color to both meta tag AND html background.
+      // Meta tag → Safari address bar (top).
+      // html background → color Safari shows in the area below/around the page (bottom tab bar).
+      function applyThemeColor(color) {
+        if (!color || color === _lastThemeColor) return;
+        _lastThemeColor = color;
         var meta = document.getElementById('theme-color-meta');
-        if (!meta) return;
-
-        // While preloader is visible, keep dark color
-        if (preloader && preloader.style.display !== 'none' && preloader.style.visibility !== 'hidden' && parseFloat(getComputedStyle(preloader).opacity) > 0.01) {
-          if (_lastThemeColor !== '#222831') {
-            meta.setAttribute('content', '#222831');
-            document.documentElement.style.backgroundColor = '#222831';
-            _lastThemeColor = '#222831';
-          }
-          return;
-        }
-
-        // Find the section visible at the top of the viewport
-        var sections = document.querySelectorAll('section, footer');
-        var currentColor = '#f2f2f2'; // fallback = hero background
-
-        for (var i = 0; i < sections.length; i++) {
-          var rect = sections[i].getBoundingClientRect();
-          // Section occupies the top edge of the viewport
-          if (rect.top <= 50 && rect.bottom >= 50) {
-            var bg = getComputedStyle(sections[i]).backgroundColor;
-            var hex = rgbToHex(bg);
-            if (hex) {
-              currentColor = hex;
-            }
-          }
-        }
-
-        // Only update DOM if color actually changed (avoid layout thrashing)
-        if (currentColor !== _lastThemeColor) {
-          meta.setAttribute('content', currentColor);
-          // Also update html background so Safari's bottom bar matches too
-          document.documentElement.style.backgroundColor = currentColor;
-          _lastThemeColor = currentColor;
-        }
+        if (meta) meta.setAttribute('content', color);
+        document.documentElement.style.backgroundColor = color;
       }
 
+      // Walk through all elements that declare data-theme-color and find
+      // the one whose top edge is at or above the viewport top AND
+      // whose bottom edge is still visible — that's the section at the top of the screen.
+      function updateThemeColor() {
+        var elements = document.querySelectorAll('[data-theme-color]');
+        var active = null;
+        for (var i = 0; i < elements.length; i++) {
+          var rect = elements[i].getBoundingClientRect();
+          // top edge has entered or passed the viewport top, and bottom is still visible
+          if (rect.top <= 1 && rect.bottom > 0) {
+            active = elements[i];  // keep last match = deepest section at the top
+          }
+        }
+        if (active) applyThemeColor(active.getAttribute('data-theme-color'));
+      }
+
+      // Watch preloader's style attribute — GSAP animates it via inline style.
+      // When opacity drops to near 0, the preloader is gone and hero is visible.
+      function watchPreloader() {
+        var preloader = document.getElementById('preloader');
+        if (!preloader) { updateThemeColor(); return; }
+
+        var obs = new MutationObserver(function() {
+          var op = parseFloat(window.getComputedStyle(preloader).opacity);
+          if (op < 0.05) {
+            obs.disconnect();
+            updateThemeColor();
+          }
+        });
+        obs.observe(preloader, { attributes: true, attributeFilter: ['style'] });
+      }
+
+      // Initial state: dark = preloader color. Bars blend with the dark preloader.
+      applyThemeColor('#222831');
+
+      // Start watching for preloader exit
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', watchPreloader);
+      } else {
+        watchPreloader();
+      }
+
+      // Update on scroll (passive for performance)
       window.addEventListener('scroll', updateThemeColor, { passive: true });
+
+      // On view transitions (page navigation): re-run immediately
       document.addEventListener('astro:page-load', function() {
-        _lastThemeColor = ''; // force re-evaluation on navigation
+        _lastThemeColor = '';
+        watchPreloader();
         updateThemeColor();
       });
-      updateThemeColor();
     </script>
 
     <!-- Primary Meta Tags -->
