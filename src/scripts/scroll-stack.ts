@@ -57,7 +57,7 @@ const initServicesSectionAnimation = () => {
         endTrigger: '#services-component-vt .card-last',
         scrub: isMobileDevice ? 0.5 : 1.2,
         pin: true,
-        pinSpacing: false,
+        anticipatePin: isMobileDevice ? 0.5 : 1,
         id: `services-card-${index}`,
         anticipatePin: isMobileDevice ? 0.5 : 1,
         fastScrollEnd: true,
