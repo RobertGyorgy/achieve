@@ -4,7 +4,7 @@ import { initializeGsap, setupPageTransitions } from './gsap-utils';
 import { initTextAnimations } from '../utils/RevealAnimationHandler';
 import { initServicesSection } from './scroll-stack';
 import { initFeaturedWorkScroll } from './featured-work-scroll';
-import { initSmoothScroll, cleanupSmoothScroll, getScrollSmoother } from './smooth-scroll';
+import { initSmoothScroll, getScrollSmoother } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
@@ -79,14 +79,7 @@ document.addEventListener('astro:page-load', () => {
   initializeApp();
 });
 
-// Cleanup on page navigation
-document.addEventListener('astro:before-swap', () => {
-  // Kill all GSAP animations
-  gsap.killTweensOf('*');
-  // Cleanup ScrollTrigger
-  ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
-  cleanupSmoothScroll();
-});
+
 
 // Force scroll to top on manual reload before JS initializes
 if (typeof window !== 'undefined') {
