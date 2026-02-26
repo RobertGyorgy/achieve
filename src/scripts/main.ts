@@ -4,7 +4,7 @@ import { initializeGsap, setupPageTransitions } from './gsap-utils';
 import { initTextAnimations } from '../utils/RevealAnimationHandler';
 import { initServicesSection } from './scroll-stack';
 import { initFeaturedWorkScroll } from './featured-work-scroll';
-import { initSmoothScroll, cleanupSmoothScroll } from './smooth-scroll';
+import { initSmoothScroll, cleanupSmoothScroll, getScrollSmoother } from './smooth-scroll';
 import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
@@ -15,6 +15,18 @@ if (typeof history !== 'undefined' && history.scrollRestoration) {
 }
 
 gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * Force scroll to absolute top — resets both native scroll
+ * and GSAP ScrollSmoother internal position.
+ */
+function forceScrollToTop() {
+  window.scrollTo(0, 0);
+  const sm = getScrollSmoother();
+  if (sm) {
+    sm.scrollTo(0, false); // instant, no animation
+  }
+}
 
 /**
  * Initialize all animations and interactions on page load
@@ -42,10 +54,8 @@ async function initializeApp() {
     const refreshDelay = window.innerWidth < 1024 ? 400 : 200;
     
     setTimeout(() => {
-      // One final pull to the top before we release the page
-      if (window.scrollY < 200) {
-        window.scrollTo(0, 0);
-      }
+      // Always pull to the top on reload
+      forceScrollToTop();
       
       ScrollTrigger.refresh();
       document.dispatchEvent(new Event('scroll-smoother-ready'));
@@ -59,7 +69,7 @@ async function initializeApp() {
 
 // Initialize on page load
 document.addEventListener('astro:page-load', () => {
-  window.scrollTo(0, 0);
+  forceScrollToTop();
   initializeApp();
 });
 
@@ -75,17 +85,17 @@ document.addEventListener('astro:before-swap', () => {
 // Force scroll to top on manual reload before JS initializes
 if (typeof window !== 'undefined') {
   window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
+    forceScrollToTop();
   };
 }
 
 // Initial load
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    window.scrollTo(0, 0);
+    forceScrollToTop();
     initializeApp();
   });
 } else {
-  window.scrollTo(0, 0);
+  forceScrollToTop();
   initializeApp();
 }

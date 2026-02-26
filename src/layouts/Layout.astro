@@ -85,8 +85,14 @@ const {
 
     <!-- Astro View Transitions -->
     <meta name="astro-view-transitions-enabled" content="true" />
+
+    <!-- Force scroll to top before any rendering on reload -->
+    <script is:inline>
+      if (history.scrollRestoration) history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+    </script>
   </head>
-  <body class="bg-dark-bg text-white">
+  <body class="text-white">
     <!-- Preloader - Outside smooth-wrapper to ensure visibility -->
     <div
       id="preloader"
