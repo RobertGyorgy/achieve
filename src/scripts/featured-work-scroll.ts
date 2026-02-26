@@ -42,27 +42,32 @@ export const initFeaturedWorkScroll = () => {
       }
       if (mobileBtn) gsap.set(mobileBtn, { display: 'inline-flex', opacity: 1, y: 0 });
     }
+    
+    // Ensure nested tooltip fills are reset
+    if (tooltipFills[i]) gsap.set(tooltipFills[i], { width: '0%' });
+    if (mobileFills[i]) gsap.set(mobileFills[i], { scaleX: 0 });
   });
 
   // Cursor Tooltip Movement
   if (tooltip) {
-    container.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
+    const moveTooltip = (e: MouseEvent) => {
       gsap.to(tooltip, {
-        x: clientX,
-        y: clientY,
-        duration: 0.5,
-        ease: 'power2.out',
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.1, // Faster follow
+        ease: 'none',
         overwrite: 'auto'
       });
-    });
+    };
+
+    container.addEventListener('mousemove', moveTooltip);
 
     container.addEventListener('mouseenter', () => {
-      gsap.to(tooltip, { opacity: 1, scale: 1, duration: 0.3 });
+      gsap.to(tooltip, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
     });
 
     container.addEventListener('mouseleave', () => {
-      gsap.to(tooltip, { opacity: 0, scale: 0, duration: 0.3 });
+      gsap.to(tooltip, { opacity: 0, scale: 0, duration: 0.3, ease: 'power2.in' });
     });
   }
 
@@ -143,7 +148,7 @@ export const initFeaturedWorkScroll = () => {
     scrollTrigger: {
       trigger: container,
       start: 'top top',
-      end: `+=${cards.length * 150}%`,
+      end: `+=${cards.length * 200}%`, // Increase distance a bit for smoother bar filling
       pin: true,
       scrub: true,
       id: 'featured-work-scroll'
@@ -152,31 +157,35 @@ export const initFeaturedWorkScroll = () => {
 
   // Build the progress timeline
   cards.forEach((_, i) => {
-    const targets = [];
-    if (tooltipFills[i]) targets.push(tooltipFills[i]);
-    if (mobileFills[i]) targets.push(mobileFills[i]);
+    const tooltipFill = tooltipFills[i];
+    const mobileFill = mobileFills[i];
 
-    if (targets.length > 0) {
-      progressTl.to(targets, {
-        width: '100%',
-        scaleX: 1, // for the mobile buttons using scaleX
-        ease: 'none',
-        duration: 1,
-        onStart: () => {
-          if (currentIndex !== i) {
-            gotoSlide(i, i > currentIndex ? 'next' : 'prev');
-          }
-        },
-        onReverseComplete: () => {
-          if (i > 0 && currentIndex !== i - 1) {
-            gotoSlide(i - 1, 'prev');
-          }
+    // Create a sub-timeline for this specific project's segment
+    const segmentTl = gsap.timeline({
+      onStart: () => {
+        if (currentIndex !== i) {
+          gotoSlide(i, i > currentIndex ? 'next' : 'prev');
         }
-      });
-      
-      if (i < cards.length - 1) {
-        progressTl.to({}, { duration: 0.1 });
+      },
+      onReverseComplete: () => {
+        if (i > 0 && currentIndex !== i - 1) {
+          gotoSlide(i - 1, 'prev');
+        }
       }
+    });
+
+    if (tooltipFill) {
+      segmentTl.to(tooltipFill, { width: '100%', ease: 'none', duration: 1 }, 0);
+    }
+    if (mobileFill) {
+      segmentTl.to(mobileFill, { scaleX: 1, ease: 'none', duration: 1 }, 0);
+    }
+
+    progressTl.add(segmentTl);
+    
+    // Add a small spacer after each project except the last
+    if (i < cards.length - 1) {
+      progressTl.to({}, { duration: 0.1 });
     }
   });
 };
