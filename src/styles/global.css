@@ -142,9 +142,10 @@ html {
   /* Smooth scrolling enhancement */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* Ensure full height on mobile including safe areas */
+  /* Ensure full height and transparency on mobile for address bar fix */
   min-height: 100%;
   min-height: -webkit-fill-available;
+  background-color: transparent;
 }
 
 /* Smooth scrolling for main document */
