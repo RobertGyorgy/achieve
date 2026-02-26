@@ -39,10 +39,9 @@ const {
 
     <script is:inline>
       var _lastThemeColor = '';
+      var _themeElements = null;
 
-      // Apply color to both meta tag AND html background.
-      // Meta tag → Safari address bar (top).
-      // html background → color Safari shows in the area below/around the page (bottom tab bar).
+      // Apply color to the meta tag (Safari address bar) AND html background (Safari tab bar area).
       function applyThemeColor(color) {
         if (!color || color === _lastThemeColor) return;
         _lastThemeColor = color;
@@ -51,56 +50,71 @@ const {
         document.documentElement.style.backgroundColor = color;
       }
 
-      // Walk through all elements that declare data-theme-color and find
-      // the one whose top edge is at or above the viewport top AND
-      // whose bottom edge is still visible — that's the section at the top of the screen.
+      // Cache elements so we don't querySelectorAll on every frame
+      function getThemeElements() {
+        if (!_themeElements || !_themeElements.length) {
+          _themeElements = document.querySelectorAll('[data-theme-color]');
+        }
+        return _themeElements;
+      }
+
+      // Find the section whose top edge has entered/passed the viewport top.
+      // getBoundingClientRect() correctly reflects GSAP transform positions.
       function updateThemeColor() {
-        var elements = document.querySelectorAll('[data-theme-color]');
+        var els = getThemeElements();
         var active = null;
-        for (var i = 0; i < elements.length; i++) {
-          var rect = elements[i].getBoundingClientRect();
-          // top edge has entered or passed the viewport top, and bottom is still visible
+        for (var i = 0; i < els.length; i++) {
+          var rect = els[i].getBoundingClientRect();
           if (rect.top <= 1 && rect.bottom > 0) {
-            active = elements[i];  // keep last match = deepest section at the top
+            active = els[i]; // last match = deepest section at the top
           }
         }
         if (active) applyThemeColor(active.getAttribute('data-theme-color'));
       }
 
-      // Watch preloader's style attribute — GSAP animates it via inline style.
-      // When opacity drops to near 0, the preloader is gone and hero is visible.
+      // rAF loop — runs every frame, works with both native scroll AND
+      // GSAP ScrollSmoother (which moves content via CSS transform, not window.scrollY)
+      function startRafLoop() {
+        function tick() {
+          updateThemeColor();
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // Watch preloader style — GSAP animates opacity inline.
+      // Once opacity < 0.05, preloader is gone and hero is the active section.
       function watchPreloader() {
         var preloader = document.getElementById('preloader');
-        if (!preloader) { updateThemeColor(); return; }
-
+        if (!preloader) return;
         var obs = new MutationObserver(function() {
           var op = parseFloat(window.getComputedStyle(preloader).opacity);
           if (op < 0.05) {
             obs.disconnect();
-            updateThemeColor();
           }
+          // updateThemeColor runs every rAF frame so nothing extra needed here
         });
         obs.observe(preloader, { attributes: true, attributeFilter: ['style'] });
       }
 
-      // Initial state: dark = preloader color. Bars blend with the dark preloader.
+      // Initial dark state matches preloader (#222831)
       applyThemeColor('#222831');
 
-      // Start watching for preloader exit
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', watchPreloader);
+        document.addEventListener('DOMContentLoaded', function() {
+          watchPreloader();
+          startRafLoop();
+        });
       } else {
         watchPreloader();
+        startRafLoop();
       }
 
-      // Update on scroll (passive for performance)
-      window.addEventListener('scroll', updateThemeColor, { passive: true });
-
-      // On view transitions (page navigation): re-run immediately
+      // On view transitions: reset cache so new page elements are picked up
       document.addEventListener('astro:page-load', function() {
         _lastThemeColor = '';
+        _themeElements = null;
         watchPreloader();
-        updateThemeColor();
       });
     </script>
 

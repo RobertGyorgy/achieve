@@ -168,8 +168,7 @@ body {
   min-height: 100svh;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
-  /* Body background stays neutral - html background is what Safari uses for bezels */
-  background-color: transparent;
+  background-color: #F2F2F2;
   scrollbar-width: none;
 }
 
