@@ -9,7 +9,6 @@ import { initBackgroundTransition } from './background-transition';
 import { initFAQAccordion } from './faq-accordion';
 import { initFAQAnimations } from './faq-animations';
 import { initHeroParallax } from './hero-parallax';
-import { initThemeManager } from './theme-manager';
 
 if (typeof history !== 'undefined' && history.scrollRestoration) {
   history.scrollRestoration = 'manual';
@@ -37,7 +36,6 @@ async function initializeApp() {
     initFAQAccordion();
     initFAQAnimations();
     initHeroParallax();
-    initThemeManager();
 
     // Critical: refreshing ScrollTrigger too early on reload can cause jumps.
     // We wait longer on mobile for full paint.
