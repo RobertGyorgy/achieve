@@ -169,60 +169,10 @@ body {
   display: none;
 }
 
-/* Utility Classes */
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.will-change-transform {
-  will-change: transform;
-}
-
-.transform-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Hero-specific styles moved to HeroSection.astro component */
-
-.fade-bg {
-  background: linear-gradient(135deg, #000000 0%, #393E46 100%);
-}
-
-/* Text Reveal Support */
-.text-reveal {
-  overflow: hidden;
-}
-
-.text-reveal-word {
-  display: inline-block;
-  overflow: hidden;
-}
-
-.text-reveal-char {
-  display: inline-block;
-}
-
-/* Draggable States */
+/* Draggable States (used by HeroSection drag interaction) */
 .dragging {
   cursor: grabbing;
   user-select: none;
-}
-
-/* Menu States */
-.menu-open {
-  overflow: hidden;
-}
-
-.menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 40;
 }
 
 
@@ -267,89 +217,6 @@ button {
   background-color: #ff4500;
   color: #ffffff;
 }
-/* Marquee Styles */
-:root {
-  --step-0: clamp(4.5rem, 3.64rem + 4.29vw, 9rem);
-}
-
-.marquee {
-  overflow: hidden;
-  width: 100%;
-  background-color: black;
-}
-
-.marquee .track {
-  display: flex;
-  gap: 2rem;
-  padding: 2rem 0;
-  width: max-content;
-  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-  animation: marquee 30s linear infinite;
-}
-
-.marquee .track.-r {
-  animation: marquee-r 30s linear infinite;
-}
-
-.marquee:hover .track {
-  background: white;
-  color: black;
-}
-
-.marquee .text {
-  font-size: var(--step-0);
-  font-family: 'Nura', serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.marquee .text .-maroon {
-  color: #ff4500;
-}
-
-.marquee .pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 6rem;
-  width: 12rem;
-  border-radius: 9999px;
-  background-color: white;
-  overflow: hidden;
-  flex-shrink: 0;
-  align-self: center;
-}
-
-.marquee:hover .pill {
-  background-color: black;
-}
-
-.marquee .pill img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes marquee-r {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
 /* ScrollSmoother Structure — no CSS rules needed.
    smooth-wrapper gets position:relative + z-index:10 via inline style in Layout.astro.
    ScrollSmoother JS sets position:fixed on desktop at runtime.

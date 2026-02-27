@@ -28,8 +28,7 @@ const featuredProjects = [
 ];
 ---
 
-<div class="relative w-full z-20">
-  <section id="featured-work-container" class="relative w-full h-[100svh] bg-[#0d141a] overflow-hidden" data-theme-color="#0d141a">
+<section id="featured-work-container" class="relative w-full h-[100svh] bg-black overflow-hidden" data-theme-color="#000000">
     
     <!-- Static Slice Borders overlay -->
     <div class="absolute inset-0 w-full h-full pointer-events-none z-[40] grid grid-cols-2 md:grid-cols-3">
@@ -67,7 +66,7 @@ const featuredProjects = [
           </div>
 
           <!-- Content (Stays above everything via z-50, but we'll fade it with GSAP) -->
-          <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col items-center lg:items-start text-center lg:text-left gap-6 lg:gap-8 px-6 lg:px-12 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: 15vh !important;">
+          <div class={`card-content relative z-50 w-full max-w-[90rem] mx-auto flex flex-col items-center lg:items-start text-center lg:text-left gap-6 lg:gap-8 px-6 lg:px-12 xl:px-12 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} style="margin-bottom: clamp(2rem, 8vh, 6rem);">
             
             <div class="flex items-center gap-4 text-white/40 font-mono text-sm mb-2">
               <span class="text-white">0{index + 1}</span>
@@ -108,7 +107,6 @@ const featuredProjects = [
         </article>
       ))}
     </div>
-  </div>
 </section>
 
 <!-- Consolidated Inverting Tooltip -->

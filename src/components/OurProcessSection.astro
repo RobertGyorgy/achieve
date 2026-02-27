@@ -374,17 +374,6 @@ const processSteps = [
       const scrollMultiplier = 1.0; // 1.0 = natural speed
       const scrollDistance = horizontalScrollAmount + (viewportWidth * scrollMultiplier);
 
-      console.log('Our Process Scroll Initialized:', {
-        totalWidth,
-        viewportWidth,
-        horizontalScrollAmount,
-        scrollDistance,
-        scrollMultiplier,
-        cardsCount: cards.length,
-        sectionFound: !!section,
-        containerFound: !!containerEl
-      });
-
       // Reset position first
       gsap.set(containerEl, { x: 0, clearProps: 'all' });
       
@@ -404,13 +393,7 @@ const processSteps = [
           anticipatePin: 1,
           pinSpacing: true,
           invalidateOnRefresh: true,
-          markers: false, // Set to true for debugging
-          onEnter: () => console.log('Our Process: Entered, end distance:', finalEndDistance),
-          onUpdate: (self) => {
-            if (self.progress > 0.9) {
-              console.log('Our Process: Near end, progress:', self.progress.toFixed(2));
-            }
-          }
+          markers: false,
         }
       });
       
@@ -444,12 +427,8 @@ const processSteps = [
       });
 
       // Refresh ScrollTrigger
-      if (smoother) {
-        // ScrollSmoother will handle refresh
-        console.log('Our Process: Initialized with ScrollSmoother');
-      } else {
+      if (!smoother) {
         ScrollTrigger.refresh();
-        console.log('Our Process: Initialized without ScrollSmoother');
       }
       isInitialized = true;
     };

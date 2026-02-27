@@ -4,25 +4,6 @@ import { isMobile, getScrollSmoother } from './smooth-scroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Configure ScrollTrigger - will be configured by ScrollSmoother
-// Keep this for fallback if ScrollSmoother is not available
-if (typeof window !== 'undefined') {
-  const isMobileDevice = isMobile();
-  
-  if (isMobileDevice) {
-    // Optimize ScrollTrigger for mobile
-    ScrollTrigger.config({
-      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
-      ignoreMobileResize: true, // Prevents glitches from address bar showing/hiding
-    });
-  } else {
-    // Optimize for desktop smooth scrolling
-    ScrollTrigger.config({
-      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
-    });
-  }
-}
-
 
 const initServicesSectionAnimation = () => {
   if (typeof window === 'undefined') return;

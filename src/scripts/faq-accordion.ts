@@ -167,6 +167,6 @@ export function initFAQAccordion() {
   });
   
   if (import.meta.env.DEV) {
-    console.log(`✓ FAQ Accordion initialized with ${faqItems.length} items`);
+
   }
 }

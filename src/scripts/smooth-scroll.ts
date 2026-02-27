@@ -79,10 +79,6 @@ export const initSmoothScroll = async () => {
     // Refresh ScrollTrigger after ScrollSmoother is created
     ScrollTrigger.refresh();
 
-    if (import.meta.env.DEV) {
-      console.log('✓ ScrollSmoother initialized', { isMobile: isMobileDevice });
-    }
-
     return smoother;
   } catch (error) {
     console.error('Failed to initialize ScrollSmoother:', error);

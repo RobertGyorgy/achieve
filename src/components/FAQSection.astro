@@ -268,20 +268,6 @@ const faqs = [
 </style>
 
 <script>
-  import { initFAQAccordion } from '../scripts/faq-accordion';
-  import { initFAQAnimations } from '../scripts/faq-animations';
-
-  // Initialize FAQ accordion and animations
-  if (typeof window !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initFAQAccordion();
-      initFAQAnimations();
-    });
-
-    // Also initialize on Astro page load
-    document.addEventListener('astro:page-load', () => {
-      initFAQAccordion();
-      initFAQAnimations();
-    });
-  }
+  // FAQ accordion and animations are initialized by main.ts.
+  // No duplicate initialization needed here.
 </script>
