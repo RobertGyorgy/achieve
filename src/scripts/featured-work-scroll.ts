@@ -145,17 +145,18 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // Single pin for card transitions + exit reveal.
-  // Extra +120% scroll distance for the exit fade.
-  // Services wrapper is pulled up behind work (negative margin, lower z-index),
-  // so when the container fades, services is physically behind it and visible.
-  const totalScrollPercent = cards.length * 150 + 120;
+  // CARD PIN: pinSpacing:false = no spacer inserted.
+  // Services sits in the same scroll space BEHIND work (z-5 < z-20).
+  // While pinned, work covers services. When pin releases,
+  // work slides up with normal scroll — revealing services underneath.
+  // Like sliding the top card off a stack.
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
       start: 'top top',
-      end: `+=${totalScrollPercent}%`,
+      end: `+=${cards.length * 150}%`,
       pin: true,
+      pinSpacing: false,
       anticipatePin: 1,
       scrub: true,
       id: 'featured-work-scroll'
@@ -199,16 +200,5 @@ export const initFeaturedWorkScroll = () => {
       progressTl.to({}, { duration: 0.1 });
     }
   });
-
-  // === EXIT REVEAL: container fades to transparent, services visible behind ===
-  // Services wrapper is pulled up -100vh with bg #000 and z-5, sitting behind
-  // the pinned container (z-20). As opacity→0, services appears through it.
-  progressTl.to(container, {
-    scale: 0.9,
-    filter: 'blur(8px)',
-    opacity: 0,
-    duration: 1.5,
-    ease: 'none',
-    force3D: true,
-  });
+  // No exit fade — the physical sliding of work off-screen IS the reveal.
 };

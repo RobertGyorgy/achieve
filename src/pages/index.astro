@@ -21,11 +21,11 @@ import Footer from '../components/Footer.astro';
       <IntroTextSection />
     </div>
 
-    <!-- FeaturedWork — pinned with card transitions, then fades to reveal services -->
+    <!-- FeaturedWork — pinned on top (z-20), pinSpacing:false -->
     <FeaturedWork />
 
-    <!-- Services pulled up behind work with -margin; revealed when work fades -->
-    <div class="relative w-full flex flex-col" style="z-index: 5; background-color: #000000; margin-top: -100vh; padding-top: 100vh;">
+    <!-- Services behind work (z-5) — same scroll space, revealed when work slides away -->
+    <div class="relative w-full flex flex-col" style="z-index: 5; background-color: #000000;">
       <ServicesSection />
 
       <OurProcessSection />
