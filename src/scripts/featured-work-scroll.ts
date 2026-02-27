@@ -146,11 +146,12 @@ export const initFeaturedWorkScroll = () => {
   };
 
   // Create a master scrubbed timeline for the progress bars
+  // Extra +100% at the end for the parallax exit (scale/blur/fade)
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
       start: 'top top',
-      end: `+=${cards.length * 150}%`,
+      end: `+=${cards.length * 150 + 100}%`,
       pin: true,
       anticipatePin: 1,
       scrub: true,
@@ -196,25 +197,15 @@ export const initFeaturedWorkScroll = () => {
     }
   });
 
-  // === PARALLAX EXIT: After pin releases, FeaturedWork stays behind ===
-  // Services (z-20) scrolls over it, just like hero → intro pattern
-  const wrapper = document.getElementById('featured-work-wrapper');
-  if (wrapper) {
-    gsap.to(container, {
-      scale: 0.92,
-      filter: 'blur(6px)',
-      opacity: 0.4,
-      ease: 'none',
-      force3D: true,
-      scrollTrigger: {
-        trigger: wrapper,
-        start: 'bottom bottom',
-        end: '+=50%',
-        scrub: 0.5,
-        pin: true,
-        pinSpacing: false,
-        id: 'featured-work-exit'
-      }
-    });
-  }
+  // === PARALLAX EXIT: scale/blur/fade while still pinned ===
+  // This fills the extra +100% scroll distance added to the main pin.
+  // After this, the pin releases and Services (z-20, solid bg) appears from below.
+  progressTl.to(container, {
+    scale: 0.92,
+    filter: 'blur(6px)',
+    opacity: 0.4,
+    duration: 1,
+    ease: 'power2.in',
+    force3D: true,
+  });
 };
