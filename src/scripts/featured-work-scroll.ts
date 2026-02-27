@@ -145,10 +145,11 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // Single pin for everything: card transitions + exit fade.
-  // Extended end distance adds scroll room for the exit animation.
-  // No nested pins — everything in one timeline.
-  const totalScrollPercent = cards.length * 150 + 80;
+  // Single pin for card transitions + exit reveal.
+  // Extra +120% scroll distance for the exit fade.
+  // Services wrapper is pulled up behind work (negative margin, lower z-index),
+  // so when the container fades, services is physically behind it and visible.
+  const totalScrollPercent = cards.length * 150 + 120;
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
@@ -199,15 +200,15 @@ export const initFeaturedWorkScroll = () => {
     }
   });
 
-  // === EXIT FADE: while still pinned, container shrinks/blurs/fades ===
-  // This fills the extra +80% scroll distance. When the fade finishes
-  // and the pin releases, services is right there in normal flow.
+  // === EXIT REVEAL: container fades to transparent, services visible behind ===
+  // Services wrapper is pulled up -100vh with bg #000 and z-5, sitting behind
+  // the pinned container (z-20). As opacity→0, services appears through it.
   progressTl.to(container, {
-    scale: 0.92,
+    scale: 0.9,
     filter: 'blur(8px)',
     opacity: 0,
-    duration: 0.8,
-    ease: 'power1.in',
+    duration: 1.5,
+    ease: 'none',
     force3D: true,
   });
 };

@@ -24,8 +24,8 @@ import Footer from '../components/Footer.astro';
     <!-- FeaturedWork — pinned with card transitions, then fades to reveal services -->
     <FeaturedWork />
 
-    <!-- Services follows work in normal flow -->
-    <div class="relative w-full flex flex-col" style="background-color: #000000;">
+    <!-- Services pulled up behind work with -margin; revealed when work fades -->
+    <div class="relative w-full flex flex-col" style="z-index: 5; background-color: #000000; margin-top: -100vh; padding-top: 100vh;">
       <ServicesSection />
 
       <OurProcessSection />
