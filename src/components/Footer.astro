@@ -1,86 +1,86 @@
 ---
-
+const currentYear = new Date().getFullYear();
 ---
 
-<footer class="relative bg-black" data-theme-color="#000000">
-  <div
-    class="absolute inset-x-0 -top-12 pointer-events-none opacity-20 blur-3xl"
-  >
+<footer
+  class="bg-[#F2F2F2] pt-8 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pt-16 md:pb-[calc(2rem+env(safe-area-inset-bottom))] px-4 md:px-8 relative overflow-hidden pointer-events-auto z-50"
+  data-theme-color="#F2F2F2"
+  id="main-footer"
+>
+  <div class="w-full max-w-[90rem] mx-auto relative z-10">
+    <!-- Footer Card -->
     <div
-      class="mx-auto w-2/3 h-72 bg-linear-to-r from-transparent via-accent-orange/70 to-transparent"
+      class="footer-card bg-black text-white rounded-[2.5rem] p-6 md:p-8 lg:p-10 relative overflow-hidden shadow-2xl pointer-events-auto"
     >
-    </div>
-  </div>
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 items-center">
+        <!-- Left Column: CTA & Brand -->
+        <div class="lg:col-span-7 flex flex-col justify-center h-full text-center lg:text-left items-center lg:items-start">
+          <h2 class="font-nura text-3xl md:text-5xl lg:text-6xl font-black leading-none mb-6">
+            Let's build<br />
+            <span class="text-accent-orange">something great</span> together.
+          </h2>
 
-  <div
-    class="relative w-full px-6 sm:px-10 lg:px-20 xl:px-28 py-24 md:py-32 text-[#F2F2F2]"
-  >
-    <div
-      class="footer-container rounded-[2.5rem] border border-white/0 flex flex-col"
-    >
-      <div
-        class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-16 text-center lg:text-left"
-      >
-        <!-- Navigation -->
-        <div class="space-y-4" style="overflow: visible;">
-          <ul
-            class="text-2xl font-nura font-semibold space-y-3"
-            style="overflow: visible;"
-          >
-            <li style="overflow: visible; position: relative;">
-              <a href="#work" class="footer-link">Work</a>
-            </li>
-            <li style="overflow: visible; position: relative;">
-              <a href="#services" class="footer-link">Services</a>
-            </li>
-            <li style="overflow: visible; position: relative;">
-              <a href="#about" class="footer-link">About</a>
-            </li>
-          </ul>
+          <!-- CTA Buttons -->
+          <div class="flex flex-wrap gap-3 mt-6 md:mt-8 justify-center lg:justify-start">
+            <a
+              href="mailto:contact@achieve.ro"
+              class="inline-flex items-center justify-center px-8 py-4 text-base rounded-full bg-accent-orange text-black font-bold uppercase tracking-wider hover:scale-105 transition-transform duration-300"
+              style="font-family: 'Nura', serif !important;"
+            >
+              Get in Touch
+            </a>
+            <a
+              href="/work"
+              class="inline-flex items-center justify-center px-8 py-4 text-base rounded-full border-2 border-white text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-300"
+              style="font-family: 'Nura', serif !important;"
+            >
+              View Work
+            </a>
+          </div>
         </div>
 
-        <!-- Contact -->
-        <div class="space-y-4" style="overflow: visible;">
-          <ul
-            class="text-2xl font-nura font-semibold space-y-3"
-            style="overflow: visible;"
-          >
-            <li style="overflow: visible; position: relative;">
-              <a
-                href="https://instagram.com/achieve"
-                target="_blank"
-                rel="noreferrer"
-                class="footer-link justify-center lg:justify-end"
-              >
-                Instagram
-              </a>
-            </li>
-            <li style="overflow: visible; position: relative;">
-              <a
-                href="mailto:contact@achieve.ro"
-                class="footer-link justify-center lg:justify-end"
-              >
-                contact@achieve.ro
-              </a>
-            </li>
-          </ul>
+        <!-- Right Column: Navigation -->
+        <div class="lg:col-span-5 flex flex-col items-center lg:items-end justify-between h-full mt-8 lg:mt-24">
+          <div class="grid grid-cols-2 gap-6 lg:gap-12 text-center lg:text-right w-full lg:w-auto">
+            <!-- Menu -->
+            <div class="space-y-4">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-widest">Menu</h3>
+              <ul class="space-y-2 font-medium text-base text-white/80">
+                <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
+                <li><a href="/work" class="hover:text-white transition-colors">Work</a></li>
+                <li><a href="/services" class="hover:text-white transition-colors">Services</a></li>
+                <li><a href="/about" class="hover:text-white transition-colors">About</a></li>
+              </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="space-y-4">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-widest">Contact</h3>
+              <ul class="space-y-2 text-white/70 text-sm">
+                <li>Brașov, România</li>
+                <li>
+                  <a href="mailto:contact@achieve.ro" class="hover:text-white transition-colors">contact@achieve.ro</a>
+                </li>
+                <li>
+                  <a href="https://instagram.com/achieve" target="_blank" rel="noreferrer" class="hover:text-white transition-colors">Instagram</a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Hero wordmark -->
-      <div class="footer-hero-wrapper w-full overflow-hidden">
-        <h2
-          class="footer-hero-title font-black font-nura text-[#F2F2F2] leading-none tracking-tight text-center mx-auto"
-          id="achieve-footer-title"
-        >
-          <span class="hero-letter" data-tooltip="Drag">A</span>
-          <span class="hero-letter" data-tooltip="Drag">C</span>
-          <span class="hero-letter" data-tooltip="Drag">H</span>
-          <span class="hero-letter" data-tooltip="Drag">I</span>
-          <span class="hero-letter" data-tooltip="Drag">E</span>
-          <span class="hero-letter" data-tooltip="Drag">V</span>
-          <span class="hero-letter" data-tooltip="Drag">E</span>
-        </h2>
+      <!-- Divider -->
+      <div class="w-full h-px bg-white/10 my-6 md:my-8"></div>
+
+      <!-- Bottom Bar -->
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
+        <p>&copy; {currentYear} Achieve Studio. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-white transition-colors">Terms & Conditions</a>
+        </div>
       </div>
     </div>
   </div>
@@ -91,96 +91,5 @@
     will-change: opacity;
     overflow-x: hidden;
     overflow-y: visible;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .footer-container {
-    padding: clamp(2.5rem, 4vw, 4.5rem) clamp(2rem, 5vw, 6rem) !important;
-    gap: clamp(2rem, 3vw, 3.5rem) !important;
-    margin-left: clamp(1rem, 3vw, 2rem);
-    margin-right: clamp(1rem, 3vw, 2rem);
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    box-shadow: none;
-    overflow: visible !important;
-  }
-
-  .footer-hero-wrapper {
-    padding-inline: clamp(1.25rem, 3.5vw, 3rem);
-    width: 100%;
-  }
-
-  .footer-hero-title {
-    font-family: 'Nura', serif !important;
-    font-size: clamp(7rem, 18vw, 18rem);
-    letter-spacing: -0.1em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: clamp(0.2rem, 0.8vw, 0.7rem);
-    width: 100%;
-  }
-
-  @media (max-width: 1024px) {
-    .footer-hero-title {
-      font-size: clamp(5rem, 22vw, 12rem);
-      letter-spacing: -0.065em;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .footer-hero-title {
-      font-size: clamp(3.4rem, 28vw, 7rem);
-      letter-spacing: -0.035em;
-      flex-wrap: wrap;
-      text-align: center;
-      justify-content: center;
-      gap: clamp(0.35rem, 1.2vw, 0.9rem);
-    }
-  }
-
-  .footer-link {
-    position: relative;
-    display: inline-block;
-    color: #f2f2f2;
-    text-decoration: none;
-    padding-bottom: 6px;
-    margin-bottom: 2px;
-  }
-
-  .footer-link::after {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #ff4500;
-    display: block;
-    content: '';
-    transition: width 0.5s ease-in-out !important;
-    z-index: 10;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: none;
-  }
-
-  .footer-link:hover::after {
-    width: 100%;
-  }
-
-  /* Override global reduced motion settings for footer links */
-  @media (prefers-reduced-motion: reduce) {
-    .footer-link::after {
-      transition-duration: 0.5s !important;
-      animation-duration: 0.5s !important;
-    }
-  }
-
-  /* Also override for normal motion preference */
-  @media (prefers-reduced-motion: no-preference) {
-    .footer-link::after {
-      transition-duration: 0.5s !important;
-    }
   }
 </style>

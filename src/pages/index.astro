@@ -5,7 +5,6 @@ import IntroTextSection from '../components/IntroTextSection.astro';
 
 import FeaturedWork from '../components/FeaturedWork.astro';
 import ServicesSection from '../components/ServicesSection.astro';
-import AboutUsSection from '../components/AboutUsSection.astro';
 import OurProcessSection from '../components/OurProcessSection.astro';
 import FAQSection from '../components/FAQSection.astro';
 import Footer from '../components/Footer.astro';
@@ -22,11 +21,14 @@ import Footer from '../components/Footer.astro';
       <IntroTextSection />
 
       <FeaturedWork />
+    </div>
 
+    <!-- Services sits behind FeaturedWork — revealed as Work scrolls away -->
+    <div class="relative z-[5] w-full" style="margin-top: -1px;">
       <ServicesSection />
+    </div>
 
-      <AboutUsSection />
-
+    <div class="relative z-10 w-full flex flex-col">
       <OurProcessSection />
 
       <FAQSection />

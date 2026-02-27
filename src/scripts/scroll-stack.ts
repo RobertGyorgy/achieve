@@ -16,6 +16,9 @@ const initServicesSectionAnimation = () => {
   // Set 3D properties
   gsap.set(cards, { force3D: true, backfaceVisibility: 'hidden' });
   
+  // Ensure card wrappers don't occlude the fixed navbar (z-9999)
+  cardWrappers.forEach(w => { w.style.zIndex = '1'; });
+  
   // Check if mobile to adjust animation parameters
   const isMobileDevice = isMobile();
   

@@ -53,7 +53,7 @@ export const initFeaturedWorkScroll = () => {
       gsap.to(tooltip, {
         x: e.clientX,
         y: e.clientY,
-        duration: 0.1, // Near-instant follow
+        duration: 0.1,
         ease: 'none',
         overwrite: 'auto'
       });
@@ -61,7 +61,9 @@ export const initFeaturedWorkScroll = () => {
 
     container.addEventListener('mousemove', moveTooltip);
 
-    container.addEventListener('mouseenter', () => {
+    container.addEventListener('mouseenter', (e: MouseEvent) => {
+      // Instantly position tooltip at cursor before fading in
+      gsap.set(tooltip, { x: e.clientX, y: e.clientY });
       gsap.to(tooltip, { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
     });
 
