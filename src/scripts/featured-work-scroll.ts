@@ -145,13 +145,15 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // Create a master scrubbed timeline for card transitions.
-  // pinSpacing: true (default) — creates spacer for scroll distance.
+  // Single pin for everything: card transitions + exit fade.
+  // Extended end distance adds scroll room for the exit animation.
+  // No nested pins — everything in one timeline.
+  const totalScrollPercent = cards.length * 150 + 80;
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
       start: 'top top',
-      end: `+=${cards.length * 150}%`,
+      end: `+=${totalScrollPercent}%`,
       pin: true,
       anticipatePin: 1,
       scrub: true,
@@ -197,26 +199,15 @@ export const initFeaturedWorkScroll = () => {
     }
   });
 
-  // === PARALLAX EXIT: work fades away to reveal services behind it ===
-  // Work (z-20) is pinned; services (z-5) flows up behind it (pinSpacing:false).
-  // As work fades to transparent, services is fully revealed.
-  const wrapper = document.getElementById('featured-work-wrapper');
-  if (wrapper) {
-    gsap.to(container, {
-      scale: 0.92,
-      filter: 'blur(6px)',
-      opacity: 0,
-      ease: 'none',
-      force3D: true,
-      scrollTrigger: {
-        trigger: wrapper,
-        start: 'bottom bottom',
-        end: '+=60%',
-        scrub: 0.5,
-        pin: true,
-        pinSpacing: false,
-        id: 'featured-work-exit',
-      }
-    });
-  }
+  // === EXIT FADE: while still pinned, container shrinks/blurs/fades ===
+  // This fills the extra +80% scroll distance. When the fade finishes
+  // and the pin releases, services is right there in normal flow.
+  progressTl.to(container, {
+    scale: 0.92,
+    filter: 'blur(8px)',
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power1.in',
+    force3D: true,
+  });
 };
