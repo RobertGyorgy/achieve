@@ -195,4 +195,26 @@ export const initFeaturedWorkScroll = () => {
       progressTl.to({}, { duration: 0.1 });
     }
   });
+
+  // === PARALLAX EXIT: After pin releases, FeaturedWork stays behind ===
+  // Services (z-20) scrolls over it, just like hero → intro pattern
+  const wrapper = document.getElementById('featured-work-wrapper');
+  if (wrapper) {
+    gsap.to(container, {
+      scale: 0.92,
+      filter: 'blur(6px)',
+      opacity: 0.4,
+      ease: 'none',
+      force3D: true,
+      scrollTrigger: {
+        trigger: wrapper,
+        start: 'bottom bottom',
+        end: '+=50%',
+        scrub: 0.5,
+        pin: true,
+        pinSpacing: false,
+        id: 'featured-work-exit'
+      }
+    });
+  }
 };

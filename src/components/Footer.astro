@@ -3,36 +3,44 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer
-  class="bg-[#F2F2F2] pt-8 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pt-16 md:pb-[calc(2rem+env(safe-area-inset-bottom))] px-4 md:px-8 relative overflow-hidden pointer-events-auto z-50"
+  class="bg-[#F2F2F2] relative overflow-hidden pointer-events-auto z-50"
   data-theme-color="#F2F2F2"
   id="main-footer"
 >
-  <div class="w-full max-w-[90rem] mx-auto relative z-10">
-    <!-- Footer Card -->
-    <div
-      class="footer-card bg-black text-white rounded-[2.5rem] p-6 md:p-8 lg:p-10 relative overflow-hidden shadow-2xl pointer-events-auto"
-    >
-      <!-- Main Content Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 items-center">
-        <!-- Left Column: CTA & Brand -->
-        <div class="lg:col-span-7 flex flex-col justify-center h-full text-center lg:text-left items-center lg:items-start">
-          <h2 class="font-nura text-3xl md:text-5xl lg:text-6xl font-black leading-none mb-6">
+  <!-- Outer padding — generous vertical breathing room -->
+  <div class="px-4 md:px-8 pt-12 md:pt-20 pb-[calc(1.5rem+env(safe-area-inset-bottom))] md:pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
+    <div class="w-full max-w-[90rem] mx-auto relative z-10">
+
+      <!-- Footer Card — tall, generous internal spacing -->
+      <div
+        class="footer-card bg-black text-white rounded-[2rem] md:rounded-[3rem] relative overflow-hidden shadow-2xl pointer-events-auto"
+      >
+        <!-- ===== TOP SECTION: Giant CTA ===== -->
+        <div class="flex flex-col items-center justify-center text-center px-6 md:px-12 lg:px-20 pt-20 md:pt-32 lg:pt-40 pb-16 md:pb-24 lg:pb-32">
+          
+          <!-- Small label -->
+          <span class="text-accent-orange text-xs md:text-sm font-bold uppercase tracking-[0.25em] mb-8 md:mb-12">
+            Ready to start?
+          </span>
+
+          <!-- Giant headline -->
+          <h2 class="font-nura text-[clamp(2.5rem,8vw,8rem)] font-black leading-[0.95] tracking-tight mb-10 md:mb-14">
             Let's build<br />
-            <span class="text-accent-orange">something great</span> together.
+            <span class="text-accent-orange">something great.</span>
           </h2>
 
           <!-- CTA Buttons -->
-          <div class="flex flex-wrap gap-3 mt-6 md:mt-8 justify-center lg:justify-start">
+          <div class="flex flex-wrap gap-4 justify-center">
             <a
               href="mailto:contact@achieve.ro"
-              class="inline-flex items-center justify-center px-8 py-4 text-base rounded-full bg-accent-orange text-black font-bold uppercase tracking-wider hover:scale-105 transition-transform duration-300"
+              class="inline-flex items-center justify-center px-10 py-5 md:px-12 md:py-6 text-base md:text-lg rounded-full bg-accent-orange text-black font-bold uppercase tracking-wider hover:scale-105 transition-transform duration-300"
               style="font-family: 'Nura', serif !important;"
             >
               Get in Touch
             </a>
             <a
               href="/work"
-              class="inline-flex items-center justify-center px-8 py-4 text-base rounded-full border-2 border-white text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-300"
+              class="inline-flex items-center justify-center px-10 py-5 md:px-12 md:py-6 text-base md:text-lg rounded-full border-2 border-white/30 text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-300"
               style="font-family: 'Nura', serif !important;"
             >
               View Work
@@ -40,46 +48,73 @@ const currentYear = new Date().getFullYear();
           </div>
         </div>
 
-        <!-- Right Column: Navigation -->
-        <div class="lg:col-span-5 flex flex-col items-center lg:items-end justify-between h-full mt-8 lg:mt-24">
-          <div class="grid grid-cols-2 gap-6 lg:gap-12 text-center lg:text-right w-full lg:w-auto">
+        <!-- ===== DIVIDER ===== -->
+        <div class="w-[calc(100%-3rem)] md:w-[calc(100%-6rem)] mx-auto h-px bg-white/10"></div>
+
+        <!-- ===== BOTTOM SECTION: Nav + Info + Copyright ===== -->
+        <div class="px-6 md:px-12 lg:px-20 pt-12 md:pt-16 pb-10 md:pb-14">
+
+          <!-- Navigation Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 mb-16 md:mb-20">
+            
             <!-- Menu -->
-            <div class="space-y-4">
-              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-widest">Menu</h3>
-              <ul class="space-y-2 font-medium text-base text-white/80">
-                <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
-                <li><a href="/work" class="hover:text-white transition-colors">Work</a></li>
-                <li><a href="/services" class="hover:text-white transition-colors">Services</a></li>
-                <li><a href="/about" class="hover:text-white transition-colors">About</a></li>
+            <div class="space-y-5">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-[0.2em]">Menu</h3>
+              <ul class="space-y-3 text-base text-white/70">
+                <li><a href="/" class="hover:text-white transition-colors duration-200">Home</a></li>
+                <li><a href="/work" class="hover:text-white transition-colors duration-200">Work</a></li>
+                <li><a href="/services" class="hover:text-white transition-colors duration-200">Services</a></li>
+                <li><a href="/about" class="hover:text-white transition-colors duration-200">About</a></li>
               </ul>
             </div>
 
             <!-- Contact -->
-            <div class="space-y-4">
-              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-widest">Contact</h3>
-              <ul class="space-y-2 text-white/70 text-sm">
+            <div class="space-y-5">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-[0.2em]">Contact</h3>
+              <ul class="space-y-3 text-base text-white/70">
                 <li>Brașov, România</li>
                 <li>
-                  <a href="mailto:contact@achieve.ro" class="hover:text-white transition-colors">contact@achieve.ro</a>
-                </li>
-                <li>
-                  <a href="https://instagram.com/achieve" target="_blank" rel="noreferrer" class="hover:text-white transition-colors">Instagram</a>
+                  <a href="mailto:contact@achieve.ro" class="hover:text-white transition-colors duration-200">contact@achieve.ro</a>
                 </li>
               </ul>
             </div>
+
+            <!-- Socials -->
+            <div class="space-y-5">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-[0.2em]">Social</h3>
+              <ul class="space-y-3 text-base text-white/70">
+                <li>
+                  <a href="https://instagram.com/achieve" target="_blank" rel="noreferrer" class="hover:text-white transition-colors duration-200">Instagram</a>
+                </li>
+                <li>
+                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" class="hover:text-white transition-colors duration-200">LinkedIn</a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Legal -->
+            <div class="space-y-5">
+              <h3 class="text-accent-orange text-xs font-bold uppercase tracking-[0.2em]">Legal</h3>
+              <ul class="space-y-3 text-base text-white/70">
+                <li><a href="#" class="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-white transition-colors duration-200">Terms & Conditions</a></li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Divider -->
-      <div class="w-full h-px bg-white/10 my-6 md:my-8"></div>
+          <!-- ACHIEVE Wordmark — large centered brand statement -->
+          <div class="text-center mb-10 md:mb-14">
+            <span class="font-nura text-[clamp(3rem,12vw,10rem)] font-black leading-none tracking-tight text-white/[0.04] select-none uppercase">
+              Achieve
+            </span>
+          </div>
 
-      <!-- Bottom Bar -->
-      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/60">
-        <p>&copy; {currentYear} Achieve Studio. All rights reserved.</p>
-        <div class="flex gap-6">
-          <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-white transition-colors">Terms & Conditions</a>
+          <!-- Copyright bar -->
+          <div class="flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/40">
+            <p>&copy; {currentYear} Achieve Studio. All rights reserved.</p>
+            <p>Designed & developed by Achieve</p>
+          </div>
+
         </div>
       </div>
     </div>

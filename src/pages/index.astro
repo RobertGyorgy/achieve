@@ -19,16 +19,15 @@ import Footer from '../components/Footer.astro';
 
     <div class="relative z-10 w-full flex flex-col">
       <IntroTextSection />
-
-      <FeaturedWork />
     </div>
 
-    <!-- Services sits behind FeaturedWork — revealed as Work scrolls away -->
-    <div class="relative z-[5] w-full" style="margin-top: -1px;">
+    <!-- FeaturedWork — pinned, then stays behind as Services scrolls over it (like hero pattern) -->
+    <FeaturedWork />
+
+    <!-- Everything after Work scrolls OVER the work section -->
+    <div class="relative z-20 w-full flex flex-col">
       <ServicesSection />
-    </div>
 
-    <div class="relative z-10 w-full flex flex-col">
       <OurProcessSection />
 
       <FAQSection />
