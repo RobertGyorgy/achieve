@@ -197,22 +197,21 @@ export const initFeaturedWorkScroll = () => {
     }
   });
 
-  // === PARALLAX EXIT (hero→intro pattern) ===
-  // After card pin releases, pin the WRAPPER with pinSpacing:false.
-  // Work (z-5) stays pinned behind while Services (z-20, solid bg)
-  // scrolls over it — exactly like intro scrolls over hero.
+  // === PARALLAX EXIT: work fades away to reveal services behind it ===
+  // Work (z-20) is pinned; services (z-5) flows up behind it (pinSpacing:false).
+  // As work fades to transparent, services is fully revealed.
   const wrapper = document.getElementById('featured-work-wrapper');
   if (wrapper) {
     gsap.to(container, {
       scale: 0.92,
       filter: 'blur(6px)',
-      opacity: 0.4,
+      opacity: 0,
       ease: 'none',
       force3D: true,
       scrollTrigger: {
         trigger: wrapper,
         start: 'bottom bottom',
-        end: '+=50%',
+        end: '+=60%',
         scrub: 0.5,
         pin: true,
         pinSpacing: false,
