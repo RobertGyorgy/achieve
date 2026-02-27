@@ -24,8 +24,8 @@ import Footer from '../components/Footer.astro';
     <!-- FeaturedWork — pinned, then stays behind as Services scrolls over it (like hero pattern) -->
     <FeaturedWork />
 
-    <!-- Everything after Work scrolls OVER the work section -->
-    <div class="relative z-20 w-full flex flex-col" style="background-color: #000000;">
+    <!-- Services sits BELOW work — gets revealed as work scrolls away -->
+    <div class="relative w-full flex flex-col" style="z-index: 5; background-color: #000000;">
       <ServicesSection />
 
       <OurProcessSection />
