@@ -16,14 +16,6 @@ export const initHeroParallax = () => {
   const isTestPage = document.querySelector('.hero-test-container') !== null;
 
   if (heroSectionMain && heroContentMain && !isTestPage) {
-    // Skip pin on mobile — reference site does the same.
-    // On iOS Safari, position:fixed pins expose the transparent body behind,
-    // which shows as the white address bar issue.
-    if (isMobileDevice) {
-      (heroSectionMain as HTMLElement).dataset.exitAnimInit = "true";
-      return;
-    }
-
     gsap.to(heroContentMain, {
       scale: 0.9,
       filter: "blur(8px)",

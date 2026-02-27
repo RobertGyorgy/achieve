@@ -186,7 +186,7 @@ body {
 /* Hero-specific styles moved to HeroSection.astro component */
 
 .fade-bg {
-  background: linear-gradient(135deg, #222831 0%, #393E46 100%);
+  background: linear-gradient(135deg, #000000 0%, #393E46 100%);
 }
 
 /* Text Reveal Support */
