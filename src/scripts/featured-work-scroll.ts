@@ -145,16 +145,14 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // Create a master scrubbed timeline for the progress bars
-  // pinSpacing: false — services sits directly behind work (lower z-index),
-  // so when the pin releases, work scrolls away and reveals services beneath.
+  // Create a master scrubbed timeline for card transitions.
+  // pinSpacing: true (default) — creates spacer for scroll distance.
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
       start: 'top top',
       end: `+=${cards.length * 150}%`,
       pin: true,
-      pinSpacing: false,
       anticipatePin: 1,
       scrub: true,
       id: 'featured-work-scroll'
@@ -198,4 +196,28 @@ export const initFeaturedWorkScroll = () => {
       progressTl.to({}, { duration: 0.1 });
     }
   });
+
+  // === PARALLAX EXIT (hero→intro pattern) ===
+  // After card pin releases, pin the WRAPPER with pinSpacing:false.
+  // Work (z-5) stays pinned behind while Services (z-20, solid bg)
+  // scrolls over it — exactly like intro scrolls over hero.
+  const wrapper = document.getElementById('featured-work-wrapper');
+  if (wrapper) {
+    gsap.to(container, {
+      scale: 0.92,
+      filter: 'blur(6px)',
+      opacity: 0.4,
+      ease: 'none',
+      force3D: true,
+      scrollTrigger: {
+        trigger: wrapper,
+        start: 'bottom bottom',
+        end: '+=50%',
+        scrub: 0.5,
+        pin: true,
+        pinSpacing: false,
+        id: 'featured-work-exit',
+      }
+    });
+  }
 };
