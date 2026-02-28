@@ -18,6 +18,7 @@ interface Dot {
   xOffset: number;
   yOffset: number;
   _pushed: boolean;
+  _returning: boolean;
 }
 
 interface Pointer {
@@ -41,6 +42,7 @@ export interface DotGridOptions {
   shockRadius?: number;
   shockStrength?: number;
   maxSpeed?: number;
+  resistance?: number;
   returnDuration?: number;
 }
 
@@ -88,7 +90,7 @@ export function initDotGrid(
 ) {
   const {
     dotSize = 5,
-    gap = 30,
+    gap = 50,
     baseColor = '#C8BEB4',
     activeColor = '#ff4500',
     proximity = 120,
@@ -96,6 +98,7 @@ export function initDotGrid(
     shockRadius = 250,
     shockStrength = 5,
     maxSpeed = 5000,
+    resistance = 750,
     returnDuration = 1.5,
   } = opts;
 
@@ -153,6 +156,7 @@ export function initDotGrid(
           xOffset: 0,
           yOffset: 0,
           _pushed: false,
+          _returning: false,
         });
       }
     }
@@ -213,23 +217,41 @@ export function initDotGrid(
 
   /* ----- Push helpers (simulates InertiaPlugin with standard tweens) ----- */
 
-  function pushDot(dot: Dot, pushX: number, pushY: number, duration = 0.35) {
+  /**
+   * Simulate InertiaPlugin: velocityX/Y are initial velocities (px/s).
+   * Final displacement ≈ v * |v| / (2 * resistance).
+   * The dot coasts to a stop, then springs back elastically.
+   */
+  function pushDot(dot: Dot, velocityX: number, velocityY: number) {
     dot._pushed = true;
+    dot._returning = false;
     gsap.killTweensOf(dot);
 
+    // Kinematic displacement: d = v² / (2a), preserve sign
+    const targetX = (velocityX * Math.abs(velocityX)) / (2 * resistance);
+    const targetY = (velocityY * Math.abs(velocityY)) / (2 * resistance);
+
+    // Duration proportional to initial speed — faster push = longer coast
+    const speed = Math.hypot(velocityX, velocityY);
+    const coastDuration = Math.min(1.2, Math.max(0.15, speed / (resistance * 1.5)));
+
     gsap.to(dot, {
-      xOffset: pushX,
-      yOffset: pushY,
-      duration,
-      ease: 'power2.out',
+      xOffset: targetX,
+      yOffset: targetY,
+      duration: coastDuration,
+      ease: 'power3.out',
       onComplete: () => {
+        dot._returning = true;
         gsap.to(dot, {
           xOffset: 0,
           yOffset: 0,
           duration: returnDuration,
           ease: 'elastic.out(1,0.75)',
+          onComplete: () => {
+            dot._pushed = false;
+            dot._returning = false;
+          },
         });
-        dot._pushed = false;
       },
     });
   }
@@ -264,18 +286,20 @@ export function initDotGrid(
     pointer.x = e.clientX - rect.left;
     pointer.y = e.clientY - rect.top;
 
-    // Velocity-based push
+    // Velocity-based push — match original InertiaPlugin formula:
+    // pushVelocity = (dot position - cursor) + cursor velocity contribution
     if (speed > speedTrigger) {
       for (let i = 0, len = dots.length; i < len; i++) {
         const dot = dots[i];
-        if (dot._pushed) continue;
+        // Allow re-push if the dot is returning (elastic phase)
+        if (dot._pushed && !dot._returning) continue;
 
         const dist = Math.hypot(dot.cx - pointer.x, dot.cy - pointer.y);
         if (dist < proximity) {
-          const falloff = 1 - dist / proximity;
-          const px = (dot.cx - pointer.x + vx * 0.005) * falloff * shockStrength * 0.5;
-          const py = (dot.cy - pointer.y + vy * 0.005) * falloff * shockStrength * 0.5;
-          pushDot(dot, px, py, 0.35);
+          // Original formula: direction away from cursor + velocity contribution
+          const pushVx = dot.cx - pointer.x + vx * 0.005;
+          const pushVy = dot.cy - pointer.y + vy * 0.005;
+          pushDot(dot, pushVx, pushVy);
         }
       }
     }
@@ -293,9 +317,10 @@ export function initDotGrid(
       const dist = Math.hypot(dot.cx - cx, dot.cy - cy);
       if (dist < shockRadius) {
         const falloff = Math.max(0, 1 - dist / shockRadius);
-        const px = (dot.cx - cx) * shockStrength * falloff;
-        const py = (dot.cy - cy) * shockStrength * falloff;
-        pushDot(dot, px, py, 0.4);
+        // Original formula: direction * strength * falloff → treated as velocity
+        const pushVx = (dot.cx - cx) * shockStrength * falloff;
+        const pushVy = (dot.cy - cy) * shockStrength * falloff;
+        pushDot(dot, pushVx, pushVy);
       }
     }
   }
@@ -305,7 +330,7 @@ export function initDotGrid(
   buildGrid();
   draw();
 
-  const throttledMove = throttle(onMove, 50);
+  const throttledMove = throttle(onMove, 16);
   window.addEventListener('mousemove', throttledMove, { passive: true });
   window.addEventListener('click', onClick);
 
