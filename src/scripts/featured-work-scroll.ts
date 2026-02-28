@@ -145,18 +145,12 @@ export const initFeaturedWorkScroll = () => {
     }
   };
 
-  // CARD PIN: pinSpacing:false = no spacer inserted.
-  // Services sits in the same scroll space BEHIND work (z-5 < z-20).
-  // While pinned, work covers services. When pin releases,
-  // work slides up with normal scroll — revealing services underneath.
-  // Like sliding the top card off a stack.
   const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: container,
       start: 'top top',
       end: `+=${cards.length * 150}%`,
       pin: true,
-      pinSpacing: false,
       anticipatePin: 1,
       scrub: true,
       id: 'featured-work-scroll'
@@ -167,7 +161,6 @@ export const initFeaturedWorkScroll = () => {
   cards.forEach((_, i) => {
     const mobileFill = mobileFills[i];
 
-    // Each project has its own progress segment
     const segmentTl = gsap.timeline({
       onStart: () => {
         if (currentIndex !== i) {
@@ -181,11 +174,9 @@ export const initFeaturedWorkScroll = () => {
       }
     });
 
-    // RESET: Ensure the single tooltip fill resets when a new segment starts
     if (tooltipBg) segmentTl.set(tooltipBg, { scaleX: 0 }, 0);
     if (mobileFill) segmentTl.set(mobileFill, { scaleX: 0 }, 0);
 
-    // FILL: Animate the same tooltip bg for every project
     if (tooltipBg) {
       segmentTl.to(tooltipBg, { scaleX: 1, ease: 'none', duration: 1 }, 0);
     }
@@ -195,10 +186,8 @@ export const initFeaturedWorkScroll = () => {
 
     progressTl.add(segmentTl);
     
-    // Add spacer
     if (i < cards.length - 1) {
       progressTl.to({}, { duration: 0.1 });
     }
   });
-  // No exit fade — the physical sliding of work off-screen IS the reveal.
 };

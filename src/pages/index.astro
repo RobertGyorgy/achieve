@@ -21,11 +21,9 @@ import Footer from '../components/Footer.astro';
       <IntroTextSection />
     </div>
 
-    <!-- FeaturedWork — pinned on top (z-20), pinSpacing:false -->
     <FeaturedWork />
 
-    <!-- Services behind work (z-5) — same scroll space, revealed when work slides away -->
-    <div class="relative w-full flex flex-col" style="z-index: 5; background-color: #000000;">
+    <div class="relative w-full flex flex-col">
       <ServicesSection />
 
       <OurProcessSection />
