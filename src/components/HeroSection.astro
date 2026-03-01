@@ -384,27 +384,43 @@
 
     const heroWords = document.querySelectorAll('.hero-text-word');
 
-    const updateTooltipPosition = (e: MouseEvent) => {
-      tooltip.style.left = e.clientX + 'px';
-      tooltip.style.top = e.clientY + 'px';
+    // Tooltip position state object for GSAP tweening
+    const tooltipPos = { x: 0, y: 0 };
+
+    const updateTooltipPositionSmooth = (targetX: number, targetY: number) => {
+      // Clamp to viewport
       const rect = tooltip.getBoundingClientRect();
       const tooltipWidth = rect.width || 120;
       const tooltipHeight = rect.height || 40;
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
 
-      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
-        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
-      }
-      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
-        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
-      }
+      const clampedX =
+        targetX + tooltipWidth + 10 > viewportWidth
+          ? viewportWidth - tooltipWidth - 10
+          : targetX;
+      const clampedY =
+        targetY + tooltipHeight + 10 > viewportHeight
+          ? viewportHeight - tooltipHeight - 10
+          : targetY;
+
+      // Animate with elastic follow effect
+      gsap.to(tooltipPos, {
+        x: clampedX,
+        y: clampedY,
+        duration: 0.4,
+        ease: 'elastic.out(1.2, 0.5)',
+        onUpdate: () => {
+          tooltip.style.left = tooltipPos.x + 'px';
+          tooltip.style.top = tooltipPos.y + 'px';
+        },
+      });
     };
 
     // Global mousemove to keep tooltip following cursor even while dragging
     document.addEventListener('mousemove', (e: MouseEvent) => {
       if (tooltip.classList.contains('visible')) {
-        updateTooltipPosition(e);
+        updateTooltipPositionSmooth(e.clientX + 10, e.clientY + 10);
       }
     });
 
@@ -412,7 +428,7 @@
       word.addEventListener('mouseenter', (e: MouseEvent) => {
         if (!word.classList.contains('dragging')) {
           tooltip.classList.add('visible');
-          updateTooltipPosition(e);
+          updateTooltipPositionSmooth((e as MouseEvent).clientX + 10, (e as MouseEvent).clientY + 10);
         }
       });
       word.addEventListener('mouseleave', () =>
