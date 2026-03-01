@@ -401,15 +401,17 @@
       }
     };
 
+    // Global mousemove to keep tooltip following cursor even while dragging
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      if (tooltip.classList.contains('visible')) {
+        updateTooltipPosition(e);
+      }
+    });
+
     heroWords.forEach((word: any) => {
       word.addEventListener('mouseenter', (e: MouseEvent) => {
         if (!word.classList.contains('dragging')) {
           tooltip.classList.add('visible');
-          updateTooltipPosition(e);
-        }
-      });
-      word.addEventListener('mousemove', (e: MouseEvent) => {
-        if (!word.classList.contains('dragging')) {
           updateTooltipPosition(e);
         }
       });
