@@ -411,12 +411,20 @@
 
     const handleMouseUp = (e: MouseEvent) => {
       if (activeDragElement) {
+        const element = activeDragElement;
+        
+        // Remove event listeners immediately (don't wait for animation)
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        
         // Animate rotation back to flat (0 degrees)
         returnToFlatAnimation();
         
         // Clean up drag state after animation
         setTimeout(() => {
-          stopDragging(activeDragElement!);
+          element.classList.remove('dragging');
+          activeDragElement = null;
+          activeDragState = null;
         }, 500);
       }
     };
