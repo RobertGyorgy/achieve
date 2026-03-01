@@ -384,11 +384,18 @@
 
     const heroWords = document.querySelectorAll('.hero-text-word');
 
-    // Tooltip position state object for GSAP tweening
-    const tooltipPos = { x: 0, y: 0 };
+    // Spring physics state
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    const friction = 0.92; // Dampening
+    const tension = 0.12; // Spring strength
+    let rafId: number;
 
-    const updateTooltipPositionSmooth = (targetX: number, targetY: number) => {
-      // Clamp to viewport
+    const clampPos = (x: number, y: number) => {
       const rect = tooltip.getBoundingClientRect();
       const tooltipWidth = rect.width || 120;
       const tooltipHeight = rect.height || 40;
@@ -396,39 +403,64 @@
       const viewportHeight = window.innerHeight;
 
       const clampedX =
-        targetX + tooltipWidth + 10 > viewportWidth
+        x + tooltipWidth + 10 > viewportWidth
           ? viewportWidth - tooltipWidth - 10
-          : targetX;
+          : x;
       const clampedY =
-        targetY + tooltipHeight + 10 > viewportHeight
+        y + tooltipHeight + 10 > viewportHeight
           ? viewportHeight - tooltipHeight - 10
-          : targetY;
+          : y;
 
-      // Animate with elastic follow effect
-      gsap.to(tooltipPos, {
-        x: clampedX,
-        y: clampedY,
-        duration: 0.4,
-        ease: 'elastic.out(1.2, 0.5)',
-        onUpdate: () => {
-          tooltip.style.left = tooltipPos.x + 'px';
-          tooltip.style.top = tooltipPos.y + 'px';
-        },
-      });
+      return { x: clampedX, y: clampedY };
     };
 
-    // Global mousemove to keep tooltip following cursor even while dragging
-    document.addEventListener('mousemove', (e: MouseEvent) => {
-      if (tooltip.classList.contains('visible')) {
-        updateTooltipPositionSmooth(e.clientX + 10, e.clientY + 10);
+    const updateTooltip = () => {
+      if (!tooltip.classList.contains('visible')) {
+        rafId = requestAnimationFrame(updateTooltip);
+        return;
       }
+
+      // Spring physics: move toward target with elasticity
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+
+      velocityX += dx * tension;
+      velocityY += dy * tension;
+
+      velocityX *= friction;
+      velocityY *= friction;
+
+      currentX += velocityX;
+      currentY += velocityY;
+
+      // Apply clamping
+      const clamped = clampPos(currentX, currentY);
+      currentX = clamped.x;
+      currentY = clamped.y;
+
+      tooltip.style.left = currentX + 'px';
+      tooltip.style.top = currentY + 'px';
+
+      rafId = requestAnimationFrame(updateTooltip);
+    };
+
+    // Start the animation loop
+    rafId = requestAnimationFrame(updateTooltip);
+
+    // Update target on mousemove
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      targetX = e.clientX + 10;
+      targetY = e.clientY + 10;
     });
 
     heroWords.forEach((word: any) => {
       word.addEventListener('mouseenter', (e: MouseEvent) => {
         if (!word.classList.contains('dragging')) {
           tooltip.classList.add('visible');
-          updateTooltipPositionSmooth((e as MouseEvent).clientX + 10, (e as MouseEvent).clientY + 10);
+          targetX = (e as MouseEvent).clientX + 10;
+          targetY = (e as MouseEvent).clientY + 10;
+          currentX = targetX;
+          currentY = targetY;
         }
       });
       word.addEventListener('mouseleave', () =>
