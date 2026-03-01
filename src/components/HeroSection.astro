@@ -393,8 +393,8 @@
       // In 2D: torque = grabOffsetX * velocityY - grabOffsetY * velocityX
       const torque = grabOffsetX * dy - grabOffsetY * dx;
 
-      // Convert torque to angular velocity (scale for visual effect)
-      activeDragState.rotationVelocity = torque * 0.002;
+      // Convert torque to angular velocity (increased scale for visibility)
+      activeDragState.rotationVelocity = torque * 0.015;
 
       const rotation = activeDragState.currentRotation || 0;
       activeDragElement.style.transform = 
@@ -567,6 +567,7 @@
     user-select: none;
     display: inline-block;
     will-change: transform;
+    transform-origin: center;
   }
 
   .hero-text-word.dragging {
