@@ -396,6 +396,9 @@
       // Convert torque to angular velocity (increased scale for visibility)
       activeDragState.rotationVelocity = torque * 0.015;
 
+      // Accumulate rotation during drag
+      activeDragState.currentRotation += activeDragState.rotationVelocity;
+
       const rotation = activeDragState.currentRotation || 0;
       activeDragElement.style.transform = 
         `translate(${x}px, ${y}px) rotate(${rotation}deg) translateZ(0)`;
