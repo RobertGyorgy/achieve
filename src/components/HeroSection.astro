@@ -391,8 +391,8 @@
     let currentY = 0;
     let velocityX = 0;
     let velocityY = 0;
-    const friction = 0.92; // Dampening
-    const tension = 0.12; // Spring strength
+    const friction = 0.85; // Dampening (lower = more damped, fewer bounces)
+    const tension = 0.08; // Spring strength (lower = less overshoot)
     let rafId: number;
 
     const clampPos = (x: number, y: number) => {
