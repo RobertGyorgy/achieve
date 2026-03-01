@@ -332,6 +332,7 @@
     let zIndexCounter = 1000;
     let activeDragElement: HTMLElement | null = null;
     let activeDragState: any = null;
+    let rafId: number;
 
     const stopDragging = (element: HTMLElement) => {
       element.classList.remove('dragging');
@@ -339,17 +340,76 @@
       activeDragState = null;
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      cancelAnimationFrame(rafId);
+    };
+
+    const updateRotation = () => {
+      if (!activeDragElement || !activeDragState) return;
+
+      // Decay rotation velocity with friction
+      activeDragState.rotationVelocity *= 0.88;
+
+      // Apply rotation 
+      const translateX = activeDragState.translateX || 0;
+      const translateY = activeDragState.translateY || 0;
+      const rotation = activeDragState.currentRotation || 0;
+
+      activeDragElement.style.transform = 
+        `translate(${translateX}px, ${translateY}px) rotate(${rotation}deg) translateZ(0)`;
+
+      // Continue animation if velocity is still significant
+      if (Math.abs(activeDragState.rotationVelocity) > 0.01) {
+        activeDragState.currentRotation += activeDragState.rotationVelocity;
+        rafId = requestAnimationFrame(updateRotation);
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!activeDragElement || !activeDragState) return;
+
       const x = e.clientX - activeDragState.startX;
       const y = e.clientY - activeDragState.startY;
-      activeDragElement.style.transform = `translate(${x}px, ${y}px) translateZ(0)`;
+
+      activeDragState.translateX = x;
+      activeDragState.translateY = y;
+
+      // Calculate velocity
+      const dx = e.clientX - activeDragState.lastX;
+      const dy = e.clientY - activeDragState.lastY;
+
+      activeDragState.lastX = e.clientX;
+      activeDragState.lastY = e.clientY;
+
+      // Get element rect for grab point calculation
+      const rect = activeDragElement.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      // Grab point relative to center
+      const grabOffsetX = e.clientX - centerX;
+      const grabOffsetY = e.clientY - centerY;
+
+      // Calculate torque from cross product: (grabOffset × velocity)
+      // In 2D: torque = grabOffsetX * velocityY - grabOffsetY * velocityX
+      const torque = grabOffsetX * dy - grabOffsetY * dx;
+
+      // Convert torque to angular velocity (scale for visual effect)
+      activeDragState.rotationVelocity = torque * 0.002;
+
+      const rotation = activeDragState.currentRotation || 0;
+      activeDragElement.style.transform = 
+        `translate(${x}px, ${y}px) rotate(${rotation}deg) translateZ(0)`;
     };
 
     const handleMouseUp = (e: MouseEvent) => {
-      if (activeDragElement) stopDragging(activeDragElement);
+      if (activeDragElement) {
+        stopDragging(activeDragElement);
+        // Start decay animation if there's rotation velocity
+        if (activeDragState && Math.abs(activeDragState.rotationVelocity) > 0.01) {
+          activeDragElement.classList.add('dragging');
+          rafId = requestAnimationFrame(updateRotation);
+        }
+      }
     };
 
     heroWords.forEach((el: any) => {
@@ -367,6 +427,12 @@
         activeDragState = {
           startX: e.clientX - curX,
           startY: e.clientY - curY,
+          lastX: e.clientX,
+          lastY: e.clientY,
+          translateX: curX,
+          translateY: curY,
+          currentRotation: 0,
+          rotationVelocity: 0,
         };
         el.classList.add('dragging');
         document.addEventListener('mousemove', handleMouseMove);
