@@ -197,6 +197,9 @@ export function initDotGrid(
         const g = Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t);
         const b = Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t);
         fill = `rgb(${r},${g},${b})`;
+      } else {
+        // Base state: much lower opacity for subtle appearance
+        fill = `rgba(${baseRgb.r},${baseRgb.g},${baseRgb.b},0.15)`;
       }
 
       ctx.save();
@@ -291,8 +294,8 @@ export function initDotGrid(
     if (speed > speedTrigger) {
       for (let i = 0, len = dots.length; i < len; i++) {
         const dot = dots[i];
-        // Allow re-push if the dot is returning (elastic phase)
-        if (dot._pushed && !dot._returning) continue;
+        // Don't re-push if already pushed (blocks until entire animation completes)
+        if (dot._pushed) continue;
 
         const dist = Math.hypot(dot.cx - pointer.x, dot.cy - pointer.y);
         if (dist < proximity) {
@@ -312,6 +315,7 @@ export function initDotGrid(
 
     for (let i = 0, len = dots.length; i < len; i++) {
       const dot = dots[i];
+      // Don't re-click if already pushed — blocks until entire animation completes
       if (dot._pushed) continue;
 
       const dist = Math.hypot(dot.cx - cx, dot.cy - cy);
