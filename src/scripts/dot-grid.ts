@@ -18,7 +18,6 @@ interface Dot {
   xOffset: number;
   yOffset: number;
   _pushed: boolean;
-  _returning: boolean;
 }
 
 interface Pointer {
@@ -156,7 +155,6 @@ export function initDotGrid(
           xOffset: 0,
           yOffset: 0,
           _pushed: false,
-          _returning: false,
         });
       }
     }
@@ -199,7 +197,7 @@ export function initDotGrid(
         fill = `rgb(${r},${g},${b})`;
       } else {
         // Base state: much lower opacity for subtle appearance
-        fill = `rgba(${baseRgb.r},${baseRgb.g},${baseRgb.b},0.15)`;
+        fill = `rgba(${baseRgb.r},${baseRgb.g},${baseRgb.b},0.20)`;
       }
 
       ctx.save();
@@ -224,10 +222,10 @@ export function initDotGrid(
    * Simulate InertiaPlugin: velocityX/Y are initial velocities (px/s).
    * Final displacement ≈ v * |v| / (2 * resistance).
    * The dot coasts to a stop, then springs back elastically.
+   * Matches original: _inertiaApplied flag is reset to false when elastic animation starts.
    */
   function pushDot(dot: Dot, velocityX: number, velocityY: number) {
     dot._pushed = true;
-    dot._returning = false;
     gsap.killTweensOf(dot);
 
     // Kinematic displacement: d = v² / (2a), preserve sign
@@ -244,16 +242,14 @@ export function initDotGrid(
       duration: coastDuration,
       ease: 'power3.out',
       onComplete: () => {
-        dot._returning = true;
+        // Reset flag so dot can be re-clicked during elastic phase (matches original behavior)
+        dot._pushed = false;
+        
         gsap.to(dot, {
           xOffset: 0,
           yOffset: 0,
           duration: returnDuration,
           ease: 'elastic.out(1,0.75)',
-          onComplete: () => {
-            dot._pushed = false;
-            dot._returning = false;
-          },
         });
       },
     });
