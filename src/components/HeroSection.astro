@@ -104,6 +104,8 @@
       </div>
     </div>
 
+    <!-- Drag Tooltip (Mobile only) -->
+    <div id="drag-tooltip" class="drag-tooltip">Drag me</div>
   </div><!-- End hero-content-wrapper -->
 </section>
 
@@ -167,6 +169,7 @@
     }
 
     initDraggable();
+    initTooltip();
     initDotGridCanvas();
   }
 
@@ -372,6 +375,53 @@
     });
   }
 
+  function initTooltip() {
+    // Mobile only
+    if (window.innerWidth >= 1024) return;
+
+    const tooltip = document.getElementById('drag-tooltip');
+    if (!tooltip) return;
+
+    const heroWords = document.querySelectorAll('.hero-text-word');
+
+    const updateTooltipPosition = (e: MouseEvent) => {
+      tooltip.style.left = e.clientX + 'px';
+      tooltip.style.top = e.clientY + 'px';
+      const rect = tooltip.getBoundingClientRect();
+      const tooltipWidth = rect.width || 120;
+      const tooltipHeight = rect.height || 40;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      if (e.clientX + tooltipWidth + 10 > viewportWidth) {
+        tooltip.style.left = viewportWidth - tooltipWidth - 10 + 'px';
+      }
+      if (e.clientY + tooltipHeight + 10 > viewportHeight) {
+        tooltip.style.top = viewportHeight - tooltipHeight - 10 + 'px';
+      }
+    };
+
+    heroWords.forEach((word: any) => {
+      word.addEventListener('mouseenter', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          tooltip.classList.add('visible');
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!word.classList.contains('dragging')) {
+          updateTooltipPosition(e);
+        }
+      });
+      word.addEventListener('mouseleave', () =>
+        tooltip.classList.remove('visible')
+      );
+      word.addEventListener('mousedown', () =>
+        tooltip.classList.remove('visible')
+      );
+    });
+  }
+
   // Handle initialization on page load and Astro transitions
   document.addEventListener('DOMContentLoaded', initHeroContent);
   document.addEventListener('astro:page-load', initHeroContent);
@@ -547,6 +597,35 @@
 
   .blob-btn:hover {
     color: #f2f2f2 !important;
+  }
+
+  @media (max-width: 1023px) {
+    .drag-tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100000;
+      opacity: 0;
+      transform: translate(10px, 10px);
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+      background: #000000;
+      color: #f2f2f2;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Nura', serif;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      margin-left: -10px;
+      margin-top: 10px;
+    }
+
+    .drag-tooltip.visible {
+      opacity: 1;
+      transform: translate(10px, 10px);
+    }
   }
 
 </style>
