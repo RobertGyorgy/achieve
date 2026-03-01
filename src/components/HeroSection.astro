@@ -332,7 +332,7 @@
     let zIndexCounter = 1000;
     let activeDragElement: HTMLElement | null = null;
     let activeDragState: any = null;
-    let rafId: number;
+    let rafId: number = 0;
 
     const stopDragging = (element: HTMLElement) => {
       element.classList.remove('dragging');
@@ -343,25 +343,27 @@
       cancelAnimationFrame(rafId);
     };
 
-    const updateRotation = () => {
+    const returnToFlatAnimation = () => {
       if (!activeDragElement || !activeDragState) return;
 
-      // Decay rotation velocity with friction
-      activeDragState.rotationVelocity *= 0.88;
-
-      // Apply rotation 
-      const translateX = activeDragState.translateX || 0;
-      const translateY = activeDragState.translateY || 0;
-      const rotation = activeDragState.currentRotation || 0;
-
-      activeDragElement.style.transform = 
-        `translate(${translateX}px, ${translateY}px) rotate(${rotation}deg) translateZ(0)`;
-
-      // Continue animation if velocity is still significant
-      if (Math.abs(activeDragState.rotationVelocity) > 0.01) {
-        activeDragState.currentRotation += activeDragState.rotationVelocity;
-        rafId = requestAnimationFrame(updateRotation);
-      }
+      const currentRot = activeDragState.currentRotation || 0;
+      
+      gsap.to(activeDragState, {
+        currentRotation: 0,
+        duration: 0.5,
+        ease: 'cubic.out',
+        onUpdate: () => {
+          const translateX = activeDragState.translateX || 0;
+          const translateY = activeDragState.translateY || 0;
+          const rotation = activeDragState.currentRotation || 0;
+          
+          activeDragElement!.style.transform = 
+            `translate(${translateX}px, ${translateY}px) rotate(${rotation}deg) translateZ(0)`;
+        },
+        onComplete: () => {
+          activeDragState.currentRotation = 0;
+        }
+      });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -393,11 +395,14 @@
       // In 2D: torque = grabOffsetX * velocityY - grabOffsetY * velocityX
       const torque = grabOffsetX * dy - grabOffsetY * dx;
 
-      // Convert torque to angular velocity (increased scale for visibility)
-      activeDragState.rotationVelocity = torque * 0.015;
+      // Convert torque to angular velocity (small scale for subtle effect)
+      activeDragState.rotationVelocity = torque * 0.004;
 
       // Accumulate rotation during drag
       activeDragState.currentRotation += activeDragState.rotationVelocity;
+      
+      // Clamp rotation to prevent extreme angles
+      activeDragState.currentRotation = Math.max(-15, Math.min(15, activeDragState.currentRotation));
 
       const rotation = activeDragState.currentRotation || 0;
       activeDragElement.style.transform = 
@@ -406,12 +411,13 @@
 
     const handleMouseUp = (e: MouseEvent) => {
       if (activeDragElement) {
-        stopDragging(activeDragElement);
-        // Start decay animation if there's rotation velocity
-        if (activeDragState && Math.abs(activeDragState.rotationVelocity) > 0.01) {
-          activeDragElement.classList.add('dragging');
-          rafId = requestAnimationFrame(updateRotation);
-        }
+        // Animate rotation back to flat (0 degrees)
+        returnToFlatAnimation();
+        
+        // Clean up drag state after animation
+        setTimeout(() => {
+          stopDragging(activeDragElement!);
+        }, 500);
       }
     };
 
